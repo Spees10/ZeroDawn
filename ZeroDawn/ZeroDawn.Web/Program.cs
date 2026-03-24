@@ -9,6 +9,9 @@ using ZeroDawn.Web.Data;
 using ZeroDawn.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var jwtOptions = builder.Configuration.GetSection(JwtOptions.Section).Get<JwtOptions>()
+    ?? throw new InvalidOperationException("Jwt configuration section is not configured.");
+var isJwtConfigured = !string.IsNullOrWhiteSpace(jwtOptions.Secret);
 
 // Configuration
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.Section));
@@ -37,27 +40,30 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddAuthentication(options =>
+if (isJwtConfigured)
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    var jwtOptions = builder.Configuration.GetSection(JwtOptions.Section).Get<JwtOptions>()!;
-    options.TokenValidationParameters = new TokenValidationParameters
+    // Re-enable this block when Jwt:Secret is configured.
+    builder.Services.AddAuthentication(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtOptions.Issuer,
-        ValidAudience = jwtOptions.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(jwtOptions.Secret)),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidAudience = jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(jwtOptions.Secret)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+}
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -85,8 +91,12 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
-app.UseAuthentication();
-app.UseAuthorization();
+
+if (isJwtConfigured)
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+}
 
 app.MapControllers();
 
