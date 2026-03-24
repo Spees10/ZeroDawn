@@ -1,12 +1,43 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ZeroDawn.Shared.Services;
+using ZeroDawn.Web.Configuration;
 using ZeroDawn.Web.Components;
+using ZeroDawn.Web.Data;
 using ZeroDawn.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuration
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.Section));
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(SmtpOptions.Section));
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.Section));
+
+// Database
+var connectionString = builder.Configuration.GetSection("Database:ConnectionString").Value
+    ?? throw new InvalidOperationException("Database connection string is not configured.");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = false; // controlled by AppOptions at runtime
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddControllers();
 
 // Add device-specific services used by the ZeroDawn.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
@@ -29,6 +60,8 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+app.MapControllers();
+
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()
@@ -36,5 +69,7 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(
         typeof(ZeroDawn.Shared._Imports).Assembly,
         typeof(ZeroDawn.Web.Client._Imports).Assembly);
+
+await DatabaseSeeder.SeedAsync(app.Services, app.Logger);
 
 app.Run();
