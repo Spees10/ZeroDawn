@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ZeroDawn/ZeroDawn.Shared/ZeroDawn.Shared.csproj" />
+  <Project Path="ZeroDawn/ZeroDawn.Web.Client/ZeroDawn.Web.Client.csproj" />
+  <Project Path="ZeroDawn/ZeroDawn.Web/ZeroDawn.Web.csproj" />
+  <Project Path="ZeroDawn/ZeroDawn/ZeroDawn.csproj" />
+</Solution>
