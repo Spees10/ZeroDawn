@@ -143,7 +143,14 @@ public class AuthController : ControllerBase
         {
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
-            await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
+            try
+            {
+                await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send confirmation email for user: {UserId}", user.Id);
+            }
 
             await transaction.CommitAsync();
 
@@ -257,7 +264,14 @@ public class AuthController : ControllerBase
         {
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             var resetLink = BuildResetPasswordLink(user.Email!, resetToken);
-            await _emailService.SendPasswordResetEmailAsync(user.Email!, user.FullName, resetLink);
+            try
+            {
+                await _emailService.SendPasswordResetEmailAsync(user.Email!, user.FullName, resetLink);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send password reset email for user: {UserId}", user.Id);
+            }
         }
 
         return Ok(SuccessMessage(message));
@@ -347,7 +361,14 @@ public class AuthController : ControllerBase
         {
             var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
-            await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
+            try
+            {
+                await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to resend confirmation email for user: {UserId}", user.Id);
+            }
         }
 
         return Ok(SuccessMessage("If the account exists, a confirmation email will be sent."));
