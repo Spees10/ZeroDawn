@@ -15,6 +15,11 @@ builder.Services.AddScoped<ITokenStorageService, BrowserTokenStorage>();
 builder.Services.AddScoped<WebAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<WebAuthStateProvider>());
 builder.Services.AddScoped<AuthHttpHandler>();
+builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+})
+.AddHttpMessageHandler<AuthHttpHandler>();
 builder.Services.AddHttpClient("ApiNoAuth", client =>
 {
     client.BaseAddress = new Uri(apiBaseUrl);
