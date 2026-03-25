@@ -51,192 +51,189 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Login(LoginRequest request)
     {
-        try
+        var jwtUnavailable = EnsureJwtConfigured<AuthResponse>();
+        if (jwtUnavailable is not null)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null)
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
-            }
-
-            var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (!passwordValid)
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
-            }
-
-            if (!user.IsActive)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Account is disabled."));
-            }
-
-            if (_appOptions.RequireEmailConfirmation && !user.EmailConfirmed)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Email not confirmed."));
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _tokenService.GenerateAccessToken(user, roles);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            user.RefreshToken = HashToken(refreshToken);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
-            user.LastLoginAt = DateTime.UtcNow;
-
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
-            {
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    Failure<AuthResponse>("Failed to update authentication state."));
-            }
-
-            _logger.LogInformation("User logged in: {UserId}", user.Id);
-
-            return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
+            return jwtUnavailable;
         }
-        catch (Exception ex)
+
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is null)
         {
-            return InternalServerError(ex, "An error occurred during login.");
+            return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
         }
+
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        if (!passwordValid)
+        {
+            return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
+        }
+
+        if (!user.IsActive)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Account is disabled."));
+        }
+
+        if (_appOptions.RequireEmailConfirmation && !user.EmailConfirmed)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Email not confirmed."));
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = HashToken(refreshToken);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
+        user.LastLoginAt = DateTime.UtcNow;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                Failure<AuthResponse>("Failed to update authentication state."));
+        }
+
+        _logger.LogInformation("User logged in: {UserId}", user.Id);
+
+        return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
     }
 
     [HttpPost("register")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Register(RegisterRequest request)
     {
-        try
+        var jwtUnavailable = EnsureJwtConfigured<AuthResponse>();
+        if (jwtUnavailable is not null)
         {
-            if (!_appOptions.AllowSelfRegistration)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Self-registration is disabled."));
-            }
+            return jwtUnavailable;
+        }
 
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+        if (!_appOptions.AllowSelfRegistration)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Self-registration is disabled."));
+        }
 
-            var user = new ApplicationUser
-            {
-                UserName = request.Email,
-                Email = request.Email,
-                FullName = request.FullName,
-                IsActive = true
-            };
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
-            var createResult = await _userManager.CreateAsync(user, request.Password);
-            if (!createResult.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(ValidationFailure<AuthResponse>(createResult.Errors.Select(e => e.Description).ToList()));
-            }
+        var user = new ApplicationUser
+        {
+            UserName = request.Email,
+            Email = request.Email,
+            FullName = request.FullName,
+            IsActive = true
+        };
 
-            var addToRoleResult = await _userManager.AddToRoleAsync(user, Roles.User);
-            if (!addToRoleResult.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(ValidationFailure<AuthResponse>(addToRoleResult.Errors.Select(e => e.Description).ToList()));
-            }
+        var createResult = await _userManager.CreateAsync(user, request.Password);
+        if (!createResult.Succeeded)
+        {
+            await transaction.RollbackAsync();
+            return BadRequest(ValidationFailure<AuthResponse>(createResult.Errors.Select(e => e.Description).ToList()));
+        }
 
-            if (_appOptions.RequireEmailConfirmation)
-            {
-                _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var addToRoleResult = await _userManager.AddToRoleAsync(user, Roles.User);
+        if (!addToRoleResult.Succeeded)
+        {
+            await transaction.RollbackAsync();
+            return BadRequest(ValidationFailure<AuthResponse>(addToRoleResult.Errors.Select(e => e.Description).ToList()));
+        }
 
-                await transaction.CommitAsync();
-
-                _logger.LogInformation("Registered user pending email confirmation: {UserId}", user.Id);
-
-                return Ok(new ApiResponse<AuthResponse>
-                {
-                    Succeeded = true,
-                    Message = "Please confirm your email."
-                });
-            }
-
-            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
-            if (!confirmResult.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(ValidationFailure<AuthResponse>(confirmResult.Errors.Select(e => e.Description).ToList()));
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _tokenService.GenerateAccessToken(user, roles);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            user.RefreshToken = HashToken(refreshToken);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
-            user.LastLoginAt = DateTime.UtcNow;
-
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(ValidationFailure<AuthResponse>(updateResult.Errors.Select(e => e.Description).ToList()));
-            }
+        if (_appOptions.RequireEmailConfirmation)
+        {
+            _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             await transaction.CommitAsync();
 
-            _logger.LogInformation("User registered: {UserId}", user.Id);
+            _logger.LogInformation("Registered user pending email confirmation: {UserId}", user.Id);
 
-            return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
+            return Ok(new ApiResponse<AuthResponse>
+            {
+                Succeeded = true,
+                Message = "Please confirm your email."
+            });
         }
-        catch (Exception ex)
+
+        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+        if (!confirmResult.Succeeded)
         {
-            return InternalServerError(ex, "An error occurred during registration.");
+            await transaction.RollbackAsync();
+            return BadRequest(ValidationFailure<AuthResponse>(confirmResult.Errors.Select(e => e.Description).ToList()));
         }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = HashToken(refreshToken);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
+        user.LastLoginAt = DateTime.UtcNow;
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            await transaction.RollbackAsync();
+            return BadRequest(ValidationFailure<AuthResponse>(updateResult.Errors.Select(e => e.Description).ToList()));
+        }
+
+        await transaction.CommitAsync();
+
+        _logger.LogInformation("User registered: {UserId}", user.Id);
+
+        return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
     }
 
     [HttpPost("refresh")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Refresh(RefreshTokenRequest request)
     {
-        try
+        var jwtUnavailable = EnsureJwtConfigured<AuthResponse>();
+        if (jwtUnavailable is not null)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
-            if (principal is null)
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid token."));
-            }
-
-            var userId = GetUserId(principal);
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid token."));
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid token."));
-            }
-
-            if (string.IsNullOrWhiteSpace(user.RefreshToken) ||
-                user.RefreshTokenExpiryTime is null ||
-                user.RefreshTokenExpiryTime <= DateTime.UtcNow ||
-                !RefreshTokenMatches(user.RefreshToken, request.RefreshToken))
-            {
-                return Unauthorized(Failure<AuthResponse>("Invalid token."));
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _tokenService.GenerateAccessToken(user, roles);
-            var refreshToken = _tokenService.GenerateRefreshToken();
-
-            user.RefreshToken = HashToken(refreshToken);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
-
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
-            {
-                return BadRequest(ValidationFailure<AuthResponse>(updateResult.Errors.Select(e => e.Description).ToList()));
-            }
-
-            _logger.LogInformation("Refreshed token for user: {UserId}", user.Id);
-
-            return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
+            return jwtUnavailable;
         }
-        catch (Exception ex)
+
+        var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
+        if (principal is null)
         {
-            return InternalServerError(ex, "An error occurred during token refresh.");
+            return Unauthorized(Failure<AuthResponse>("Invalid token."));
         }
+
+        var userId = GetUserId(principal);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+        }
+
+        if (string.IsNullOrWhiteSpace(user.RefreshToken) ||
+            user.RefreshTokenExpiryTime is null ||
+            user.RefreshTokenExpiryTime <= DateTime.UtcNow ||
+            !RefreshTokenMatches(user.RefreshToken, request.RefreshToken))
+        {
+            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = HashToken(refreshToken);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays);
+
+        var updateResult = await _userManager.UpdateAsync(user);
+        if (!updateResult.Succeeded)
+        {
+            return BadRequest(ValidationFailure<AuthResponse>(updateResult.Errors.Select(e => e.Description).ToList()));
+        }
+
+        _logger.LogInformation("Refreshed token for user: {UserId}", user.Id);
+
+        return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
     }
 
     [HttpPost("forgot-password")]
@@ -244,174 +241,144 @@ public class AuthController : ControllerBase
     {
         const string message = "If the email exists, a reset link has been sent.";
 
-        try
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is not null && user.IsActive)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is not null && user.IsActive)
+            _ = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            if (_environment.IsDevelopment())
             {
-                _ = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                if (_environment.IsDevelopment())
-                {
-                    _logger.LogInformation("Generated password reset token for user: {UserId}", user.Id);
-                }
+                _logger.LogInformation("Generated password reset token for user: {UserId}", user.Id);
             }
+        }
 
-            return Ok(SuccessMessage(message));
-        }
-        catch (Exception ex)
-        {
-            return InternalServerError(ex, "An error occurred during forgot-password processing.");
-        }
+        return Ok(SuccessMessage(message));
     }
 
     [HttpPost("reset-password")]
     public async Task<ActionResult<ApiResponse<string>>> ResetPassword(ResetPasswordRequest request)
     {
-        try
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is null)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is null)
-            {
-                return BadRequest(ValidationFailure<string>(["Invalid email or token."]));
-            }
-
-            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
-            if (!result.Succeeded)
-            {
-                return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
-            }
-
-            _logger.LogInformation("Password reset completed for user: {UserId}", user.Id);
-
-            return Ok(SuccessMessage("Password has been reset successfully."));
+            return BadRequest(ValidationFailure<string>(["Invalid email or token."]));
         }
-        catch (Exception ex)
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        if (!result.Succeeded)
         {
-            return InternalServerError(ex, "An error occurred during password reset.");
+            return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
         }
+
+        _logger.LogInformation("Password reset completed for user: {UserId}", user.Id);
+
+        return Ok(SuccessMessage("Password has been reset successfully."));
     }
 
     [Authorize]
     [HttpPost("change-password")]
     public async Task<ActionResult<ApiResponse<string>>> ChangePassword(ChangePasswordRequest request)
     {
-        try
+        var jwtUnavailable = EnsureJwtConfigured<string>();
+        if (jwtUnavailable is not null)
         {
-            var userId = GetUserId(User);
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(Failure<string>("Unauthorized."));
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized(Failure<string>("Unauthorized."));
-            }
-
-            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
-            if (!result.Succeeded)
-            {
-                return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
-            }
-
-            _logger.LogInformation("Password changed for user: {UserId}", user.Id);
-
-            return Ok(SuccessMessage("Password changed successfully."));
+            return jwtUnavailable;
         }
-        catch (Exception ex)
+
+        var userId = GetUserId(User);
+        if (string.IsNullOrWhiteSpace(userId))
         {
-            return InternalServerError(ex, "An error occurred during password change.");
+            return Unauthorized(Failure<string>("Unauthorized."));
         }
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return Unauthorized(Failure<string>("Unauthorized."));
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+        if (!result.Succeeded)
+        {
+            return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
+        }
+
+        _logger.LogInformation("Password changed for user: {UserId}", user.Id);
+
+        return Ok(SuccessMessage("Password changed successfully."));
     }
 
     [HttpPost("confirm-email")]
     public async Task<ActionResult<ApiResponse<string>>> ConfirmEmail(ConfirmEmailRequest request)
     {
-        try
+        var user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
-            if (user is null)
-            {
-                return BadRequest(ValidationFailure<string>(["Invalid confirmation request."]));
-            }
-
-            var result = await _userManager.ConfirmEmailAsync(user, request.Token);
-            if (!result.Succeeded)
-            {
-                return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
-            }
-
-            _logger.LogInformation("Email confirmed for user: {UserId}", user.Id);
-
-            return Ok(SuccessMessage("Email confirmed successfully."));
+            return BadRequest(ValidationFailure<string>(["Invalid confirmation request."]));
         }
-        catch (Exception ex)
+
+        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        if (!result.Succeeded)
         {
-            return InternalServerError(ex, "An error occurred during email confirmation.");
+            return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
         }
+
+        _logger.LogInformation("Email confirmed for user: {UserId}", user.Id);
+
+        return Ok(SuccessMessage("Email confirmed successfully."));
     }
 
     [HttpPost("resend-confirmation")]
     public async Task<ActionResult<ApiResponse<string>>> ResendConfirmation(ResendConfirmationRequest request)
     {
-        try
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user is not null && !user.EmailConfirmed)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user is not null && !user.EmailConfirmed)
+            _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            if (_environment.IsDevelopment())
             {
-                _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-                if (_environment.IsDevelopment())
-                {
-                    _logger.LogInformation("Generated email confirmation token for user: {UserId}", user.Id);
-                }
+                _logger.LogInformation("Generated email confirmation token for user: {UserId}", user.Id);
             }
+        }
 
-            return Ok(SuccessMessage("If the account exists, a confirmation email will be sent."));
-        }
-        catch (Exception ex)
-        {
-            return InternalServerError(ex, "An error occurred while resending confirmation.");
-        }
+        return Ok(SuccessMessage("If the account exists, a confirmation email will be sent."));
     }
 
     [Authorize]
     [HttpPost("logout")]
     public async Task<ActionResult<ApiResponse<string>>> Logout()
     {
-        try
+        var jwtUnavailable = EnsureJwtConfigured<string>();
+        if (jwtUnavailable is not null)
         {
-            var userId = GetUserId(User);
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Unauthorized(Failure<string>("Unauthorized."));
-            }
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is null)
-            {
-                return Unauthorized(Failure<string>("Unauthorized."));
-            }
-
-            user.RefreshToken = null;
-            user.RefreshTokenExpiryTime = null;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
-            }
-
-            _logger.LogInformation("User logged out: {UserId}", user.Id);
-
-            return Ok(SuccessMessage("Logged out successfully."));
+            return jwtUnavailable;
         }
-        catch (Exception ex)
+
+        var userId = GetUserId(User);
+        if (string.IsNullOrWhiteSpace(userId))
         {
-            return InternalServerError(ex, "An error occurred during logout.");
+            return Unauthorized(Failure<string>("Unauthorized."));
         }
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return Unauthorized(Failure<string>("Unauthorized."));
+        }
+
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = null;
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
+        }
+
+        _logger.LogInformation("User logged out: {UserId}", user.Id);
+
+        return Ok(SuccessMessage("Logged out successfully."));
     }
 
     private AuthResponse CreateAuthResponse(
@@ -428,23 +395,6 @@ public class AuthController : ControllerBase
             FullName = user.FullName,
             Roles = [.. roles]
         };
-
-    private ActionResult InternalServerError(Exception ex, string message)
-    {
-        var referenceNumber = CreateReferenceNumber();
-        _logger.LogError(ex, "{Message} ReferenceNumber: {ReferenceNumber}", message, referenceNumber);
-
-        var problem = new ProblemDetails
-        {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "An unexpected error occurred.",
-            Detail = $"Reference number: {referenceNumber}"
-        };
-
-        problem.Extensions["referenceNumber"] = referenceNumber;
-
-        return StatusCode(StatusCodes.Status500InternalServerError, problem);
-    }
 
     private static ApiResponse<T> Success<T>(T data, string? message = null)
         => new()
@@ -478,8 +428,17 @@ public class AuthController : ControllerBase
             ValidationErrors = validationErrors
         };
 
-    private static string CreateReferenceNumber()
-        => Guid.NewGuid().ToString("N")[..12].ToUpperInvariant();
+    private ActionResult<ApiResponse<T>>? EnsureJwtConfigured<T>()
+    {
+        if (!string.IsNullOrWhiteSpace(_jwtOptions.Secret))
+        {
+            return null;
+        }
+
+        return StatusCode(
+            StatusCodes.Status503ServiceUnavailable,
+            Failure<T>("Authentication is not configured.", "AUTH_NOT_CONFIGURED"));
+    }
 
     private static string HashToken(string token)
         => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));

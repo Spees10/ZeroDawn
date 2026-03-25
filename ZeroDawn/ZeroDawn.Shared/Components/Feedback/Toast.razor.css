@@ -1,0 +1,67 @@
+.toast {
+    --toast-bg: color-mix(in srgb, #131922 90%, #ffffff 10%);
+    --toast-text: #f3f7fc;
+    --toast-muted: #c3cddd;
+    --toast-border: color-mix(in srgb, #ffffff 12%, transparent);
+    --toast-accent: #5aa8ff;
+
+    display: grid;
+    grid-template-columns: 0.35rem 1fr auto;
+    align-items: start;
+    overflow: hidden;
+    min-width: min(24rem, calc(100vw - 2rem));
+    border-radius: 1rem;
+    border: 1px solid var(--toast-border);
+    background: var(--toast-bg);
+    color: var(--toast-text);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+    animation: toast-slide-in 180ms ease-out;
+    pointer-events: auto;
+}
+
+.accent {
+    align-self: stretch;
+    background: var(--toast-accent);
+}
+
+.body {
+    padding: 0.85rem 0.95rem;
+}
+
+.title {
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+}
+
+.message {
+    color: var(--toast-muted);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.close-button {
+    border: 0;
+    background: transparent;
+    color: var(--toast-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0.75rem 0.9rem 0 0;
+}
+
+.info { --toast-accent: #5aa8ff; }
+.success { --toast-accent: #3bc781; }
+.warning { --toast-accent: #f1a93b; }
+.error { --toast-accent: #e4644d; }
+
+@keyframes toast-slide-in {
+    from {
+        opacity: 0;
+        transform: translate3d(1rem, -0.75rem, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}

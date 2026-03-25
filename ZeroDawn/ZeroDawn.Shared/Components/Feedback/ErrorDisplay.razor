@@ -1,0 +1,79 @@
+@namespace ZeroDawn.Shared.Components.Feedback
+
+<div class="error-display" role="alert" aria-live="assertive">
+    <div class="icon" aria-hidden="true">⚠️</div>
+
+    <div class="content">
+        <div class="header">
+            <h3>Something went wrong</h3>
+            @if (!string.IsNullOrWhiteSpace(ReferenceNumber))
+            {
+                <span class="reference">Ref: @ReferenceNumber</span>
+            }
+        </div>
+
+        <p class="message">@DisplayMessage</p>
+        <p class="support">Please contact support and share the reference number if the problem continues.</p>
+
+        @if (OnRetry.HasDelegate)
+        {
+            <button class="retry-button" type="button" @onclick="HandleRetry">Try Again</button>
+        }
+
+        @if (ShowTechnicalDetails && !string.IsNullOrWhiteSpace(TechnicalDetails))
+        {
+            <div class="technical-section">
+                <button class="toggle-button" type="button" @onclick="ToggleDetails">
+                    @(detailsVisible ? "Hide Technical Details" : "Show Technical Details")
+                </button>
+
+                @if (detailsVisible)
+                {
+                    <div class="technical-panel">
+                        <button class="copy-button" type="button" @onclick="ShowCopyHint">Copy Details</button>
+
+                        @if (copyHintVisible)
+                        {
+                            <p class="copy-hint">Clipboard copy needs host support. Select the details below and copy manually if nothing happens.</p>
+                        }
+
+                        <pre class="technical-details">@TechnicalDetails</pre>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public string? ReferenceNumber { get; set; }
+    [Parameter] public string? TechnicalDetails { get; set; }
+    [Parameter] public bool ShowTechnicalDetails { get; set; }
+    [Parameter] public EventCallback OnRetry { get; set; }
+
+    private bool detailsVisible;
+    private bool copyHintVisible;
+
+    private string DisplayMessage
+        => string.IsNullOrWhiteSpace(Message)
+            ? "An unexpected error occurred."
+            : Message;
+
+    private void ToggleDetails()
+    {
+        detailsVisible = !detailsVisible;
+        if (!detailsVisible)
+        {
+            copyHintVisible = false;
+        }
+    }
+
+    private void ShowCopyHint()
+    {
+        copyHintVisible = true;
+    }
+
+    private Task HandleRetry()
+        => OnRetry.InvokeAsync();
+}

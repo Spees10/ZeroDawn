@@ -1,0 +1,60 @@
+@implements IDisposable
+@namespace ZeroDawn.Shared.Components.Feedback
+@using ZeroDawn.Shared.Services
+@inject IToastService ToastService
+
+<div class="toast-container" aria-live="polite" aria-atomic="false">
+    @foreach (var toast in toasts)
+    {
+        <Toast Message="@toast.Message"
+               Type="@toast.Type"
+               DurationMs="@toast.DurationMs"
+               OnClose="@(() => RemoveToast(toast.Id))" />
+    }
+</div>
+
+@code {
+    private readonly List<ToastItem> toasts = [];
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnShow += ShowToast;
+    }
+
+    private void ShowToast(string message, ToastType type)
+    {
+        var toast = new ToastItem
+        {
+            Id = Guid.NewGuid(),
+            Message = message,
+            Type = type
+        };
+
+        toasts.Add(toast);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private Task RemoveToast(Guid id)
+    {
+        var removed = toasts.RemoveAll(toast => toast.Id == id);
+        if (removed > 0)
+        {
+            StateHasChanged();
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnShow -= ShowToast;
+    }
+
+    private sealed class ToastItem
+    {
+        public Guid Id { get; init; }
+        public string Message { get; init; } = string.Empty;
+        public ToastType Type { get; init; }
+        public int DurationMs { get; init; } = 4000;
+    }
+}

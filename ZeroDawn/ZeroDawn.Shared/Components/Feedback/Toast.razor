@@ -1,0 +1,71 @@
+@implements IDisposable
+@namespace ZeroDawn.Shared.Components.Feedback
+
+<div class="toast @TypeClass" role="status" aria-live="polite">
+    <div class="accent"></div>
+    <div class="body">
+        <div class="title">@Title</div>
+        <div class="message">@Message</div>
+    </div>
+    <button class="close-button" type="button" @onclick="CloseAsync" aria-label="Close">×</button>
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; } = "";
+    [Parameter] public ToastType Type { get; set; } = ToastType.Info;
+    [Parameter] public int DurationMs { get; set; } = 4000;
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private Timer? dismissTimer;
+    private bool closed;
+
+    private string Title => Type switch
+    {
+        ToastType.Success => "Success",
+        ToastType.Warning => "Warning",
+        ToastType.Error => "Error",
+        _ => "Info"
+    };
+
+    private string TypeClass => Type.ToString().ToLowerInvariant();
+
+    protected override void OnParametersSet()
+    {
+        ResetTimer();
+    }
+
+    private void ResetTimer()
+    {
+        dismissTimer?.Dispose();
+        closed = false;
+
+        if (DurationMs <= 0)
+        {
+            return;
+        }
+
+        dismissTimer = new Timer(async _ => await InvokeAsync(CloseAsync), null, DurationMs, Timeout.Infinite);
+    }
+
+    private async Task CloseAsync()
+    {
+        if (closed)
+        {
+            return;
+        }
+
+        closed = true;
+        dismissTimer?.Dispose();
+        dismissTimer = null;
+
+        if (OnClose.HasDelegate)
+        {
+            await OnClose.InvokeAsync();
+        }
+    }
+
+    public void Dispose()
+    {
+        dismissTimer?.Dispose();
+    }
+}
