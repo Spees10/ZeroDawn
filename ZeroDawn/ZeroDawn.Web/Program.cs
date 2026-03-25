@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.RateLimiting;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using ZeroDawn.Shared.Services;
+using ZeroDawn.Shared.Contracts.Common;
 using ZeroDawn.Web.Configuration;
 using ZeroDawn.Web.Components;
 using ZeroDawn.Web.Data;
@@ -98,6 +101,57 @@ try
 
     // Add device-specific services used by the ZeroDawn.Shared project
     builder.Services.AddSingleton<IFormFactor, FormFactor>();
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+        options.OnRejected = async (context, cancellationToken) =>
+        {
+            var httpContext = context.HttpContext;
+            if (httpContext.Response.HasStarted)
+            {
+                return;
+            }
+
+            httpContext.Features.Get<Microsoft.AspNetCore.Diagnostics.IStatusCodePagesFeature>()?.Enabled = false;
+            httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            httpContext.Response.ContentType = "application/json";
+
+            var response = new ApiResponse
+            {
+                Succeeded = false,
+                Error = "Too many requests. Please try again later.",
+                ErrorCode = "RATE_LIMIT_EXCEEDED"
+            };
+
+            await httpContext.Response.WriteAsync(
+                JsonSerializer.Serialize(
+                    response,
+                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }),
+                cancellationToken);
+        };
+
+        // Strict policy for auth endpoints: 5 requests per 60 seconds per IP
+        options.AddPolicy("auth-strict", context =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromSeconds(60),
+                    QueueLimit = 0
+                }));
+
+        // Moderate policy for resend/confirm: 3 requests per 120 seconds per IP
+        options.AddPolicy("auth-resend", context =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 3,
+                    Window = TimeSpan.FromSeconds(120),
+                    QueueLimit = 0
+                }));
+    });
 
     var app = builder.Build();
     app.UseMiddleware<CorrelationIdMiddleware>();
@@ -125,7 +179,9 @@ try
     app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
     app.UseHttpsRedirection();
 
+    app.UseRouting();
     app.UseAntiforgery();
+    app.UseRateLimiter();
 
     if (isJwtConfigured)
     {

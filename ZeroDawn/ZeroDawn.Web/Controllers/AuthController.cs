@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ZeroDawn.Shared.Contracts.Auth;
@@ -52,6 +53,7 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
+    [EnableRateLimiting("auth-strict")]
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Login(LoginRequest request)
     {
@@ -104,6 +106,7 @@ public class AuthController : ControllerBase
         return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
     }
 
+    [EnableRateLimiting("auth-strict")]
     [HttpPost("register")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Register(RegisterRequest request)
     {
@@ -243,6 +246,7 @@ public class AuthController : ControllerBase
         return Ok(Success(CreateAuthResponse(user, roles, accessToken, refreshToken)));
     }
 
+    [EnableRateLimiting("auth-strict")]
     [HttpPost("forgot-password")]
     public async Task<ActionResult<ApiResponse<string>>> ForgotPassword(ForgotPasswordRequest request)
     {
@@ -259,6 +263,7 @@ public class AuthController : ControllerBase
         return Ok(SuccessMessage(message));
     }
 
+    [EnableRateLimiting("auth-strict")]
     [HttpPost("reset-password")]
     public async Task<ActionResult<ApiResponse<string>>> ResetPassword(ResetPasswordRequest request)
     {
@@ -312,6 +317,7 @@ public class AuthController : ControllerBase
         return Ok(SuccessMessage("Password changed successfully."));
     }
 
+    [EnableRateLimiting("auth-resend")]
     [HttpPost("confirm-email")]
     public async Task<ActionResult<ApiResponse<string>>> ConfirmEmail(ConfirmEmailRequest request)
     {
@@ -332,6 +338,7 @@ public class AuthController : ControllerBase
         return Ok(SuccessMessage("Email confirmed successfully."));
     }
 
+    [EnableRateLimiting("auth-resend")]
     [HttpPost("resend-confirmation")]
     public async Task<ActionResult<ApiResponse<string>>> ResendConfirmation(ResendConfirmationRequest request)
     {
