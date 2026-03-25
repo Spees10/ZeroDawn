@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using System.Threading.RateLimiting;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +68,16 @@ try
 
     builder.Services.AddScoped<IEmailService, MailKitEmailService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddLocalization(options =>
+        options.ResourcesPath = "Localization/Resources");
+
+    var supportedCultures = new[] { "en", "ar" };
+    builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        options.SetDefaultCulture("en");
+        options.AddSupportedCultures(supportedCultures);
+        options.AddSupportedUICultures(supportedCultures);
+    });
 
     if (isJwtConfigured)
     {
@@ -180,6 +191,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseRouting();
+    app.UseRequestLocalization();
     app.UseAntiforgery();
     app.UseRateLimiter();
 
