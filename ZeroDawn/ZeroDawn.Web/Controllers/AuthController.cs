@@ -1,6 +1,7 @@
 #nullable enable
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +24,7 @@ namespace ZeroDawn.Web.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IEmailService _emailService;
     private readonly ITokenService _tokenService;
     private readonly ApplicationDbContext _dbContext;
     private readonly AppOptions _appOptions;
@@ -32,6 +34,7 @@ public class AuthController : ControllerBase
 
     public AuthController(
         UserManager<ApplicationUser> userManager,
+        IEmailService emailService,
         ITokenService tokenService,
         ApplicationDbContext dbContext,
         IOptions<AppOptions> appOptions,
@@ -40,6 +43,7 @@ public class AuthController : ControllerBase
         ILogger<AuthController> logger)
     {
         _userManager = userManager;
+        _emailService = emailService;
         _tokenService = tokenService;
         _dbContext = dbContext;
         _appOptions = appOptions.Value;
@@ -103,12 +107,6 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<ApiResponse<AuthResponse>>> Register(RegisterRequest request)
     {
-        var jwtUnavailable = EnsureJwtConfigured<AuthResponse>();
-        if (jwtUnavailable is not null)
-        {
-            return jwtUnavailable;
-        }
-
         if (!_appOptions.AllowSelfRegistration)
         {
             return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Self-registration is disabled."));
@@ -140,7 +138,9 @@ public class AuthController : ControllerBase
 
         if (_appOptions.RequireEmailConfirmation)
         {
-            _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
+            await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
 
             await transaction.CommitAsync();
 
@@ -153,8 +153,15 @@ public class AuthController : ControllerBase
             });
         }
 
-        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+        var jwtUnavailable = EnsureJwtConfigured<AuthResponse>();
+        if (jwtUnavailable is not null)
+        {
+            await transaction.RollbackAsync();
+            return jwtUnavailable;
+        }
+
+        var autoConfirmToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmResult = await _userManager.ConfirmEmailAsync(user, autoConfirmToken);
         if (!confirmResult.Succeeded)
         {
             await transaction.RollbackAsync();
@@ -244,12 +251,9 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not null && user.IsActive)
         {
-            _ = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            if (_environment.IsDevelopment())
-            {
-                _logger.LogInformation("Generated password reset token for user: {UserId}", user.Id);
-            }
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = BuildResetPasswordLink(user.Email!, resetToken);
+            await _emailService.SendPasswordResetEmailAsync(user.Email!, user.FullName, resetLink);
         }
 
         return Ok(SuccessMessage(message));
@@ -334,12 +338,9 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not null && !user.EmailConfirmed)
         {
-            _ = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            if (_environment.IsDevelopment())
-            {
-                _logger.LogInformation("Generated email confirmation token for user: {UserId}", user.Id);
-            }
+            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
+            await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
         }
 
         return Ok(SuccessMessage("If the account exists, a confirmation email will be sent."));
@@ -450,6 +451,12 @@ public class AuthController : ControllerBase
             Convert.FromHexString(storedHash),
             Convert.FromHexString(candidateHash));
     }
+
+    private string BuildConfirmationLink(string userId, string token)
+        => $"{_appOptions.BaseUrl.TrimEnd('/')}/confirm-email?userId={Uri.EscapeDataString(userId)}&token={Uri.EscapeDataString(token)}";
+
+    private string BuildResetPasswordLink(string email, string token)
+        => $"{_appOptions.BaseUrl.TrimEnd('/')}/reset-password?email={Uri.EscapeDataString(email)}&token={Uri.EscapeDataString(token)}";
 
     private static string? GetUserId(ClaimsPrincipal principal)
         => principal.FindFirstValue(ClaimTypes.NameIdentifier)

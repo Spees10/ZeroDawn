@@ -62,6 +62,7 @@ try
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+    builder.Services.AddScoped<IEmailService, MailKitEmailService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
 
     if (isJwtConfigured)
