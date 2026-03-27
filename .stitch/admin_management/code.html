@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#4659a9",
+              "primary-container": "#5d6fc1",
+              "surface-dim": "#d5d8f4",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#5fdbbb",
+              "on-background": "#161a2e",
+              "surface-container-low": "#f3f2ff",
+              "surface-container-high": "#e4e7ff",
+              "inverse-surface": "#2b2f44",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#3f6b61",
+              "surface-container-highest": "#dee1fc",
+              "inverse-primary": "#b8c3ff",
+              "surface-container": "#ececff",
+              "on-tertiary-fixed-variant": "#005141",
+              "background": "#fbf8ff",
+              "primary-fixed": "#dde1ff",
+              "surface-bright": "#fbf8ff",
+              "tertiary": "#006955",
+              "on-primary-fixed-variant": "#2d408f",
+              "secondary-container": "#bae9dd",
+              "outline": "#757682",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#001355",
+              "primary-fixed-dim": "#b8c3ff",
+              "secondary-fixed-dim": "#a2d0c4",
+              "surface": "#fbf8ff",
+              "secondary": "#3b665d",
+              "outline-variant": "#c5c5d3",
+              "on-secondary-fixed": "#00201b",
+              "surface-variant": "#dee1fc",
+              "secondary-fixed": "#bdece0",
+              "on-surface": "#161a2e",
+              "on-tertiary-fixed": "#002019",
+              "on-surface-variant": "#454651",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#efefff",
+              "on-primary-container": "#fffbff",
+              "on-error": "#ffffff",
+              "primary": "#4456a6",
+              "on-secondary-fixed-variant": "#224e45",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#00846c",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#7df8d7",
+              "on-tertiary-container": "#f4fff9"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-[#fbf8ff]/80 dark:bg-[#161a2e]/80 backdrop-blur-md w-full h-16 border-b border-[#4456a6]/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)] sticky top-0 z-50 flex items-center justify-between px-8 flex-row-reverse">
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-[#4456a6] dark:text-[#6072C4] cursor-pointer hover:bg-[#4456a6]/5 p-2 rounded-full transition-colors active:scale-95 duration-200" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</div>
+<span class="material-symbols-outlined text-[#4456a6] dark:text-[#6072C4] cursor-pointer hover:bg-[#4456a6]/5 p-2 rounded-full transition-colors active:scale-95 duration-200" data-icon="settings">settings</span>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional man in a sharp suit with a neutral confident expression, studio lighting, high-end editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWT_KgC4WzZwUaSZHFqahLnd4WTMAJ1ccvHvk7ZYE99GL4s1qsGRpoMAjK6RofLs4wOiYu8R3KaCw32LLGuKD2WlQONC1LYyzjYIGc2oleIeDT2ch48wjZtLImG-KXFYWnnn_zg8ZvcZM05HRZQb5hBDW7IrAM9eQcyk-5iRSXnMo5HAwdj9He3mOtPty4pTHu0GTCZg9mgozS_Ewe96fqjT_9m0NT5X9f2NE82W-xKm4vFbbBNY2nPDJUc0TDWR7cnBAOTdG58RMy"/>
+</div>
+</div>
+<div class="flex items-center gap-8 font-manrope text-sm font-medium">
+<div class="relative group h-16 flex items-center">
+<input class="bg-surface-container-low border-none rounded-lg px-4 py-1.5 w-64 focus:ring-1 focus:ring-primary text-xs transition-all" placeholder="Search resources..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 text-outline text-lg pointer-events-none" data-icon="search">search</span>
+</div>
+</div>
+<div class="text-xl font-bold tracking-tight text-[#4456a6] dark:text-[#6072C4]">
+            ZeroDawn
+        </div>
+</nav>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<aside class="bg-[#fbf8ff] dark:bg-[#161a2e] h-screen w-64 border-l border-[#4456a6]/10 fixed right-0 top-0 hidden md:flex flex-col py-6 px-4 z-40">
+<div class="mb-10 flex flex-col items-center text-center">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-3 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-on-primary text-2xl" data-icon="diamond" data-weight="fill" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<h2 class="text-lg font-black text-[#4456a6] dark:text-[#6072C4]">ZeroDawn</h2>
+<p class="text-[10px] uppercase tracking-widest text-outline font-bold">Admin Workspace</p>
+</div>
+<nav class="flex-1 space-y-1 font-manrope text-sm font-semibold">
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboards</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Users</span>
+</a>
+<a class="flex items-center gap-3 bg-[#4456a6]/10 text-[#4456a6] dark:text-[#6072C4] rounded-lg px-4 py-3 active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings" data-weight="fill" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span>Admins</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span>Health</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant/10 pt-6 space-y-1">
+<button class="w-full bg-primary text-on-primary py-2.5 rounded-lg text-xs font-bold mb-4 shadow-md shadow-primary/10 hover:brightness-110 transition-all">
+                    New Report
+                </button>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-error/80 px-4 py-3 hover:bg-error/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:mr-64 p-8 bg-surface">
+<!-- Header Section -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-3xl font-extrabold text-on-surface tracking-tight mb-2">Admin Management</h1>
+<p class="text-secondary max-w-xl leading-relaxed">System-level role assignments and permission oversight. Maintain administrative integrity through granular control of SuperAdmin and Operational roles.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 bg-surface-container-high text-on-secondary-container rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                        Filters
+                    </button>
+<button class="px-5 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold flex items-center gap-2 hover:brightness-110 shadow-lg shadow-primary/10 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="person_add">person_add</span>
+                        Assign New Admin
+                    </button>
+</div>
+</div>
+<!-- Stats Bar (Asymmetric Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)]">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-1">Total Admins</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-primary">24</span>
+<span class="text-[10px] text-tertiary font-bold">+2 this month</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)]">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-1">Active Sessions</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-primary">08</span>
+<span class="text-[10px] text-outline font-bold">Current traffic</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)] md:col-span-2 flex items-center justify-between">
+<div>
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-1">Security Health</p>
+<div class="flex items-center gap-3">
+<span class="text-2xl font-black text-on-surface">98.4%</span>
+<div class="flex gap-1">
+<div class="w-1.5 h-6 bg-tertiary rounded-full"></div>
+<div class="w-1.5 h-6 bg-tertiary rounded-full"></div>
+<div class="w-1.5 h-6 bg-tertiary rounded-full"></div>
+<div class="w-1.5 h-6 bg-tertiary/30 rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-outline uppercase">Next Review</p>
+<p class="text-sm font-bold text-secondary">Oct 24, 2023</p>
+</div>
+</div>
+</div>
+<!-- Operational Table Section -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 overflow-hidden shadow-[0_40px_80px_rgba(22,26,46,0.03)]">
+<div class="px-8 py-6 flex items-center justify-between border-b border-outline-variant/5">
+<div class="flex items-center gap-4">
+<h3 class="font-bold text-on-surface">Active Administrators</h3>
+<div class="h-5 w-[1px] bg-outline-variant/30"></div>
+<div class="flex gap-2">
+<span class="px-2.5 py-1 bg-primary/5 text-primary text-[10px] font-black rounded-md uppercase">SuperAdmin: 4</span>
+<span class="px-2.5 py-1 bg-secondary/5 text-secondary text-[10px] font-black rounded-md uppercase">Standard: 20</span>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors" data-icon="file_download">file_download</span>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors" data-icon="print">print</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-right">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Admin User</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Designation</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Access Level</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Last Login</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Status</th>
+<th class="px-8 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<!-- Admin Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="professional portrait of a male tech executive with glasses, clean desk background, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAId66GoHHQgREycK_imY2OhwMKdAOEgEf_4EkLZbypGuo8LU8aPPW1ouPR-ncqlArzZbvYTPkvTokC7u4SwV1xLunMkWKOxJt99ijjW84a895QYTQrkfMeqIWfVElpcA3S7yRLsnLSthSOEjVHIbyDNeuNSs27gDQSvPpjOoAxzavTYtsVPlp6vbaJ6NZpnmjuU2eLMOr61L6Yw6vMiuMzj8UNfJ9pHCRbatNrHtSB-UgC9GEthjx45E6_11R-ia2AOFPoC5i59vjZ"/>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Julian Marcelle</p>
+<p class="text-xs text-outline">julian.m@zerodawn.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-semibold text-secondary">Chief Operations</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-xs font-black text-error/80 uppercase">SuperAdmin</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-medium text-on-surface">12 mins ago</p>
+<p class="text-[10px] text-outline">IP: 192.168.1.45</p>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded-full">ACTIVE</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="shield_person">shield_person</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-1.5 hover:bg-error/5 rounded transition-colors text-outline hover:text-error">
+<span class="material-symbols-outlined text-xl" data-icon="lock">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Admin Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="professional woman in corporate attire, focused expression, high-key bright office background, cinematic depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6k7dojSkReTuse30TnyoeNhFgA0uBfxZQOoHKT7_-Cpg2YIC8rlqtoPSyo7XJjJj5nkRPPm0DoTUXJ02ounkBSN3NBKaaCGxMqDBscTpToeJfjcfGnbXb_w9P-hL1qJTUNEvqxhpWqalDS5lPdsGm4NOdzVk2uTrdqbwotURv0MrFiPfGELIakIov4yv4aIVWIn4OaHti3wOO7jrKHmzWXZFvn8h3rXdLzhtQj8EVwQerF1kNjjOT29eLFXlBBHdFOxjFrccoTI-P"/>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Sarah Al-Fayed</p>
+<p class="text-xs text-outline">sarah.a@zerodawn.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-semibold text-secondary">Security Lead</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-xs font-black text-primary uppercase">SysAdmin</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-medium text-on-surface">2 hours ago</p>
+<p class="text-[10px] text-outline">IP: 10.0.0.82</p>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded-full">ACTIVE</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="shield_person">shield_person</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-1.5 hover:bg-error/5 rounded transition-colors text-outline hover:text-error">
+<span class="material-symbols-outlined text-xl" data-icon="lock">lock</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Admin Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg overflow-hidden border border-outline-variant/20">
+<img alt="Admin" class="w-full h-full object-cover" data-alt="executive male portrait in minimalist setting, neutral tones, high contrast, clean professional aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdL1q7oFe-7kX4_i_-8LnJg1n5WtPnVCiUAH5Yhn-pIUIKK3sPGhy3w4ZYKAQhHJ6oBFbtxv0zBpSUR4go183WipMw68VMoCukCMjAmSHFDizq_d9O31NFH4l9EggO6DjD4XPsRHOgxAd9OLBZGLi8cBdjny-HpOsJ569_izzG1tG6GNlRbnK5Lx2bcl0UMUOm1a127o7Jy3ONerFLJ4MFthnx0rdtK3q30De1OXJnSy9S7QlbRzYah_u1gGqplhoZbSCiVEXgbtBv"/>
+</div>
+<div>
+<p class="font-bold text-sm text-on-surface">Leo Sterling</p>
+<p class="text-xs text-outline">leo.s@zerodawn.io</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-semibold text-secondary">Database Architect</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="text-xs font-black text-outline uppercase">Operator</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-xs font-medium text-on-surface">Yesterday, 18:30</p>
+<p class="text-[10px] text-outline">IP: 172.16.254.1</p>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-outline-variant/20 text-outline text-[10px] font-bold rounded-full">INACTIVE</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="shield_person">shield_person</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-high rounded transition-colors text-outline hover:text-primary">
+<span class="material-symbols-outlined text-xl" data-icon="edit_square">edit_square</span>
+</button>
+<button class="p-1.5 hover:bg-error/5 rounded transition-colors text-outline hover:text-error">
+<span class="material-symbols-outlined text-xl" data-icon="lock">lock</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-4 bg-surface-container-low/30 flex items-center justify-between border-t border-outline-variant/5">
+<p class="text-xs font-semibold text-outline">Showing 1-3 of 24 Administrators</p>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded text-outline transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-on-primary rounded font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-high rounded font-bold text-xs">2</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-high rounded font-bold text-xs">3</button>
+<button class="p-2 hover:bg-surface-container-high rounded text-outline transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Security Log Summary (Asymmetric Side Info) -->
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-2xl border border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-bold text-on-surface">Recent Privilege Escalations</h4>
+<a class="text-xs font-bold text-primary hover:underline" href="#">View All Logs</a>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-4 p-4 rounded-xl bg-error/5 border border-error/10">
+<span class="material-symbols-outlined text-error mt-0.5" data-icon="warning">warning</span>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Unauthorized Access Attempt</p>
+<p class="text-xs text-secondary mb-2">User Julian Marcelle attempted to access the Encrypted Key Store without secondary 2FA verification.</p>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-black text-outline uppercase tracking-tight">Today, 09:12 AM</span>
+<span class="px-2 py-0.5 bg-error text-on-error text-[9px] font-bold rounded">BLOCKED</span>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<span class="material-symbols-outlined text-primary mt-0.5 group-hover:scale-110 transition-transform" data-icon="verified_user">verified_user</span>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Role Modification: Sarah Al-Fayed</p>
+<p class="text-xs text-secondary">Assigned 'Audit Manager' additional scope for the regional cloud infrastructure.</p>
+<span class="text-[10px] font-black text-outline uppercase tracking-tight">Yesterday, 14:45 PM</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary-container p-8 rounded-2xl text-on-primary-container relative overflow-hidden">
+<!-- Texture Overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+<h4 class="text-lg font-black mb-4 relative z-10">Access Audit Pending</h4>
+<p class="text-sm opacity-90 leading-relaxed mb-6 relative z-10">Quarterly administrative review is due in 4 days. Please ensure all inactive SuperAdmin accounts are flagged for rotation.</p>
+<button class="w-full bg-on-primary-container text-primary-container py-3 rounded-lg text-sm font-bold hover:bg-white transition-all relative z-10">
+                        Initiate Review
+                    </button>
+<div class="mt-8 flex -space-x-3 space-x-reverse relative z-10">
+<img alt="reviewer" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" data-alt="male headshot for admin dashboard profile circular frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGmyFfSKv-c61YHJDk2T8tR9SoFbyoqMEX1o7imRmIiT2KKS7Zem_qYZ32YoCWEAjF2XTOG0EwWCR0EciOhYqGwmfQt5jhpv3Cp-ympgFSfWc0DDObyGrrg5HSvhdEuCKQcQVAbJmMJDJ2VVe8BG7RhzPdGOPh2LJdY4TTGYQFAFVlNaSjg9Zb3B2sUSdu7Wq-uQ2Ly8jn92CevUW7WmjD2y1bqwaYSupWDLhoSGlTKcqHQw2EpRuaU1H3XG3QoHgnCkdL1UiYrMuU"/>
+<img alt="reviewer" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" data-alt="female headshot for admin dashboard profile circular frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgESPbhczVOyMciUc0u-FFHhYG8kIn1QbjXVATfJfadT03Xafodce9tFxd7MA8yNyzGlwNi6Ooj6AjxcdkyXKLqgDiGgObPz5-kyM7l_jvir-7no69ydISJlnYSwVLgcyT54IhcUFgRp-nxftB3u-EDLDRah7cTr5gdvUsf7ijeq0joaYafexdqOIc0yOdIuYdSTdAr5_nkflXYm450T3t6rN5eTmwJXtow6LlYQZiB2_31lV-acvt4urTguJ9oGrA4LJM6VT4_hmy"/>
+<img alt="reviewer" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" data-alt="male headshot for admin dashboard profile circular frame" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPiBTm9gWvVu2qomNTEyBhVrAiz-0uP0wqO157-VKbnCkpJ4rdsi244B1Tp4DHBKn6zdInJF55FFtUDPDMpP8Y1SI0aU59FggyFQXYTHP_Sl903onbuL20MSUWgH6GbAtpr5FpRYaB0ARRka2Bi49G2NCOnjcWtVrSC_mcokmBZQlNj799iqtOJdZj2p7nrYkW5hJH2y6fY4ct2N4G2PoeIkGy-XdAZ6Qyfm3GhKhRL0csqcRhvFJHM-OBk2ZzTyoLdo0vyFrmddUc"/>
+<div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold border-2 border-primary-container">+5</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Mobile Navigation (Bottom) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-[#fbf8ff]/95 backdrop-blur-lg border-t border-[#4456a6]/10 flex items-center justify-around h-16 px-4 z-50">
+<a class="flex flex-col items-center gap-1 text-[#4456a6] font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span class="text-[10px]">Admins</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-[10px]">Users</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-[10px]">Logs</span>
+</a>
+</nav>
+</body></html>

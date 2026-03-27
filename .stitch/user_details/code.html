@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#4659a9",
+              "primary-container": "#5d6fc1",
+              "surface-dim": "#d5d8f4",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#5fdbbb",
+              "on-background": "#161a2e",
+              "surface-container-low": "#f3f2ff",
+              "surface-container-high": "#e4e7ff",
+              "inverse-surface": "#2b2f44",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#3f6b61",
+              "surface-container-highest": "#dee1fc",
+              "inverse-primary": "#b8c3ff",
+              "surface-container": "#ececff",
+              "on-tertiary-fixed-variant": "#005141",
+              "background": "#fbf8ff",
+              "primary-fixed": "#dde1ff",
+              "surface-bright": "#fbf8ff",
+              "tertiary": "#006955",
+              "on-primary-fixed-variant": "#2d408f",
+              "secondary-container": "#bae9dd",
+              "outline": "#757682",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#001355",
+              "primary-fixed-dim": "#b8c3ff",
+              "secondary-fixed-dim": "#a2d0c4",
+              "surface": "#fbf8ff",
+              "secondary": "#3b665d",
+              "outline-variant": "#c5c5d3",
+              "on-secondary-fixed": "#00201b",
+              "surface-variant": "#dee1fc",
+              "secondary-fixed": "#bdece0",
+              "on-surface": "#161a2e",
+              "on-tertiary-fixed": "#002019",
+              "on-surface-variant": "#454651",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#efefff",
+              "on-primary-container": "#fffbff",
+              "on-error": "#ffffff",
+              "primary": "#4456a6",
+              "on-secondary-fixed-variant": "#224e45",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#00846c",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#7df8d7",
+              "on-tertiary-container": "#f4fff9"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed right-0 top-0 h-full flex flex-col py-6 px-4 z-40 bg-[#fbf8ff] dark:bg-[#161a2e] h-screen w-64 border-l border-[#4456a6]/10 font-manrope text-sm font-semibold">
+<div class="flex flex-col items-center gap-1 mb-10 px-4">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-on-primary text-2xl" data-icon="admin_panel_settings">admin_panel_settings</span>
+</div>
+<h1 class="text-lg font-black text-[#4456a6] dark:text-[#6072C4]">ZeroDawn</h1>
+<p class="text-[10px] text-secondary opacity-70">Admin Workspace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboards</span>
+</a>
+<a class="flex items-center gap-3 bg-[#4456a6]/10 text-[#4456a6] dark:text-[#6072C4] rounded-lg px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Users</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span>Admins</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span>Health</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-outline-variant/20 flex flex-col gap-1">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold mb-4 shadow-sm hover:opacity-90 transition-opacity">
+                New Report
+            </button>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 mr-64">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex items-center justify-between px-8 w-full sticky top-0 z-50 flex-row-reverse bg-[#fbf8ff]/80 dark:bg-[#161a2e]/80 backdrop-blur-md w-full h-16 border-b border-[#4456a6]/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)]">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="p-2 text-secondary hover:bg-[#4456a6]/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-secondary hover:bg-[#4456a6]/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional man in a minimal studio setting with soft side lighting and a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbwpxz08qreWyglrQr0ao-a6kvn3aemYq1KCp8b12FMma9rYxvxXXQnVDyIbPKcfeeuu9ach3UYG-UQCM6JqZ7TxW8ndomEcXXAlZXuLqKXQs7A82UzoWwYtB1uhVByqMYZQtEMQyxcJEcsLG5ZVv2kjgoBqd5Lj4Gq876iDvgE8xvmHB9rodM6hkZD45F-eUFYPQRqaR2Q_Jmvz_vjtJLJQ2rIfl3CPa0RJjOja01mV2WPISMhOf7mZYznOtZmTqdGI_TlVL77xY5"/>
+</div>
+</div>
+<div class="flex-1 flex justify-start pr-12">
+<div class="relative w-96 group">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pr-10 pl-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-outline-variant transition-all" placeholder="بحث عن مستخدم أو ملف..." type="text"/>
+</div>
+</div>
+<div class="text-xl font-bold tracking-tight text-[#4456a6] dark:text-[#6072C4] font-manrope">ZeroDawn</div>
+</header>
+<!-- Profile Page Content -->
+<div class="p-10 space-y-10 max-w-7xl mx-auto">
+<!-- Breadcrumbs & Actions -->
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-sm text-secondary">
+<span>إدارة المستخدمين</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_left">chevron_left</span>
+<span class="text-primary font-bold">تفاصيل الملف الشخصي</span>
+</div>
+<div class="flex gap-3">
+<button class="px-5 py-2 text-sm font-semibold text-secondary hover:bg-surface-container transition-colors rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="archive">archive</span>
+                        أرشفة الحساب
+                    </button>
+<button class="px-5 py-2 text-sm font-semibold text-on-error bg-error hover:opacity-90 transition-opacity rounded-lg flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="block">block</span>
+                        حظر المستخدم
+                    </button>
+<button class="px-5 py-2 text-sm font-semibold text-on-primary bg-primary hover:opacity-90 transition-opacity rounded-lg flex items-center gap-2 shadow-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+                        تعديل البيانات
+                    </button>
+</div>
+</div>
+<!-- Identity Block (Asymmetric Bento-ish Layout) -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Main Identity Card -->
+<div class="col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-[0_24px_40px_rgba(22,26,46,0.04)] flex gap-10">
+<div class="relative group">
+<div class="w-40 h-40 rounded-2xl overflow-hidden ring-4 ring-primary-container/10">
+<img alt="Main Profile" class="w-full h-full object-cover" data-alt="Professional studio headshot of a smiling man wearing a tailored charcoal suit against a minimal lavender grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf_ZYE5i4j1deBQJAqSmj0xwiX6-qsRylp6BJl_Zlcp5E8nVg-_So-0hy3H8Vos9G-7RTH5Qr6c7YC2EMOXYhZtHzeIYfsmR0u7-h13HrfD_x_tV36W1uwbahlcYY2jqdwZ1B_34KIc3TpXgcEtMgPWQL2lu23FRGodFi1XZMzK_M1zIR7-ALmznSjBuKg6jZv8S7w8MJ-tyagLzVMMNOoV4tbZMb1Y37YdxemzjvCx1qq6AetaToYYzQcAqvwf8ML7W5YgqPlFGdT"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-tertiary text-on-tertiary p-2 rounded-lg shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex items-center gap-4 mb-2">
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight">أحمد كمال بن يوسف</h2>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-bold rounded-full">نشط</span>
+</div>
+<p class="text-secondary font-medium text-lg mb-6">كبير مهندسي البرمجيات - قسم البنية التحتية</p>
+<div class="grid grid-cols-3 gap-6">
+<div class="space-y-1">
+<p class="text-[10px] uppercase tracking-widest text-outline font-bold">المعرف الرقمي</p>
+<p class="font-mono text-sm text-on-surface-variant">ZD-998-021</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase tracking-widest text-outline font-bold">البريد الإلكتروني</p>
+<p class="text-sm text-on-surface-variant">ahmed.y@zerodawn.io</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase tracking-widest text-outline font-bold">الموقع الجغرافي</p>
+<p class="text-sm text-on-surface-variant">الرياض، المملكة العربية السعودية</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Status & Metadata Card -->
+<div class="col-span-4 bg-primary-container text-on-primary-container rounded-xl p-8 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-8">
+<span class="text-xs font-bold uppercase tracking-widest opacity-80">إحصائيات الوصول</span>
+<span class="material-symbols-outlined opacity-60" data-icon="security">security</span>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-on-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</div>
+<div>
+<p class="text-xs opacity-70">آخر تسجيل دخول</p>
+<p class="font-bold">منذ ساعتين (14:30)</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-on-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+</div>
+<div>
+<p class="text-xs opacity-70">تاريخ الانضمام</p>
+<p class="font-bold">12 نوفمبر 2021</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-on-primary-container/10">
+<div class="flex justify-between items-center text-sm">
+<span>مستوى الصلاحية</span>
+<span class="font-bold">إداري مستوى 4</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Roles & Permissions Card -->
+<div class="col-span-4 space-y-6">
+<div class="bg-surface-container-low rounded-xl p-6">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="shield_person">shield_person</span>
+<h3 class="font-bold text-on-surface">الأدوار والصلاحيات</h3>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-sm font-semibold">مسؤول النظام الرئيسي</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]" data-icon="info">info</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-sm font-semibold">مدير قاعدة البيانات</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]" data-icon="info">info</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest rounded-lg">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-sm font-semibold">مراقب سجلات الأمان</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]" data-icon="info">info</span>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-primary font-bold text-xs uppercase tracking-widest hover:bg-primary/5 transition-colors rounded">
+                            إدارة الصلاحيات
+                        </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-4 text-error">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<h3 class="font-bold">منطقة الخطر</h3>
+</div>
+<p class="text-xs text-secondary mb-4">هذا الإجراء سيقوم بتعطيل كافة مفاتيح الوصول الخاصة بالمستخدم بشكل فوري.</p>
+<button class="w-full py-3 border-2 border-error/20 text-error font-bold rounded-lg hover:bg-error/5 transition-colors">
+                            تعطيل كافة الجلسات
+                        </button>
+</div>
+</div>
+<!-- Recent Activity / Logs (Layered List) -->
+<div class="col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-[0_24px_40px_rgba(22,26,46,0.04)]">
+<div class="flex justify-between items-center mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="history">history</span>
+<h3 class="font-bold text-lg text-on-surface">سجل النشاط الأخير</h3>
+</div>
+<button class="text-xs font-bold text-secondary flex items-center gap-1 hover:text-primary transition-colors">
+                            مشاهدة السجل الكامل
+                            <span class="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+<div class="space-y-0">
+<!-- Activity Item 1 -->
+<div class="group flex items-center gap-6 py-4 px-4 hover:bg-surface-container-low transition-colors rounded-xl">
+<div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/10"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">تحديث إعدادات جدار الحماية</p>
+<p class="text-xs text-secondary mt-1">قام المستخدم بتعديل قواعد الوصول للمنافذ 8080 و 443</p>
+</div>
+<div class="text-left">
+<p class="text-[10px] font-bold text-outline">منذ 45 دقيقة</p>
+<p class="text-[10px] text-secondary font-mono">IP: 192.168.1.104</p>
+</div>
+</div>
+<!-- Spacing 6 via Dividerless Tonal Layer -->
+<div class="h-4"></div>
+<!-- Activity Item 2 -->
+<div class="group flex items-center gap-6 py-4 px-4 hover:bg-surface-container-low transition-colors rounded-xl">
+<div class="w-2 h-2 rounded-full bg-primary ring-4 ring-primary/10"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">تصدير تقرير المستخدمين الأسبوعي</p>
+<p class="text-xs text-secondary mt-1">تم إنشاء ملف CSV بنجاح وتحميله للجهاز المحلي</p>
+</div>
+<div class="text-left">
+<p class="text-[10px] font-bold text-outline">الأمس، 11:20 م</p>
+<p class="text-[10px] text-secondary font-mono">IP: 192.168.1.104</p>
+</div>
+</div>
+<div class="h-4"></div>
+<!-- Activity Item 3 -->
+<div class="group flex items-center gap-6 py-4 px-4 hover:bg-surface-container-low transition-colors rounded-xl">
+<div class="w-2 h-2 rounded-full bg-secondary ring-4 ring-secondary/10"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">فشل محاولة تسجيل الدخول</p>
+<p class="text-xs text-error font-medium mt-1">محاولة غير مصرح بها من موقع جغرافي مختلف</p>
+</div>
+<div class="text-left">
+<p class="text-[10px] font-bold text-outline">15 نوفمبر 2023</p>
+<p class="text-[10px] text-error font-mono">IP: 203.0.113.12</p>
+</div>
+</div>
+<div class="h-4"></div>
+<!-- Activity Item 4 -->
+<div class="group flex items-center gap-6 py-4 px-4 hover:bg-surface-container-low transition-colors rounded-xl">
+<div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/10"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">إنشاء مفتاح API جديد</p>
+<p class="text-xs text-secondary mt-1">توليد مفتاح وصول لمنصة التكامل الإنتاجي</p>
+</div>
+<div class="text-left">
+<p class="text-[10px] font-bold text-outline">12 نوفمبر 2023</p>
+<p class="text-[10px] text-secondary font-mono">IP: 192.168.1.104</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Notes & Documentation Section -->
+<div class="bg-surface-container-low rounded-2xl p-8">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="notes">notes</span>
+<h3 class="font-bold text-on-surface">ملاحظات الإدارة</h3>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<div class="col-span-2 space-y-4">
+<textarea class="w-full h-32 bg-surface-container-lowest border-outline-variant/20 rounded-xl p-4 text-sm focus:ring-primary focus:border-primary placeholder:text-outline-variant" placeholder="إضافة ملاحظة إدارية خاصة بهذا المستخدم..."></textarea>
+<div class="flex justify-end">
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg text-sm font-bold hover:opacity-90">حفظ الملاحظة</button>
+</div>
+</div>
+<div class="col-span-1 bg-surface-container-high rounded-xl p-6">
+<h4 class="text-xs font-black uppercase tracking-widest text-secondary mb-4">المستندات المرفقة</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="description">description</span>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">عقد العمل_محدث.pdf</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]" data-icon="download">download</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="image">image</span>
+<span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">الهوية_الوطنية.jpg</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[18px]" data-icon="download">download</span>
+</div>
+</div>
+<button class="mt-6 flex items-center gap-2 text-primary font-bold text-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="add_circle">add_circle</span>
+                            إضافة مستند جديد
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

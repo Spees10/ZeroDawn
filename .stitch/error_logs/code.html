@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#4659a9",
+                        "primary-container": "#5d6fc1",
+                        "surface-dim": "#d5d8f4",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#5fdbbb",
+                        "on-background": "#161a2e",
+                        "surface-container-low": "#f3f2ff",
+                        "surface-container-high": "#e4e7ff",
+                        "inverse-surface": "#2b2f44",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#3f6b61",
+                        "surface-container-highest": "#dee1fc",
+                        "inverse-primary": "#b8c3ff",
+                        "surface-container": "#ececff",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "background": "#fbf8ff",
+                        "primary-fixed": "#dde1ff",
+                        "surface-bright": "#fbf8ff",
+                        "tertiary": "#006955",
+                        "on-primary-fixed-variant": "#2d408f",
+                        "secondary-container": "#bae9dd",
+                        "outline": "#757682",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#001355",
+                        "primary-fixed-dim": "#b8c3ff",
+                        "secondary-fixed-dim": "#a2d0c4",
+                        "surface": "#fbf8ff",
+                        "secondary": "#3b665d",
+                        "outline-variant": "#c5c5d3",
+                        "on-secondary-fixed": "#00201b",
+                        "surface-variant": "#dee1fc",
+                        "secondary-fixed": "#bdece0",
+                        "on-surface": "#161a2e",
+                        "on-tertiary-fixed": "#002019",
+                        "on-surface-variant": "#454651",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#efefff",
+                        "on-primary-container": "#fffbff",
+                        "on-error": "#ffffff",
+                        "primary": "#4456a6",
+                        "on-secondary-fixed-variant": "#224e45",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#00846c",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#7df8d7",
+                        "on-tertiary-container": "#f4fff9"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"],
+                        "mono": ["monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #fbf8ff;
+            color: #161a2e;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c5c5d3;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="flex flex-row-reverse min-h-screen">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed right-0 top-0 h-full flex flex-col py-6 px-4 z-40 bg-[#fbf8ff] dark:bg-[#161a2e] h-screen w-64 border-l border-[#4456a6]/10 font-manrope text-sm font-semibold">
+<div class="flex items-center gap-3 mb-10 px-2">
+<div class="w-10 h-10 rounded bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-[#4456a6] dark:text-[#6072C4] leading-tight">ZeroDawn</h1>
+<p class="text-xs text-secondary opacity-70">Admin Workspace</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboards</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Users</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span>Admins</span>
+</a>
+<!-- Active State: Logs -->
+<a class="flex items-center gap-3 bg-[#4456a6]/10 text-[#4456a6] dark:text-[#6072C4] rounded-lg px-4 py-3 active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span>Health</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-[#4456a6]/5 pt-6 space-y-1">
+<button class="w-full mb-4 bg-primary text-on-primary py-2.5 rounded text-xs font-bold tracking-wide active:scale-95 transition-transform">
+                New Report
+            </button>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 hover:bg-[#4456a6]/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 mr-64">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex items-center justify-between px-8 w-full sticky top-0 z-50 flex-row-reverse bg-[#fbf8ff]/80 dark:bg-[#161a2e]/80 backdrop-blur-md w-full h-16 border-b border-[#4456a6]/10 shadow-[0_24px_40px_rgba(22,26,46,0.04)] font-manrope text-sm font-medium">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary" data-icon="settings">settings</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline-variant">
+<img alt="User profile" data-alt="professional male headshot in soft studio lighting with a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbkXBi9cLW2dTdKWYRoX3ZbO8u48ZNLs43tM_gWj_9pEPxn3ezScl1h-Dd1efmp5gJdtnO5c7KUspOQzdJAugdo4___1MwYIMZ-FrDyXRnT-dw5lfxe3eDQ_NUlZPO7WTggxsHBINTHI0UOYynhpSDMk6RqtiPI7JQ6ehcDuQczJ9zm1k665Q4nWmAJAp7zEjkv40cOjIbEDPJrh2UiJ5HbxmMDeFpgrmX5NVUXWE6CNo26jWaHKVj26lp7Ae4_RnMnxHd3i3c1okn"/>
+</div>
+</div>
+<div class="flex-1 max-w-xl mx-12">
+<div class="relative group">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded px-10 py-2 text-sm focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-outline/60" placeholder="Search by reference ID, path or status code..." type="text"/>
+</div>
+</div>
+<div class="flex items-center">
+<span class="text-xl font-bold tracking-tight text-[#4456a6] dark:text-[#6072C4]">Logs Explorer</span>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Hero / Metrics Section -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_24px_40px_rgba(22,26,46,0.04)] border-r-4 border-error">
+<p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Critical Errors</p>
+<h3 class="text-3xl font-black text-on-surface">124</h3>
+<p class="text-xs text-error mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12% from last hour</span>
+</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_24px_40px_rgba(22,26,46,0.04)] border-r-4 border-primary">
+<p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Avg. Latency</p>
+<h3 class="text-3xl font-black text-on-surface">240<span class="text-sm font-medium text-outline">ms</span></h3>
+<p class="text-xs text-tertiary mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_down">trending_down</span>
+<span>-45ms optimization</span>
+</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_24px_40px_rgba(22,26,46,0.04)] border-r-4 border-secondary">
+<p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Total Requests</p>
+<h3 class="text-3xl font-black text-on-surface">1.2M</h3>
+<p class="text-xs text-outline mt-2">Past 24 hours</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_24px_40px_rgba(22,26,46,0.04)] flex items-center justify-center">
+<div class="text-center">
+<div class="inline-flex p-3 rounded-full bg-primary/5 text-primary mb-2">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+</div>
+<p class="text-xs font-bold text-primary">System Health: 99.4%</p>
+</div>
+</div>
+</section>
+<!-- Filters Bar -->
+<div class="flex items-center justify-between bg-surface-container-low p-4 rounded-lg">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded border border-outline-variant/30 text-xs">
+<span class="text-outline">Severity:</span>
+<select class="border-none p-0 text-xs font-bold bg-transparent focus:ring-0">
+<option>All Levels</option>
+<option>Error</option>
+<option>Warning</option>
+<option>Critical</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded border border-outline-variant/30 text-xs">
+<span class="text-outline">Service:</span>
+<select class="border-none p-0 text-xs font-bold bg-transparent focus:ring-0">
+<option>Auth-Service</option>
+<option>Payment-Gateway</option>
+<option>User-Profile</option>
+</select>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 text-xs font-bold text-primary px-4 py-2 hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export CSV
+                    </button>
+<button class="bg-primary text-white px-4 py-2 rounded text-xs font-bold">
+                        Real-time Stream
+                    </button>
+</div>
+</div>
+<!-- Logs Table (Technical Content) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_24px_40px_rgba(22,26,46,0.04)] overflow-hidden">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-right border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/10 text-outline text-[10px] uppercase tracking-widest font-bold">
+<th class="px-6 py-4 text-center w-12">#</th>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4">Level</th>
+<th class="px-6 py-4">Reference ID</th>
+<th class="px-6 py-4">Endpoint Path</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Details</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<!-- Row 1 (Critical) -->
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-error text-base" data-icon="error" data-weight="fill">error</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs opacity-80">2023-11-24 14:02:11.452</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded bg-error/10 text-error text-[10px] font-black uppercase">Critical</span></td>
+<td class="px-6 py-4 font-mono text-xs text-primary">ERR-9942-XA</td>
+<td class="px-6 py-4 font-mono text-xs truncate max-w-[200px]">/v1/api/transactions/process</td>
+<td class="px-6 py-4"><span class="font-mono text-xs font-bold text-error">500</span></td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1 text-primary text-xs font-bold hover:underline">
+                                        View Trace
+                                        <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_left">keyboard_arrow_left</span>
+</button>
+</td>
+</tr>
+<!-- Expansion Sample (Simulated as content) -->
+<tr class="bg-surface-container-low/50">
+<td class="px-8 py-4" colspan="7">
+<div class="bg-[#161a2e] text-slate-300 p-6 rounded font-mono text-xs space-y-2 leading-relaxed border-r-4 border-error">
+<p class="text-white font-bold opacity-60 mb-2">// Stack Trace Overflow - ERR-9942-XA</p>
+<p><span class="text-tertiary-fixed-dim">java.lang.NullPointerException:</span> Cannot invoke "com.zerodawn.PaymentProcessor.init()" because "this.gateway" is null</p>
+<p class="pl-4">at com.zerodawn.api.TransactionController.process(TransactionController.java:142)</p>
+<p class="pl-4">at com.zerodawn.internal.RequestRouter.handle(RequestRouter.java:89)</p>
+<div class="mt-4 pt-4 border-t border-slate-700 flex justify-between items-center">
+<span class="text-outline">Environment: production-cluster-01</span>
+<button class="bg-white/10 px-3 py-1 rounded text-[10px] hover:bg-white/20 transition-colors">Copy Payload</button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-secondary text-base" data-icon="warning" data-weight="fill">warning</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs opacity-80">2023-11-24 14:01:55.102</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary text-[10px] font-black uppercase">Warning</span></td>
+<td class="px-6 py-4 font-mono text-xs text-primary">WARN-2210-BC</td>
+<td class="px-6 py-4 font-mono text-xs truncate max-w-[200px]">/auth/v2/login/biometric</td>
+<td class="px-6 py-4"><span class="font-mono text-xs font-bold text-secondary">401</span></td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1 text-primary text-xs font-bold hover:underline">
+                                        View Trace
+                                        <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_left">keyboard_arrow_left</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-error text-base" data-icon="report" data-weight="fill">report</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs opacity-80">2023-11-24 13:58:12.890</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded bg-error/10 text-error text-[10px] font-black uppercase">Critical</span></td>
+<td class="px-6 py-4 font-mono text-xs text-primary">ERR-0041-KF</td>
+<td class="px-6 py-4 font-mono text-xs truncate max-w-[200px]">/internal/health/db-sync</td>
+<td class="px-6 py-4"><span class="font-mono text-xs font-bold text-error">503</span></td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1 text-primary text-xs font-bold hover:underline">
+                                        View Trace
+                                        <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_left">keyboard_arrow_left</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="border-b border-outline-variant/5 hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-primary text-base" data-icon="info" data-weight="fill">info</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap font-mono text-xs opacity-80">2023-11-24 13:55:01.002</td>
+<td class="px-6 py-4"><span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-black uppercase">Info</span></td>
+<td class="px-6 py-4 font-mono text-xs text-primary">INFO-8832-ZM</td>
+<td class="px-6 py-4 font-mono text-xs truncate max-w-[200px]">/v1/user/settings/update</td>
+<td class="px-6 py-4"><span class="font-mono text-xs font-bold text-tertiary">200</span></td>
+<td class="px-6 py-4">
+<button class="flex items-center gap-1 text-primary text-xs font-bold hover:underline">
+                                        View Trace
+                                        <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_left">keyboard_arrow_left</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 bg-surface-container-low/30 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-xs text-outline">Showing 1 to 20 of 1,244 entries</span>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded hover:bg-surface-container-high transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="px-3 py-1 rounded bg-primary text-white text-xs font-bold">1</button>
+<button class="px-3 py-1 rounded hover:bg-surface-container-high text-xs font-bold">2</button>
+<button class="px-3 py-1 rounded hover:bg-surface-container-high text-xs font-bold">3</button>
+<span class="text-outline text-xs px-2">...</span>
+<button class="px-3 py-1 rounded hover:bg-surface-container-high text-xs font-bold">62</button>
+<button class="p-1 rounded hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Asymmetric Bento-like Details Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-[0_24px_40px_rgba(22,26,46,0.04)] relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors"></div>
+<h4 class="text-lg font-black mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="analytics">analytics</span>
+                        Error Distribution by Service
+                    </h4>
+<div class="h-64 flex items-end gap-6 px-4">
+<!-- Simulated Chart -->
+<div class="flex-1 bg-primary/10 rounded-t h-full relative group/bar">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">Auth-Service: 42%</div>
+<div class="absolute bottom-0 w-full bg-primary rounded-t" style="height: 42%"></div>
+</div>
+<div class="flex-1 bg-primary/10 rounded-t h-full relative group/bar">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">Payment: 28%</div>
+<div class="absolute bottom-0 w-full bg-primary rounded-t" style="height: 28%"></div>
+</div>
+<div class="flex-1 bg-primary/10 rounded-t h-full relative group/bar">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">DB-Core: 65%</div>
+<div class="absolute bottom-0 w-full bg-primary rounded-t" style="height: 65%"></div>
+</div>
+<div class="flex-1 bg-primary/10 rounded-t h-full relative group/bar">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">Static: 12%</div>
+<div class="absolute bottom-0 w-full bg-primary rounded-t" style="height: 12%"></div>
+</div>
+<div class="flex-1 bg-primary/10 rounded-t h-full relative group/bar">
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-on-surface text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap">Gateway: 34%</div>
+<div class="absolute bottom-0 w-full bg-primary rounded-t" style="height: 34%"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-outline px-4">
+<span>Auth</span>
+<span>Payment</span>
+<span>Database</span>
+<span>Media</span>
+<span>Routing</span>
+</div>
+</div>
+<div class="bg-primary text-on-primary p-8 rounded-xl shadow-xl flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-4xl mb-4" data-icon="auto_awesome">auto_awesome</span>
+<h4 class="text-xl font-bold leading-tight mb-2">Predictive System Alert</h4>
+<p class="text-sm opacity-80 leading-relaxed">Based on the current error trajectory in <span class="font-mono">DB-Core</span>, we estimate a potential outage in 45 minutes if cache-invalidation persists.</p>
+</div>
+<button class="mt-8 bg-white text-primary px-6 py-3 rounded font-black text-xs uppercase tracking-widest hover:bg-opacity-90 active:scale-95 transition-all">
+                        Initiate Auto-Scaling
+                    </button>
+</div>
+</section>
+</div>
+<!-- Footer -->
+<footer class="p-8 mt-12 border-t border-outline-variant/10 text-outline text-xs flex justify-between items-center">
+<p>© 2023 ZeroDawn Global Operations. Internal Use Only.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="hover:text-primary transition-colors" href="#">System Status</a>
+<a class="hover:text-primary transition-colors" href="#">Emergency Protocol</a>
+</div>
+</footer>
+</main>
+</body></html>

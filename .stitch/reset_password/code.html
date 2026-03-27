@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ZeroDawn - إعادة تعيين كلمة المرور</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#00846c",
+                        "on-primary-fixed": "#001355",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#002019",
+                        "background": "#fbf8ff",
+                        "on-secondary-container": "#3f6b61",
+                        "primary-fixed-dim": "#b8c3ff",
+                        "tertiary-fixed-dim": "#5fdbbb",
+                        "secondary-container": "#bae9dd",
+                        "on-primary-fixed-variant": "#2d408f",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#bdece0",
+                        "secondary": "#3b665d",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#4659a9",
+                        "primary-container": "#5d6fc1",
+                        "on-secondary-fixed-variant": "#224e45",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#7df8d7",
+                        "inverse-surface": "#2b2f44",
+                        "surface-bright": "#fbf8ff",
+                        "secondary-fixed-dim": "#a2d0c4",
+                        "primary": "#4456a6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#454651",
+                        "surface": "#fbf8ff",
+                        "on-background": "#161a2e",
+                        "inverse-on-surface": "#efefff",
+                        "surface-container-high": "#e4e7ff",
+                        "on-surface": "#161a2e",
+                        "tertiary": "#006955",
+                        "on-secondary-fixed": "#00201b",
+                        "surface-container": "#ececff",
+                        "on-tertiary-container": "#f4fff9",
+                        "inverse-primary": "#b8c3ff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "surface-container-low": "#f3f2ff",
+                        "primary-fixed": "#dde1ff",
+                        "outline": "#757682",
+                        "surface-container-highest": "#dee1fc",
+                        "surface-variant": "#dee1fc",
+                        "outline-variant": "#c5c5d3",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d5d8f4"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #fbf8ff;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<div class="min-h-screen flex flex-col md:flex-row-reverse">
+<!-- Editorial Side (Visual Anchor) -->
+<div class="hidden md:flex md:w-1/2 lg:w-3/5 bg-surface-container relative overflow-hidden items-center justify-center p-12">
+<div class="absolute inset-0 z-0 opacity-20">
+<img class="w-full h-full object-cover grayscale brightness-50 contrast-125" data-alt="Abstract deep blue digital network patterns flowing across a dark lavender background with soft glowing nodes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMsvjOOmuB6aukzZ-mhTVfZcJNdtGXbLPDLRtzfd5nwZ3Zf6UzNRGw6kkW8iEHM55ObfhKecd9lM8XU-1OHAhYJLleoEdXGyghqNxhQiwNJmprJ-z0wFp4GEU0KhM2GMcU4dLZdLodyYUuJaQGYoeZplMdDibQH3eSyyG5dlsYIxNMc28TJ1nzVnPvCZmDpqFCl61EcfYb89wZv3zIODeVKlRjpaqMalGJkjpE_EOdBTebxGiaWRJ9xisHkc24XavHOgCYa5RvOEq2"/>
+</div>
+<div class="relative z-10 max-w-xl text-right">
+<div class="mb-8">
+<span class="text-primary font-bold tracking-widest text-xs border-r-2 border-primary pr-4">ZERODAWN PREMIUM</span>
+</div>
+<h1 class="text-5xl lg:text-7xl font-extrabold text-on-surface leading-tight tracking-tighter mb-6">
+                    استعادة الوصول إلى <br/>
+<span class="text-primary">مساحتك الخاصة</span>
+</h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-md ml-auto">
+                    نحن نؤمن بأن الأمان يبدأ بالبساطة. قم بتحديث هويتك الرقمية بكلمة مرور جديدة قوية لضمان حماية بياناتك الأكثر أهمية في بيئة عملنا المتميزة.
+                </p>
+<div class="mt-16 grid grid-cols-2 gap-8 border-t border-outline-variant/30 pt-12">
+<div>
+<h4 class="text-primary font-bold mb-1">تشفير متطور</h4>
+<p class="text-xs text-on-surface-variant">حماية كاملة لبياناتك الشخصية</p>
+</div>
+<div>
+<h4 class="text-primary font-bold mb-1">دخول موحد</h4>
+<p class="text-xs text-on-surface-variant">وصول سريع لجميع خدماتنا</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Auth Form Side -->
+<div class="flex-1 flex flex-col items-center justify-center px-6 py-12 md:px-12 lg:px-24 bg-background">
+<!-- Logo Mobile -->
+<div class="md:hidden self-start mb-12">
+<h2 class="text-2xl font-extrabold text-primary tracking-tight">ZeroDawn</h2>
+</div>
+<!-- Form Container -->
+<div class="w-full max-w-md space-y-8">
+<div class="space-y-2">
+<h2 class="text-3xl font-bold text-on-surface tracking-tight">إعادة تعيين كلمة المرور</h2>
+<p class="text-on-surface-variant">الرجاء إدخال كلمة المرور الجديدة الخاصة بك أدناه.</p>
+</div>
+<!-- Success State (Hidden by Default/Manual Control) -->
+<!-- Use 'flex' instead of 'hidden' to preview success state -->
+<div class="hidden flex-row items-start gap-4 p-4 bg-tertiary/10 rounded-xl border-r-4 border-tertiary">
+<span class="material-symbols-outlined text-tertiary mt-1">check_circle</span>
+<div>
+<p class="font-bold text-on-surface">تم تغيير كلمة المرور</p>
+<p class="text-sm text-on-surface-variant">يمكنك الآن تسجيل الدخول باستخدام بياناتك الجديدة.</p>
+<button class="mt-3 text-sm font-bold text-tertiary flex items-center gap-1 hover:underline">
+                            التوجه لتسجيل الدخول
+                            <span class="material-symbols-outlined text-xs">arrow_back</span>
+</button>
+</div>
+</div>
+<!-- Invalid Link Alert -->
+<div class="flex flex-row items-start gap-4 p-4 bg-error-container/30 rounded-xl border-r-4 border-error">
+<span class="material-symbols-outlined text-error mt-1">warning</span>
+<div>
+<p class="font-bold text-on-surface">رابط غير صالح</p>
+<p class="text-sm text-on-surface-variant">انتهت صلاحية هذا الرابط أو تم استخدامه مسبقاً.</p>
+<button class="mt-3 text-sm font-bold text-error flex items-center gap-1 hover:underline">
+                            طلب رابط جديد
+                            <span class="material-symbols-outlined text-xs">refresh</span>
+</button>
+</div>
+</div>
+<!-- Reset Form -->
+<form class="space-y-6">
+<div class="space-y-4">
+<div class="relative group">
+<label class="block text-xs font-bold text-on-surface-variant mb-2 mr-1" for="password">كلمة المرور الجديدة</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full h-14 pr-4 pl-12 bg-surface-container-low border-b-2 border-transparent focus:border-primary focus:ring-0 rounded-xl text-on-surface transition-all placeholder:text-outline-variant/50" id="password" name="password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<div class="relative group">
+<label class="block text-xs font-bold text-on-surface-variant mb-2 mr-1" for="confirm-password">تأكيد كلمة المرور</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">verified_user</span>
+<input class="w-full h-14 pr-4 pl-12 bg-surface-container-low border-b-2 border-transparent focus:border-primary focus:ring-0 rounded-xl text-on-surface transition-all placeholder:text-outline-variant/50" id="confirm-password" name="confirm-password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+</div>
+<!-- Requirements Indicator -->
+<div class="bg-surface-container-lowest/50 p-4 rounded-xl space-y-3">
+<p class="text-[10px] font-bold text-outline uppercase tracking-wider mb-2">متطلبات الأمان</p>
+<div class="grid grid-cols-2 gap-y-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs text-on-surface-variant">8 أحرف على الأقل</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-outline-variant">circle</span>
+<span class="text-xs text-on-surface-variant">رمز خاص (!@#)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs text-on-surface-variant">رقم واحد على الأقل</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-outline-variant">circle</span>
+<span class="text-xs text-on-surface-variant">حرف كبير</span>
+</div>
+</div>
+</div>
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary-container transition-all active:scale-[0.98] shadow-lg shadow-primary/20 flex items-center justify-center gap-2" type="submit">
+                        Reset Password
+                        <span class="material-symbols-outlined">key</span>
+</button>
+</form>
+<div class="pt-8 text-center">
+<a class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">
+                        العودة إلى صفحة تسجيل الدخول
+                    </a>
+</div>
+</div>
+<!-- Footer -->
+<div class="mt-auto pt-12 flex items-center justify-between w-full max-w-md border-t border-outline-variant/20">
+<p class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">© 2024 ZERODAWN</p>
+<div class="flex gap-4">
+<a class="text-[10px] font-bold text-outline-variant uppercase tracking-widest hover:text-primary transition-colors" href="#">شروط الاستخدام</a>
+<a class="text-[10px] font-bold text-outline-variant uppercase tracking-widest hover:text-primary transition-colors" href="#">الخصوصية</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

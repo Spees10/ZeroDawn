@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#4659a9",
+              "primary-container": "#5d6fc1",
+              "surface-dim": "#d5d8f4",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#5fdbbb",
+              "on-background": "#161a2e",
+              "surface-container-low": "#f3f2ff",
+              "surface-container-high": "#e4e7ff",
+              "inverse-surface": "#2b2f44",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#3f6b61",
+              "surface-container-highest": "#dee1fc",
+              "inverse-primary": "#b8c3ff",
+              "surface-container": "#ececff",
+              "on-tertiary-fixed-variant": "#005141",
+              "background": "#fbf8ff",
+              "primary-fixed": "#dde1ff",
+              "surface-bright": "#fbf8ff",
+              "tertiary": "#006955",
+              "on-primary-fixed-variant": "#2d408f",
+              "secondary-container": "#bae9dd",
+              "outline": "#757682",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#001355",
+              "primary-fixed-dim": "#b8c3ff",
+              "secondary-fixed-dim": "#a2d0c4",
+              "surface": "#fbf8ff",
+              "secondary": "#3b665d",
+              "outline-variant": "#c5c5d3",
+              "on-secondary-fixed": "#00201b",
+              "surface-variant": "#dee1fc",
+              "secondary-fixed": "#bdece0",
+              "on-surface": "#161a2e",
+              "on-tertiary-fixed": "#002019",
+              "on-surface-variant": "#454651",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#efefff",
+              "on-primary-container": "#fffbff",
+              "on-error": "#ffffff",
+              "primary": "#4456a6",
+              "on-secondary-fixed-variant": "#224e45",
+              "on-primary": "#ffffff",
+              "tertiary-container": "#00846c",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#7df8d7",
+              "on-tertiary-container": "#f4fff9"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Manrope', sans-serif;
+      }
+      .glass-nav {
+        background: rgba(251, 248, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+      .ambient-shadow {
+        box-shadow: 0 24px 40px rgba(22, 26, 46, 0.04);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface flex min-h-screen">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="fixed right-0 top-0 h-full flex flex-col py-6 px-4 z-40 bg-[#fbf8ff] dark:bg-[#161a2e] h-screen w-64 border-l border-[#4456a6]/10 hidden md:flex">
+<div class="mb-10 px-4">
+<h1 class="text-lg font-black text-[#4456a6] dark:text-[#6072C4]">ZeroDawn</h1>
+<p class="text-xs text-secondary opacity-70">Admin Workspace</p>
+</div>
+<nav class="flex flex-col gap-1 flex-grow">
+<!-- Dashboards is active -->
+<a class="flex items-center gap-3 bg-[#4456a6]/10 text-[#4456a6] dark:text-[#6072C4] rounded-lg px-4 py-3 font-semibold text-sm transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboards</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 font-semibold text-sm hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Users</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 font-semibold text-sm hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="admin_panel_settings">admin_panel_settings</span>
+<span>Admins</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 font-semibold text-sm hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 font-semibold text-sm hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="health_and_safety">health_and_safety</span>
+<span>Health</span>
+</a>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-3 font-semibold text-sm hover:bg-[#4456a6]/5 transition-all active:translate-x-[-2px] duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-[#4456a6]/5 pt-6">
+<button class="mb-4 bg-primary text-on-primary py-2.5 px-4 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors hover:bg-primary-container">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Report
+            </button>
+<a class="flex items-center gap-3 text-[#3b665d] dark:text-slate-400 px-4 py-2 text-sm hover:bg-[#4456a6]/5 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-error px-4 py-2 text-sm hover:bg-error/5 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-grow md:mr-64 min-h-screen">
+<!-- TopAppBar (Execution from JSON) -->
+<header class="flex items-center justify-between px-8 w-full sticky top-0 z-50 flex-row-reverse bg-[#fbf8ff]/80 dark:bg-[#161a2e]/80 backdrop-blur-md w-full h-16 shadow-[0_24px_40px_rgba(22,26,46,0.04)]">
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-[#4456a6]/5 transition-colors text-[#4456a6]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-[#4456a6]/5 transition-colors text-[#4456a6]">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Close up portrait of a professional man in a light blue shirt with a friendly expression against a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVCcg_SvqnX8NhOISmBf2Uf3khafJFdJnewRxE9UbynCdSxWF1Ozgx6El1uu5xycU51h7KXJOvOtB-nY63vQcaFy56_Df5-72TBMfy7KzgQQXdfUbOqv7h9uzivFI4J6lCALJmhP6yXo5EpUJz9Bjw8I_noNnhN6Xjn3H8hWOtDZk3GFTdB7iroVmO4XDctB4AHSrQQJDZ33GLHTIOmk--6wofo5FlKNtYR9w-r1pxKY_aHHecqTQ1hnYvtMXA2dXtT_tjNxkpEnzs"/>
+</div>
+</div>
+<div class="flex items-center gap-8 font-manrope text-sm font-medium">
+<div class="relative">
+<span class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="bg-surface-container-high border-none rounded-full pr-10 pl-4 py-1.5 text-xs w-64 focus:ring-2 focus:ring-primary/20 placeholder:text-outline" placeholder="بحث..." type="text"/>
+</div>
+<div class="flex gap-6">
+<a class="text-[#4456a6] font-bold border-b-2 border-[#4456a6] py-5" href="#">الرئيسية</a>
+<a class="text-[#3b665d] dark:text-slate-400 py-5 hover:text-primary transition-colors" href="#">التقارير</a>
+<a class="text-[#3b665d] dark:text-slate-400 py-5 hover:text-primary transition-colors" href="#">المشاريع</a>
+</div>
+</div>
+<div class="text-xl font-bold tracking-tight text-[#4456a6] dark:text-[#6072C4] md:hidden">
+                ZeroDawn
+            </div>
+</header>
+<!-- Dashboard Content -->
+<div class="px-8 py-10 max-w-6xl mx-auto">
+<!-- Welcome Section -->
+<section class="mb-12 flex flex-col md:flex-row justify-between items-end md:items-center gap-6">
+<div>
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight mb-2">مرحباً بك، أحمد</h2>
+<p class="text-secondary text-lg">إليك نظرة سريعة على نشاطك اليوم وتطورات حسابك.</p>
+</div>
+<div class="flex gap-3">
+<div class="flex flex-col items-end">
+<span class="text-xs text-outline font-bold uppercase tracking-widest">التاريخ الحالي</span>
+<span class="text-on-surface font-semibold">الاثنين، 24 مايو 2024</span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Personal Profile Entry (High Intent) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 ambient-shadow relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-br-full -translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-500"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+<div class="w-32 h-32 rounded-full ring-4 ring-surface-container-high p-1">
+<img alt="Ahmed" class="w-full h-full object-cover rounded-full shadow-lg" data-alt="Close up portrait of a professional man in a light blue shirt with a friendly expression against a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOuwUxkv1pKuEQEiedZxXOypXBC8T-4IAXcDwnHBo34sHY6NvM1GL-7RyKez1alYEnuy8ndjrMUqH-2t124KqKi6z5N0qWvsY4j5ae6ak32y6v2NgYGsj7Eg_Ywt7qj6M3SkX0IEtHJggRRiHGtm8p-u_iIv8W1OMJGmVpnFGHDOdbUenptbjnqbFMYFfoEuox_IhvaOoas5RddM1hUE6QsZ4rpNu-iO4zrTpPR6ZYd_OLw13_PW_jCQibQoPpxmFLiP1QawX0EvN4"/>
+</div>
+<div class="flex-grow text-center md:text-right">
+<h3 class="text-2xl font-bold text-on-surface mb-1">أحمد المنصور</h3>
+<p class="text-secondary mb-4">محلل بيانات أول • ZeroDawn</p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<span class="bg-surface-container px-3 py-1.5 rounded-lg text-xs font-semibold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-base" data-icon="verified">verified</span>
+                                    حساب موثق
+                                </span>
+<span class="bg-secondary-container px-3 py-1.5 rounded-lg text-xs font-semibold text-on-secondary-container flex items-center gap-2">
+<span class="material-symbols-outlined text-base" data-icon="bolt">bolt</span>
+                                    خطة بريميوم
+                                </span>
+</div>
+</div>
+<div class="md:border-r border-outline-variant/20 md:pr-8 flex flex-col gap-2">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold text-sm shadow-md hover:bg-primary-container transition-colors">
+                                تعديل الملف
+                            </button>
+<button class="text-primary hover:bg-primary/5 px-6 py-2 rounded-lg font-bold text-sm transition-colors">
+                                عرض الإحصائيات
+                            </button>
+</div>
+</div>
+</div>
+<!-- Lightweight Account Overview -->
+<div class="md:col-span-4 bg-primary text-on-primary rounded-xl p-8 ambient-shadow flex flex-col justify-between">
+<div>
+<p class="text-on-primary/70 text-sm font-semibold mb-1">الرصيد المتاح</p>
+<h4 class="text-4xl font-black mb-6">$12,450.00</h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-primary/60">المدخرات الشهرية</span>
+<span class="font-bold">+12%</span>
+</div>
+<div class="w-full bg-on-primary/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary-fixed w-3/4 h-full rounded-full"></div>
+</div>
+</div>
+</div>
+<button class="mt-8 bg-on-primary text-primary py-3 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary-fixed transition-colors">
+                        تحويل سريع
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span>
+</button>
+</div>
+<!-- Recent Personal Activity -->
+<div class="md:col-span-12 bg-surface-container-low rounded-xl p-8">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold text-on-surface">آخر النشاطات</h3>
+<a class="text-primary text-sm font-bold hover:underline" href="#">عرض السجل الكامل</a>
+</div>
+<div class="space-y-4">
+<!-- Activity Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between transition-all hover:translate-x-[-4px] hover:shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/10 text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div>
+<p class="text-on-surface font-bold text-sm">تم تحديث تقرير الربع الأول</p>
+<p class="text-outline text-xs">منذ ساعتين • ملفات المشاريع</p>
+</div>
+</div>
+<span class="text-xs text-outline font-medium">14:20</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between transition-all hover:translate-x-[-4px] hover:shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</div>
+<div>
+<p class="text-on-surface font-bold text-sm">تسجيل دخول جديد</p>
+<p class="text-outline text-xs">منذ 5 ساعات • Chrome - macOS</p>
+</div>
+</div>
+<span class="text-xs text-outline font-medium">11:05</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center justify-between transition-all hover:translate-x-[-4px] hover:shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/30 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<div>
+<p class="text-on-surface font-bold text-sm">استلام دفعة مالية</p>
+<p class="text-outline text-xs">منذ يوم • عميل رقم #9422</p>
+</div>
+</div>
+<span class="text-xs text-outline font-medium">أمس</span>
+</div>
+</div>
+</div>
+<!-- Extra Context Card (Asymmetric Design) -->
+<div class="md:col-span-5 bg-surface-container-high rounded-xl p-8 relative overflow-hidden flex flex-col justify-end min-h-[300px]">
+<div class="absolute inset-0 z-0">
+<img alt="Abstract background" class="w-full h-full object-cover opacity-20 grayscale hover:grayscale-0 transition-all duration-700" data-alt="Subtle abstract gradient with flowing organic shapes in shades of deep blue and lavender, soft grainy texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFijDj-splx-wRuwh7LH5_rAR8DMdW2BhDG3jzOQzIBzmi01fsIgyW1j36KE1maBLDG7e0oxRkMCcc2I3D9ta0h_sjgLLudvQ1th0bmDCL1bfl67nmxg9-HpYh9FmFbtwV0bm2FwXwIOJgaYmDXqQHoUaKZKeMuW2IJbPAsmXZPZwuryQDP8WojIz0hc0Mv37eNfGBJJAEV2eKKUbya5OTc_yFD-BoXuF_3Y9PIGaTt6RT67OTilY81grsXjoD1i5eultkJ-jX82dF"/>
+</div>
+<div class="relative z-10">
+<span class="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-tighter mb-4">نصيحة الأمان</span>
+<h4 class="text-xl font-bold mb-2">قم بتفعيل المصادقة الثنائية</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">احمِ حسابك وبياناتك الشخصية عبر تفعيل ميزة التحقق بخطوتين لضمان وصولك الآمن دائماً.</p>
+<button class="text-primary font-bold text-sm flex items-center gap-2 group">
+                            تفعيل الآن
+                            <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform" data-icon="arrow_back">arrow_back</span>
+</button>
+</div>
+</div>
+<div class="md:col-span-7 grid grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest rounded-xl p-6 ambient-shadow text-center">
+<div class="w-12 h-12 rounded-full bg-surface-container-high mx-auto mb-4 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</div>
+<p class="text-xs text-outline mb-1">المهام القادمة</p>
+<h5 class="text-2xl font-black">04</h5>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-6 ambient-shadow text-center">
+<div class="w-12 h-12 rounded-full bg-surface-container-high mx-auto mb-4 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+<p class="text-xs text-outline mb-1">رسائل جديدة</p>
+<h5 class="text-2xl font-black text-secondary">12</h5>
+</div>
+<div class="col-span-2 bg-surface-container-highest/50 rounded-xl p-6 border-r-4 border-primary">
+<div class="flex justify-between items-center">
+<div>
+<h6 class="font-bold text-sm">اجتماع الفريق السنوي</h6>
+<p class="text-xs text-outline">غداً الساعة 10:00 صباحاً</p>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="event">event</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Space at bottom for navigation bar on mobile -->
+<div class="h-20 md:hidden"></div>
+</main>
+<!-- BottomNavBar (Execution for Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 glass-nav h-16 flex items-center justify-around px-4 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] border-t border-primary/5">
+<a class="flex flex-col items-center gap-1 text-[#4456a6] font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px]">الرئيسية</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-[10px]">النشاط</span>
+</a>
+<div class="relative -top-6">
+<button class="bg-primary text-on-primary w-12 h-12 rounded-full shadow-lg flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="text-[10px]">تنبيهات</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px]">إعدادات</span>
+</a>
+</nav>
+</body></html>

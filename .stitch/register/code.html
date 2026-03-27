@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#00846c",
+                        "on-primary-fixed": "#001355",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#002019",
+                        "background": "#fbf8ff",
+                        "on-secondary-container": "#3f6b61",
+                        "primary-fixed-dim": "#b8c3ff",
+                        "tertiary-fixed-dim": "#5fdbbb",
+                        "secondary-container": "#bae9dd",
+                        "on-primary-fixed-variant": "#2d408f",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#bdece0",
+                        "secondary": "#3b665d",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#4659a9",
+                        "primary-container": "#5d6fc1",
+                        "on-secondary-fixed-variant": "#224e45",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#7df8d7",
+                        "inverse-surface": "#2b2f44",
+                        "surface-bright": "#fbf8ff",
+                        "secondary-fixed-dim": "#a2d0c4",
+                        "primary": "#4456a6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005141",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#454651",
+                        "surface": "#fbf8ff",
+                        "on-background": "#161a2e",
+                        "inverse-on-surface": "#efefff",
+                        "surface-container-high": "#e4e7ff",
+                        "on-surface": "#161a2e",
+                        "tertiary": "#006955",
+                        "on-secondary-fixed": "#00201b",
+                        "surface-container": "#ececff",
+                        "on-tertiary-container": "#f4fff9",
+                        "inverse-primary": "#b8c3ff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "surface-container-low": "#f3f2ff",
+                        "primary-fixed": "#dde1ff",
+                        "outline": "#757682",
+                        "surface-container-highest": "#dee1fc",
+                        "surface-variant": "#dee1fc",
+                        "outline-variant": "#c5c5d3",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d5d8f4"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #fbf8ff;
+            color: #161a2e;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-gradient {
+            background: linear-gradient(135deg, #4456a6 0%, #3b665d 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased overflow-hidden">
+<main class="flex min-h-screen">
+<!-- Right Section: Form (Primary interaction area in RTL) -->
+<section class="w-full lg:w-[45%] flex flex-col justify-center px-8 sm:px-16 lg:px-24 bg-surface z-10">
+<div class="max-w-md w-full mx-auto">
+<div class="mb-12">
+<div class="flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-primary text-3xl">security</span>
+<h2 class="text-xl font-extrabold text-primary tracking-tight">ZeroDawn</h2>
+</div>
+<h1 class="text-4xl font-extrabold text-on-surface mb-3 tracking-tight">إنشاء حساب جديد</h1>
+<p class="text-on-surface-variant leading-relaxed">انضم إلى مجتمعنا الحصري وابدأ رحلتك في إدارة مشاريعك باحترافية تامة.</p>
+</div>
+<form class="space-y-6">
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider" for="full_name">الاسم الكامل</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary px-4 py-3.5 outline-none transition-all placeholder:text-outline/50" id="full_name" placeholder="أدخل اسمك الثلاثي" type="text"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider" for="email">البريد الإلكتروني</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary px-4 py-3.5 outline-none transition-all placeholder:text-outline/50 text-left" dir="ltr" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider" for="password">كلمة المرور</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary px-4 py-3.5 outline-none transition-all placeholder:text-outline/50 text-left" dir="ltr" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-on-surface-variant px-1 uppercase tracking-wider" for="confirm_password">تأكيد كلمة المرور</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary px-4 py-3.5 outline-none transition-all placeholder:text-outline/50 text-left" dir="ltr" id="confirm_password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 rounded-sm border-outline-variant text-primary focus:ring-primary h-4 w-4" id="terms" type="checkbox"/>
+<label class="text-sm text-on-surface-variant leading-relaxed" for="terms">
+                            أوافق على <a class="text-primary font-bold hover:underline" href="#">شروط الخدمة</a> و <a class="text-primary font-bold hover:underline" href="#">سياسة الخصوصية</a> الخاصة بـ ZeroDawn.
+                        </label>
+</div>
+<div class="pt-4 space-y-4">
+<button class="w-full bg-primary text-on-primary py-4 px-6 rounded-lg font-bold shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-3" type="submit">
+<span>إنشاء الحساب</span>
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+</button>
+<div class="text-center">
+<p class="text-sm text-on-surface-variant">
+                                لديك حساب بالفعل؟ 
+                                <a class="text-primary font-bold hover:underline inline-flex items-center gap-1 mr-1" href="#">
+                                    العودة لتسجيل الدخول
+                                </a>
+</p>
+</div>
+</div>
+</form>
+<footer class="mt-20 pt-8 border-t border-outline-variant/10">
+<div class="flex items-center justify-between text-[10px] uppercase tracking-widest text-outline font-bold">
+<span>© 2024 ZeroDawn Premium</span>
+<div class="flex gap-4">
+<a class="hover:text-primary" href="#">مساعدة</a>
+<a class="hover:text-primary" href="#">اللغة</a>
+</div>
+</div>
+</footer>
+</div>
+</section>
+<!-- Left Section: Visual (Secondary area in RTL) -->
+<section class="hidden lg:flex lg:w-[55%] relative editorial-gradient overflow-hidden items-center justify-center">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0">
+<img alt="Premium Workspace" class="w-full h-full object-cover mix-blend-overlay opacity-40" data-alt="Modern high-end minimal office interior with floor to ceiling windows, deep blue atmospheric lighting and soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVJ3Mq75OZxrUGkTr3IkzxgyfWjKhv6_LZJ4lSjsTXgjB-q3i0oU18oK7AB4RxUo9Rd0FzOw3eZdwzzvS9u7_kN8SR6t_Ofra1cqFzkyR9GAkb4o-diiMHFkiz8PPD5VhrqMwPodw8Vt3p0hCcSIGmczIqHLd4gcS-BDGsLyl4MiL3cvLriU25h0bQ3SBdYRN4n1OApJtTW8tT4_cvDgWNG2IfV76g8bCD6UjnpCS1_f_2PSv0JYFW1B0kuR7WFnHnhWxRLtvtftyM"/>
+</div>
+<!-- Abstract Shapes for Tonal Depth -->
+<div class="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-secondary opacity-20 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary opacity-30 blur-[100px]"></div>
+<div class="relative z-10 px-16 max-w-2xl text-white">
+<div class="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8">
+<span class="text-xs font-bold tracking-widest uppercase">الإصدار الممتاز 2.0</span>
+</div>
+<h2 class="text-6xl font-extrabold leading-[1.15] mb-8 tracking-tighter">
+                    مساحتك الرقمية <br/>
+<span class="text-secondary-container">بأعلى معايير الأمان</span>
+</h2>
+<div class="grid grid-cols-2 gap-8 mt-12">
+<div class="glass-panel p-6 rounded-xl">
+<span class="material-symbols-outlined text-secondary-container mb-4 text-3xl" data-weight="fill">verified_user</span>
+<h3 class="text-lg font-bold mb-2">تشفير متطور</h3>
+<p class="text-sm text-white/70 leading-relaxed">بياناتك محمية بأحدث بروتوكولات التشفير العالمية لضمان الخصوصية التامة.</p>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<span class="material-symbols-outlined text-secondary-container mb-4 text-3xl" data-weight="fill">speed</span>
+<h3 class="text-lg font-bold mb-2">أداء فائق</h3>
+<p class="text-sm text-white/70 leading-relaxed">تجربة مستخدم انسيابية تتيح لك التركيز على إبداعك دون أي عوائق تقنية.</p>
+</div>
+</div>
+<div class="mt-16 flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full editorial-gradient flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+</div>
+<div>
+<p class="text-sm font-bold">شاهد جولة سريعة</p>
+<p class="text-xs text-white/50 uppercase tracking-widest">فيديو تعريفي 2:30 دقيقة</p>
+</div>
+</div>
+</div>
+<!-- Subtle Decorative Element -->
+<div class="absolute bottom-12 right-12 flex gap-1">
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+<div class="w-8 h-2 rounded-full bg-white/60"></div>
+<div class="w-2 h-2 rounded-full bg-white/20"></div>
+</div>
+</section>
+</main>
+</body></html>
