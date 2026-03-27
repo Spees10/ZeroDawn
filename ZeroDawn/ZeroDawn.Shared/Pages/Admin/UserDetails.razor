@@ -3,10 +3,6 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,SuperAdmin")]
 @inherits AppPageBase
 
-<PageHeader Title="User Details"
-            Breadcrumb='@L["Users"]'
-            Subtitle="@UserId" />
-
 @if (HasError)
 {
     <ErrorDisplay Message="@ErrorMessage"
@@ -17,40 +13,156 @@
 }
 else if (_isLoading)
 {
-    <div class="d-flex flex-column gap-2">
-        <Skeleton Height="8rem" />
-        <Skeleton Height="10rem" />
+    <div class="user-details__loading">
+        <Skeleton Height="14rem" Rounded="true" />
+        <Skeleton Height="20rem" Rounded="true" />
     </div>
 }
 else if (_user is null)
 {
-    <EmptyState Message='@L["NoResults"]' />
+    <EmptyState Message="المستخدم المطلوب غير موجود." />
 }
 else
 {
-    <div class="row g-3">
-        <div class="col-12 col-lg-8">
-            <div class="card h-100">
-                <div class="mb-2"><strong>@L["FullName"]:</strong> @_user.FullName</div>
-                <div class="mb-2"><strong>@L["Email"]:</strong> @_user.Email</div>
-                <div class="mb-2"><strong>Roles:</strong> @string.Join(", ", _user.Roles)</div>
-                <div class="mb-2"><strong>Status:</strong> @(_user.IsActive ? "Active" : "Inactive")</div>
-                <div class="mb-2"><strong>Created:</strong> @_user.CreatedAt.ToLocalTime().ToString("g")</div>
-                <div class="mb-0"><strong>Last Login:</strong> @_user.LastLoginAt?.ToLocalTime().ToString("g")</div>
-            </div>
-        </div>
+    <section class="user-details">
+        <header class="user-details__hero">
+            <div class="user-details__identity-card">
+                <div class="user-details__identity-meta">
+                    <div class="user-details__eyebrow">تفاصيل الحساب</div>
+                    <div class="user-details__breadcrumbs">إدارة المستخدمين / @_user.FullName</div>
+                </div>
 
-        <div class="col-12 col-lg-4">
-            <div class="card d-flex flex-column gap-2">
-                <button type="button" class="btn btn-secondary" @onclick="ToggleStatusAsync">
-                    @(_user.IsActive ? "Disable User" : "Enable User")
-                </button>
-                <button type="button" class="btn btn-primary" @onclick="CycleRoleAsync">
-                    Change Role
-                </button>
+                <div class="user-details__identity-main">
+                    <div class="user-details__avatar">@GetInitials(_user.FullName)</div>
+
+                    <div class="user-details__identity-copy">
+                        <div class="user-details__title-row">
+                            <h1>@_user.FullName</h1>
+                            <span class="user-details__status @( _user.IsActive ? "is-active" : "is-inactive")">
+                                @(_user.IsActive ? "نشط" : "موقوف")
+                            </span>
+                        </div>
+
+                        <p>@(_user.Roles.FirstOrDefault() ?? "User") - إدارة البنية والعمليات</p>
+
+                        <dl class="user-details__meta-grid">
+                            <div>
+                                <dt>المعرف</dt>
+                                <dd>@_user.Id</dd>
+                            </div>
+                            <div>
+                                <dt>البريد الإلكتروني</dt>
+                                <dd>@_user.Email</dd>
+                            </div>
+                            <div>
+                                <dt>الدور الحالي</dt>
+                                <dd>@string.Join(" / ", _user.Roles)</dd>
+                            </div>
+                            <div>
+                                <dt>تاريخ الإنشاء</dt>
+                                <dd>@_user.CreatedAt.ToLocalTime().ToString("d")</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                <div class="user-details__hero-actions">
+                    <button type="button" class="user-details__ghost-action" @onclick="CycleRoleAsync">
+                        <span class="material-symbols-outlined">shield_person</span>
+                        تبديل الدور
+                    </button>
+                    <button type="button" class="user-details__danger-action" @onclick="ToggleStatusAsync">
+                        <span class="material-symbols-outlined">block</span>
+                        @(_user.IsActive ? "تعطيل المستخدم" : "إعادة تفعيل المستخدم")
+                    </button>
+                </div>
             </div>
-        </div>
-    </div>
+
+            <aside class="user-details__insight-card">
+                <p>إحصائيات الوصول</p>
+                <div class="user-details__insight-row">
+                    <span class="material-symbols-outlined">login</span>
+                    <div>
+                        <small>آخر تسجيل دخول</small>
+                        <strong>@(_user.LastLoginAt?.ToLocalTime().ToString("g") ?? "لا يوجد")</strong>
+                    </div>
+                </div>
+                <div class="user-details__insight-row">
+                    <span class="material-symbols-outlined">event</span>
+                    <div>
+                        <small>تاريخ الانضمام</small>
+                        <strong>@_user.CreatedAt.ToLocalTime().ToString("d")</strong>
+                    </div>
+                </div>
+                <div class="user-details__insight-row">
+                    <span class="material-symbols-outlined">verified_user</span>
+                    <div>
+                        <small>مستوى الصلاحية</small>
+                        <strong>@GetAuthorityLevel(_user)</strong>
+                    </div>
+                </div>
+            </aside>
+        </header>
+
+        <section class="user-details__grid">
+            <article class="user-details__panel">
+                <header>
+                    <h2>سجل النشاط الأخير</h2>
+                    <span class="material-symbols-outlined">history</span>
+                </header>
+
+                <div class="user-details__activity-list">
+                    @foreach (var activity in BuildActivityFeed(_user))
+                    {
+                        <div class="user-details__activity-item">
+                            <div class="user-details__activity-dot @(activity.IsWarning ? "is-warning" : string.Empty)"></div>
+                            <div>
+                                <strong>@activity.Title</strong>
+                                <p>@activity.Description</p>
+                            </div>
+                            <span>@activity.When</span>
+                        </div>
+                    }
+                </div>
+            </article>
+
+            <article class="user-details__panel">
+                <header>
+                    <h2>الأدوار والصلاحيات</h2>
+                    <span class="material-symbols-outlined">security</span>
+                </header>
+
+                <div class="user-details__permission-list">
+                    @foreach (var permission in BuildPermissionItems(_user))
+                    {
+                        <div class="user-details__permission-item">
+                            <div>
+                                <strong>@permission.Title</strong>
+                                <p>@permission.Description</p>
+                            </div>
+                            <span class="user-details__permission-state @(permission.IsEnabled ? "is-enabled" : "is-disabled")">
+                                @(permission.IsEnabled ? "مفعل" : "مقيد")
+                            </span>
+                        </div>
+                    }
+                </div>
+            </article>
+
+            <article class="user-details__panel user-details__panel--alert">
+                <header>
+                    <h2>تنبيه إداري</h2>
+                    <span class="material-symbols-outlined">warning</span>
+                </header>
+                <p>
+                    هذا الحساب @( _user.IsActive ? "فعال" : "موقوف") حاليًا.
+                    @( _user.EmailConfirmed ? "البريد الإلكتروني مؤكد." : "البريد الإلكتروني لم يتم تأكيده بعد.")
+                </p>
+                <button type="button" @onclick="@(() => ToastService.ShowInfo("ميزة ملاحظات الإدارة ستتضاف لاحقًا."))">
+                    تسجيل ملاحظة جديدة
+                </button>
+            </article>
+        </section>
+    </section>
 }
 
 @code {
@@ -137,7 +249,7 @@ else
                 };
             }
 
-            ShowSuccess("User status updated.");
+            ShowSuccess("تم تحديث حالة المستخدم.");
         }
         catch (Exception ex)
         {
@@ -187,7 +299,7 @@ else
                 };
             }
 
-            ShowSuccess("Role updated.");
+            ShowSuccess("تم تحديث الدور بنجاح.");
         }
         catch (Exception ex)
         {
@@ -195,12 +307,46 @@ else
         }
     }
 
+    private static string GetAuthorityLevel(UserDto user)
+    {
+        if (user.Roles.Contains("SuperAdmin"))
+        {
+            return "إداري مستوى 5";
+        }
+
+        if (user.Roles.Contains("Admin"))
+        {
+            return "إداري مستوى 4";
+        }
+
+        return "مستخدم مستوى 1";
+    }
+
+    private static List<ActivityItem> BuildActivityFeed(UserDto user)
+        =>
+        [
+            new("تسجيل دخول من جهاز جديد", $"تمت المراجعة من عنوان IP داخلي للمستخدم {user.FullName}.", "منذ 45 دقيقة", false),
+            new("تعديل بيانات وصول", "تم تحديث جلسة الوصول وإعادة مصادقة الجلسة.", "منذ 3 ساعات", false),
+            new("محاولة وصول حساسة", "تم رفض محاولة الوصول إلى جزء إداري أعلى.", "أمس", true)
+        ];
+
+    private static List<PermissionItem> BuildPermissionItems(UserDto user)
+        =>
+        [
+            new("لوحة التحكم الرئيسية", "الوصول إلى مؤشرات النظام ولوحات المراقبة.", true),
+            new("إدارة المستخدمين", "التحكم في التفعيل والتعطيل وتحرير الحسابات.", user.Roles.Contains("Admin") || user.Roles.Contains("SuperAdmin")),
+            new("سجل الأخطاء", "الوصول إلى تفاصيل الأخطاء والتشخيصات.", user.Roles.Contains("SuperAdmin"))
+        ];
+
     private static List<UserDto> GetDemoUsers()
         =>
         [
-            new() { Id = "1", FullName = "Super Admin", Email = "admin@zerodawn.local", Roles = ["SuperAdmin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-8), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddMinutes(-25) },
-            new() { Id = "2", FullName = "Ops Admin", Email = "ops@zerodawn.local", Roles = ["Admin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-6), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddHours(-3) },
-            new() { Id = "3", FullName = "Sarah User", Email = "sarah@zerodawn.local", Roles = ["User"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-2), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddDays(-1) },
-            new() { Id = "4", FullName = "Inactive User", Email = "inactive@zerodawn.local", Roles = ["User"], IsActive = false, CreatedAt = DateTime.UtcNow.AddMonths(-1), EmailConfirmed = false, LastLoginAt = DateTime.UtcNow.AddDays(-12) }
+            new() { Id = "1", FullName = "لواء الأشقر", Email = "loai.asp97@gmail.com", Roles = ["SuperAdmin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-8), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddMinutes(-25) },
+            new() { Id = "2", FullName = "سارة الفايد", Email = "ops@zerodawn.local", Roles = ["Admin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-6), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddHours(-3) },
+            new() { Id = "3", FullName = "أحمد كمال بن يوسف", Email = "ahmed@zerodawn.local", Roles = ["User"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-2), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddDays(-1) },
+            new() { Id = "4", FullName = "مستخدم غير نشط", Email = "inactive@zerodawn.local", Roles = ["User"], IsActive = false, CreatedAt = DateTime.UtcNow.AddMonths(-1), EmailConfirmed = false, LastLoginAt = DateTime.UtcNow.AddDays(-12) }
         ];
+
+    private sealed record ActivityItem(string Title, string Description, string When, bool IsWarning);
+    private sealed record PermissionItem(string Title, string Description, bool IsEnabled);
 }

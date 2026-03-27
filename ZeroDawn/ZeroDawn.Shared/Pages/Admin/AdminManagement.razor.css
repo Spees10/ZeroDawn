@@ -1,0 +1,377 @@
+.admin-management {
+    display: grid;
+    gap: 1.75rem;
+}
+
+.admin-management__hero,
+.admin-management__table-shell,
+.admin-management__events-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,245,255,0.92));
+    border: 1px solid rgba(70, 89, 169, 0.08);
+    box-shadow: 0 24px 48px rgba(24, 34, 70, 0.06);
+}
+
+.admin-management__hero {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 2rem;
+}
+
+.admin-management__eyebrow {
+    margin: 0 0 0.6rem;
+    color: var(--color-success);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+}
+
+.admin-management__hero h1 {
+    margin: 0 0 0.8rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+}
+
+.admin-management__subtitle {
+    max-width: 42rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+}
+
+.admin-management__hero-actions {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.admin-management__hero-actions button,
+.admin-management__row-action,
+.admin-management__audit-card button {
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.admin-management__hero-actions button:hover,
+.admin-management__row-action:hover,
+.admin-management__audit-card button:hover {
+    transform: translateY(-1px);
+}
+
+.admin-management__primary-action,
+.admin-management__secondary-action,
+.admin-management__row-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 1rem;
+    font-weight: 700;
+}
+
+.admin-management__primary-action {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 16px 28px rgba(68, 86, 166, 0.22);
+}
+
+.admin-management__secondary-action,
+.admin-management__row-action {
+    background: rgba(92, 111, 193, 0.1);
+    color: var(--color-primary);
+}
+
+.admin-management__stats {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-management__stat-card {
+    display: grid;
+    gap: 0.45rem;
+    padding: 1.45rem 1.5rem;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(70, 89, 169, 0.06);
+    box-shadow: 0 18px 36px rgba(24, 34, 70, 0.05);
+}
+
+.admin-management__stat-card span,
+.admin-management__stat-card small {
+    color: var(--color-text-muted);
+}
+
+.admin-management__stat-card strong {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.admin-management__stat-card--wide {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+.admin-management__health-bars {
+    display: flex;
+    gap: 0.35rem;
+}
+
+.admin-management__health-bars span {
+    width: 0.35rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: rgba(0, 105, 85, 0.18);
+}
+
+.admin-management__health-bars span.is-active {
+    background: var(--color-success);
+}
+
+.admin-management__table-shell {
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.admin-management__table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid rgba(70, 89, 169, 0.08);
+}
+
+.admin-management__table-header h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.admin-management__table-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.admin-management__table-tags span {
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(92, 111, 193, 0.1);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.admin-management__table-tools {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.admin-management__table-tools button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 0.85rem;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.admin-management__table-wrap {
+    overflow-x: auto;
+}
+
+.admin-management__table {
+    width: 100%;
+    min-width: 50rem;
+    border-collapse: collapse;
+}
+
+.admin-management__table th,
+.admin-management__table td {
+    padding: 1.15rem 1.4rem;
+    text-align: right;
+    border-bottom: 1px solid rgba(70, 89, 169, 0.06);
+}
+
+.admin-management__table th {
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.admin-management__identity {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.admin-management__avatar {
+    display: grid;
+    place-items: center;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 0.95rem;
+    background: rgba(68, 86, 166, 0.12);
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+.admin-management__identity strong,
+.admin-management__last-login strong {
+    display: block;
+    color: var(--color-text);
+}
+
+.admin-management__identity small,
+.admin-management__last-login {
+    color: var(--color-text-muted);
+}
+
+.admin-management__role,
+.admin-management__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.42rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 800;
+}
+
+.admin-management__role.is-critical {
+    color: #b42318;
+}
+
+.admin-management__role.is-standard {
+    color: var(--color-primary);
+}
+
+.admin-management__status.is-active {
+    background: rgba(34, 197, 94, 0.12);
+    color: #0f7b3b;
+}
+
+.admin-management__status.is-inactive {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
+.admin-management__loading {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.admin-management__lower-grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2.2fr);
+    gap: 1.25rem;
+}
+
+.admin-management__audit-card {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1.6rem;
+    border-radius: 2rem;
+    background: linear-gradient(180deg, #576ad3, #4558b5);
+    color: white;
+    box-shadow: 0 24px 46px rgba(69, 88, 181, 0.24);
+}
+
+.admin-management__audit-card p,
+.admin-management__audit-card span {
+    margin: 0;
+    opacity: 0.92;
+}
+
+.admin-management__audit-card strong {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.admin-management__audit-card button {
+    justify-self: start;
+    padding: 0.9rem 1.1rem;
+    border-radius: 1rem;
+    background: white;
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+.admin-management__events-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem;
+    border-radius: 2rem;
+}
+
+.admin-management__events-card header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-management__events-card h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.admin-management__events-card a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-management__events-list {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.admin-management__event-item {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(92, 111, 193, 0.05);
+}
+
+.admin-management__event-item strong {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.admin-management__event-item p,
+.admin-management__event-item span {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 960px) {
+    .admin-management__hero,
+    .admin-management__table-header,
+    .admin-management__lower-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-management__stats {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-management__stat-card--wide {
+        grid-template-columns: 1fr;
+    }
+}

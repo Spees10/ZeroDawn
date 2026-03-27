@@ -2,12 +2,89 @@
 @layout MainLayout
 @inherits AppPageBase
 
-<PageHeader Title='@L["About"]'
-            Breadcrumb='@L["Home"]'
-            Subtitle='@L["AppName"]' />
+<section class="about-page">
+    <header class="about-page__hero">
+        <div class="about-page__visual">
+            <div class="about-page__visual-core">ZD</div>
+        </div>
 
-<div class="card">
-    <h3 class="mb-3">@L["AppName"]</h3>
-    <p class="text-muted mb-2">Version 1.0.0</p>
-    <p class="mb-0">A Blazor Hybrid platform for secure administration, diagnostics, and user operations.</p>
-</div>
+        <div class="about-page__copy">
+            <p class="about-page__eyebrow">Identity &amp; Core</p>
+            <h1>
+                زيرو دون
+                <span>منظومة إدارية تنفيذية</span>
+            </h1>
+            <p>
+                منصة Blazor Hybrid / Web إدارية موجهة لإدارة المستخدمين، التتبع، الصحة التشغيلية،
+                وسير العمل الأمني من نفس الـ shell وبهوية عربية RTL من البداية.
+            </p>
+        </div>
+    </header>
+
+    <section class="about-page__grid">
+        <article class="about-page__card about-page__card--highlight">
+            <span>Stable core</span>
+            <strong>99.9%</strong>
+            <small>جاهزية تشغيلية واستقرار أساسي للبنية</small>
+        </article>
+
+        <article class="about-page__card">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <h2>Precision-first architecture</h2>
+            <p>
+                واجهات قليلة الضوضاء، State واضح، reusable components مشتركة بين Web و MAUI،
+                وطبقات API / Shared / Host مفصولة بوضوح.
+            </p>
+        </article>
+
+        <article class="about-page__card about-page__card--soft">
+            <h2>Platform purpose</h2>
+            <p>
+                تمكين فرق الإدارة والدعم من إدارة الصلاحيات، مراقبة الأخطاء، ومتابعة النظام
+                بدون الحاجة لواجهات منفصلة أو حلول متفرقة.
+            </p>
+        </article>
+
+        <article class="about-page__card">
+            <span class="material-symbols-outlined">verified_user</span>
+            <h2>Zero-trust security</h2>
+            <p>
+                JWT + refresh tokens + rate limiting + structured logging + global exception tracking
+                كأساس تشغيلي افتراضي.
+            </p>
+        </article>
+    </section>
+
+    <section class="about-page__specs">
+        <h2>مواصفات المنصة</h2>
+
+        <div class="about-page__spec-list">
+            <div>
+                <span>Build version</span>
+                <strong>v1.0.0-template</strong>
+                <small>STABLE_RELEASE</small>
+            </div>
+            <div>
+                <span>Platform base</span>
+                <strong>Unified Data Engine</strong>
+                <small>ASP.NET Core + Blazor + EF Core</small>
+            </div>
+            <div>
+                <span>Regional deployment</span>
+                <strong>Middle East North (MENA)</strong>
+                <small>RTL_OPTIMIZED</small>
+            </div>
+        </div>
+    </section>
+
+    <footer class="about-page__footer">
+        <div>
+            <strong>ZeroDawn</strong>
+            <p>Built as a reusable operational template for new ideas, not just a one-off project.</p>
+        </div>
+        <div>
+            <small>Last system update</small>
+            <span>@DateTime.Now.ToString("yyyy-MM-dd HH:mm")</span>
+        </div>
+    </footer>
+</section>

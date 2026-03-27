@@ -9,41 +9,44 @@
                 <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
                     <Authorizing>
                         <LayoutView Layout="typeof(Layout.AuthLayout)">
-                            <div class="card text-center">
+                            <section class="routes-feedback routes-feedback--loading">
                                 <LoadingSpinner Size="large" />
-                                <p class="mt-3 mb-0 text-muted">@L["Loading"]</p>
-                            </div>
+                                <p>@L["Loading"]</p>
+                            </section>
                         </LayoutView>
                     </Authorizing>
                     <NotAuthorized>
                         <AuthorizeView>
                             <Authorized Context="authorizedContext">
                                 <LayoutView Layout="typeof(Layout.AuthLayout)">
-                                    <div class="card text-center">
-                                        <h1 class="mb-2">
-                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                                ? "غير مصرح"
-                                                : "Access denied")
-                                        </h1>
-                                        <p class="text-muted mb-0">
-                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                                ? "ليس لديك صلاحية للوصول إلى هذه الصفحة."
-                                                : "You do not have permission to access this page.")
-                                        </p>
-                                    </div>
+                                    <section class="routes-feedback routes-feedback--forbidden">
+                                        <div class="routes-feedback__visual">
+                                            <span class="routes-feedback__lock">403</span>
+                                        </div>
+                                        <div class="routes-feedback__copy">
+                                            <h1>وصول محدود</h1>
+                                            <p>عذرًا، لا تملك الصلاحيات الكافية للوصول إلى هذه الصفحة.</p>
+                                            <small>معرف العملية: ZD-SEC-9921-X</small>
+                                        </div>
+                                    </section>
                                 </LayoutView>
                             </Authorized>
                             <NotAuthorized Context="anonymousContext">
                                 <LayoutView Layout="typeof(Layout.AuthLayout)">
-                                    <div class="card text-center">
-                                        <h1 class="mb-2">@L["Login"]</h1>
-                                        <p class="text-muted mb-3">
-                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                                ? "يجب تسجيل الدخول للوصول إلى هذه الصفحة."
-                                                : "You must sign in to access this page.")
-                                        </p>
-                                        <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
-                                    </div>
+                                    <section class="routes-feedback routes-feedback--login">
+                                        <div class="routes-feedback__visual routes-feedback__visual--soft">
+                                            <span class="material-symbols-outlined">login</span>
+                                        </div>
+                                        <div class="routes-feedback__copy">
+                                            <h1>@L["Login"]</h1>
+                                            <p>
+                                                @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                                                    ? "يجب تسجيل الدخول للوصول إلى هذه الصفحة."
+                                                    : "You must sign in to access this page.")
+                                            </p>
+                                            <a class="routes-feedback__button" href="/login">@L["BackToLogin"]</a>
+                                        </div>
+                                    </section>
                                 </LayoutView>
                             </NotAuthorized>
                         </AuthorizeView>
@@ -54,3 +57,59 @@
         </Found>
     </Router>
 </CascadingAuthenticationState>
+
+<style>
+    .routes-feedback {
+        display: grid;
+        justify-items: center;
+        gap: 1rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .routes-feedback__visual {
+        display: grid;
+        place-items: center;
+        width: 6rem;
+        height: 6rem;
+        border-radius: 1.6rem;
+        background: rgba(92, 111, 193, 0.1);
+        color: var(--color-primary);
+        font-size: 2rem;
+        font-weight: 800;
+    }
+
+    .routes-feedback__visual--soft {
+        background: rgba(186, 233, 221, 0.55);
+        color: #224e45;
+    }
+
+    .routes-feedback__copy {
+        display: grid;
+        gap: 0.6rem;
+        justify-items: center;
+    }
+
+    .routes-feedback__copy h1 {
+        margin: 0;
+    }
+
+    .routes-feedback__copy p,
+    .routes-feedback__copy small {
+        margin: 0;
+        color: var(--color-text-muted);
+        line-height: 1.7;
+    }
+
+    .routes-feedback__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.85rem 1.1rem;
+        border-radius: 999px;
+        background: var(--color-primary);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+    }
+</style>

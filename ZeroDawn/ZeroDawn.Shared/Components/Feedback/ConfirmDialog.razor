@@ -5,14 +5,16 @@
     <div class="confirm-dialog">
         <div class="confirm-dialog__backdrop" @onclick="OnCancel"></div>
 
-        <div class="confirm-dialog__panel card" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
-            <div class="confirm-dialog__icon">⚠</div>
+        <div class="confirm-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
+            <div class="confirm-dialog__icon">
+                <span class="material-symbols-outlined">warning</span>
+            </div>
             <h3 id="confirm-dialog-title" class="confirm-dialog__title">@ResolvedTitle</h3>
             <p class="confirm-dialog__message">@Message</p>
 
             <div class="confirm-dialog__actions">
-                <button type="button" class="btn btn-secondary" @onclick="OnCancel">@ResolvedCancelText</button>
-                <button type="button" class="btn btn-danger" @onclick="OnConfirm">@ResolvedConfirmText</button>
+                <button type="button" class="confirm-dialog__cancel" @onclick="OnCancel">@ResolvedCancelText</button>
+                <button type="button" class="confirm-dialog__confirm" @onclick="OnConfirm">@ResolvedConfirmText</button>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
                 @onclick="OnMenuToggle"
                 aria-label="@L["OpenNavigation"]"
                 title="@L["OpenNavigation"]">
-            ☰
+            <span class="material-symbols-outlined" aria-hidden="true">menu</span>
         </button>
 
         <div class="topbar__heading">
@@ -20,7 +20,7 @@
         <ThemeToggle />
 
         <label class="topbar__language" aria-label="@L["LanguageSelector"]">
-            <span class="topbar__language-icon">🌐</span>
+            <span class="topbar__language-icon material-symbols-outlined" aria-hidden="true">language</span>
             <select value="@CurrentCulture" @onchange="HandleCultureChanged">
                 <option value="ar">@L["LanguageArabic"]</option>
                 <option value="en">@L["LanguageEnglish"]</option>
@@ -40,7 +40,7 @@
         </div>
 
         <button type="button" class="topbar__logout btn btn-secondary" @onclick="OnLogout">
-            <span>⇦</span>
+            <span class="material-symbols-outlined" aria-hidden="true">logout</span>
             <span class="topbar__logout-text">@L["Logout"]</span>
         </button>
     </div>

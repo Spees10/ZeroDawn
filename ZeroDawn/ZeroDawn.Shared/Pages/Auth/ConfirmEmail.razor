@@ -3,13 +3,13 @@
 @inherits AuthPageBase
 @using Microsoft.AspNetCore.Components
 @using ZeroDawn.Shared.Contracts.Auth
-@using ZeroDawn.Shared.Layout
 
-<div class="d-flex flex-column gap-4">
-    <div>
-        <h1 class="mb-2">@L["ConfirmEmail"]</h1>
-        <p class="text-muted mb-0">@(_isSubmitting ? L["ConfirmingEmail"] : _statusMessage)</p>
-    </div>
+<div class="auth-flow">
+    <header class="auth-flow__header">
+        <div class="auth-flow__eyebrow">@L["ConfirmEmail"]</div>
+        <h1 class="auth-flow__title">التحقق من البريد الإلكتروني</h1>
+        <p class="auth-flow__subtitle">نقوم الآن بمعالجة طلب التحقق وتأمين حسابك قبل نقلك إلى الخطوة التالية.</p>
+    </header>
 
     @if (HasUnhandledError)
     {
@@ -21,24 +21,37 @@
     }
     else if (_invalidLink)
     {
-        <ErrorDisplay Message="@L["InvalidLink"]"
-                      TechnicalDetails="Missing userId or token query parameter."
-                      ShowTechnicalDetails="true"
-                      OnRetry="SubmitAsync" />
+        <div class="auth-state auth-state--error">
+            <div class="auth-state__icon">
+                <span class="material-symbols-outlined">link_off</span>
+            </div>
+            <h3 class="auth-state__title">@L["InvalidLink"]</h3>
+            <p class="auth-state__copy">الرابط غير مكتمل أو انتهت صلاحيته. اطلب رابط تحقق جديد للمتابعة.</p>
+            <div class="auth-flow__actions mt-4">
+                <a class="btn btn-secondary" href="/resend-confirmation">@L["ResendEmail"]</a>
+                <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
+            </div>
+        </div>
     }
     else if (_isSubmitting)
     {
-        <div class="card text-center">
-            <LoadingSpinner Size="large" />
-            <p class="mt-3 mb-0 text-muted">@L["ConfirmingEmail"]</p>
+        <div class="auth-state">
+            <div class="auth-state__icon">
+                <LoadingSpinner Size="large" />
+            </div>
+            <h3 class="auth-state__title">@L["ConfirmingEmail"]</h3>
+            <p class="auth-state__copy">جاري تأكيد الرابط والتحقق من صلاحية الطلب الآن.</p>
         </div>
     }
     else
     {
-        <div class="card text-center">
-            <h3 class="mb-2">@(_isSuccess ? L["EmailConfirmedSuccess"] : L["EmailConfirmationFailed"])</h3>
-            <p class="text-muted mb-3">@_statusMessage</p>
-            <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <div class="auth-state @(_isSuccess ? "auth-state--success" : "auth-state--error")">
+            <div class="auth-state__icon">
+                <span class="material-symbols-outlined">@(_isSuccess ? "verified" : "error")</span>
+            </div>
+            <h3 class="auth-state__title">@(_isSuccess ? L["EmailConfirmedSuccess"] : L["EmailConfirmationFailed"])</h3>
+            <p class="auth-state__copy">@_statusMessage</p>
+            <div class="auth-flow__actions mt-4">
                 @if (!_isSuccess)
                 {
                     <button type="button" class="btn btn-secondary" @onclick="SubmitAsync">@L["Retry"]</button>

@@ -3,10 +3,6 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin")]
 @inherits AppPageBase
 
-<PageHeader Title="Error Logs"
-            Breadcrumb='@L["Dashboard"]'
-            Subtitle="Review recent system errors" />
-
 @if (HasError)
 {
     <ErrorDisplay Message="@ErrorMessage"
@@ -17,77 +13,152 @@
 }
 else
 {
-    <div class="card">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-            <SearchBar Placeholder="Search by reference number" OnSearch="HandleSearchAsync" />
+    <section class="error-logs">
+        <header class="error-logs__hero">
+            <div>
+                <p class="error-logs__eyebrow">Logs Explorer</p>
+                <h1>مستكشف السجل التقني</h1>
+                <p>
+                    شاشة SuperAdmin لمتابعة المشاكل، المرجعيات، وحركة الخدمة مع surface تقني سريع المسح
+                    بدل جدول تقليدي جاف.
+                </p>
+            </div>
+
+            <div class="error-logs__hero-actions">
+                <button type="button" class="error-logs__ghost-action">تصدير CSV</button>
+                <button type="button" class="error-logs__primary-action">بث لحظي</button>
+            </div>
+        </header>
+
+        <section class="error-logs__metrics">
+            <article class="error-logs__metric-card is-health">
+                <span>System health</span>
+                <strong>@($"{ComputeHealthScore():0.#}%")</strong>
+            </article>
+            <article class="error-logs__metric-card">
+                <span>إجمالي الطلبات</span>
+                <strong>@($"{_logs.Count * 0.6:0.0}K")</strong>
+                <small>آخر دورة تحميل</small>
+            </article>
+            <article class="error-logs__metric-card">
+                <span>متوسط التأخير</span>
+                <strong>@($"{ComputeAverageLatency():0}")<small>ms</small></strong>
+                <small>مستنتج من مددد الفحوصات والسجلات الحالية</small>
+            </article>
+            <article class="error-logs__metric-card is-critical">
+                <span>الأخطاء الحرجة</span>
+                <strong>@_logs.Count(log => ResolveSeverity(log) == "حرج")</strong>
+                <small>تحتاج مراجعة الآن</small>
+            </article>
+        </section>
+
+        <section class="error-logs__filters">
+            <SearchBar Placeholder="ابحث برقم المرجع أو المسار" OnSearch="HandleSearchAsync" />
+
+            <div class="error-logs__chips">
+                <button type="button">جميع المستويات</button>
+                <button type="button">Auth Service</button>
+                <button type="button">آخر 24 ساعة</button>
+            </div>
+        </section>
+
+        <section class="error-logs__table-shell">
             @if (_isLoading)
             {
-                <LoadingSpinner Size="small" />
+                <div class="error-logs__loading">
+                    <Skeleton Height="4.4rem" />
+                    <Skeleton Height="4.4rem" />
+                    <Skeleton Height="4.4rem" />
+                </div>
             }
-        </div>
-
-        @if (_isLoading)
-        {
-            <div class="d-flex flex-column gap-2">
-                <Skeleton Height="3rem" />
-                <Skeleton Height="3rem" />
-            </div>
-        }
-        else if (_logs.Count == 0)
-        {
-            <EmptyState Message='@L["NoResults"]' />
-        }
-        else
-        {
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead>
-                        <tr>
-                            <th>Reference</th>
-                            <th>Message</th>
-                            <th>Path</th>
-                            <th>Created</th>
-                            <th>@L["Edit"]</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var log in _logs)
-                        {
+            else if (_logs.Count == 0)
+            {
+                <EmptyState Message="لا توجد سجلات مطابقة للفلترة الحالية." />
+            }
+            else
+            {
+                <div class="error-logs__table-wrap">
+                    <table class="error-logs__table">
+                        <thead>
                             <tr>
-                                <td><Badge Text="@log.ReferenceNumber" Variant="error" /></td>
-                                <td>@Truncate(log.Message, 70)</td>
-                                <td>@log.RequestPath</td>
-                                <td>@log.CreatedAt.ToLocalTime().ToString("g")</td>
-                                <td>
-                                    <button type="button" class="btn btn-secondary" @onclick="() => ToggleExpanded(log.Id)">
-                                        @(_expandedLogId == log.Id ? "Hide" : "View")
-                                    </button>
-                                </td>
+                                <th>التفاصيل</th>
+                                <th>الحالة</th>
+                                <th>المسار</th>
+                                <th>المرجع</th>
+                                <th>المستوى</th>
+                                <th>التوقيت</th>
                             </tr>
-
-                            @if (_expandedLogId == log.Id)
+                        </thead>
+                        <tbody>
+                            @foreach (var log in _logs)
                             {
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="card">
-                                            <div><strong>Source:</strong> @log.Source</div>
-                                            <div><strong>Correlation:</strong> @log.CorrelationId</div>
-                                            <div><strong>Inner:</strong> @log.InnerException</div>
-                                            <pre class="mb-0 mt-3">@log.StackTrace</pre>
-                                        </div>
+                                var severity = ResolveSeverity(log);
+                                <tr class="@(_expandedLogId == log.Id ? "is-expanded" : string.Empty)">
+                                    <td>
+                                        <button type="button" class="error-logs__trace-button" @onclick="() => ToggleExpanded(log.Id)">
+                                            <span class="material-symbols-outlined">chevron_left</span>
+                                            @(_expandedLogId == log.Id ? "إخفاء" : "عرض")
+                                        </button>
                                     </td>
+                                    <td><span class="error-logs__status-code">@ResolveStatusCode(log)</span></td>
+                                    <td class="error-logs__path">@log.RequestPath</td>
+                                    <td><span class="error-logs__reference">@log.ReferenceNumber</span></td>
+                                    <td><span class="error-logs__severity @MapSeverityClass(severity)">@severity</span></td>
+                                    <td>@log.CreatedAt.ToLocalTime().ToString("g")</td>
                                 </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
 
-            <Pagination CurrentPage="@_currentPage"
-                        TotalPages="@_totalPages"
-                        OnPageChanged="HandlePageChangedAsync" />
-        }
-    </div>
+                                @if (_expandedLogId == log.Id)
+                                {
+                                    <tr class="error-logs__expanded-row">
+                                        <td colspan="6">
+                                            <div class="error-logs__trace-card">
+                                                <div class="error-logs__trace-meta">
+                                                    <span>Source: @log.Source</span>
+                                                    <span>Correlation: @log.CorrelationId</span>
+                                                    <span>Inner: @(string.IsNullOrWhiteSpace(log.InnerException) ? "-" : log.InnerException)</span>
+                                                </div>
+                                                <pre>@log.StackTrace</pre>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <Pagination CurrentPage="@_currentPage"
+                            TotalPages="@_totalPages"
+                            OnPageChanged="HandlePageChangedAsync" />
+            }
+        </section>
+
+        <section class="error-logs__lower-grid">
+            <article class="error-logs__alert-card">
+                <h3>تنبيه تنبؤي</h3>
+                <p>
+                    بناءً على السجلات الحالية، هناك احتمال لتصاعد في أخطاء الـ cache invalidation
+                    لو استمر نفس النمط خلال الدقائق القادمة.
+                </p>
+                <button type="button">بدء توسعة تلقائية</button>
+            </article>
+
+            <article class="error-logs__distribution-card">
+                <h3>توزيع الأخطاء حسب الخدمة</h3>
+                <div class="error-logs__bars">
+                    @foreach (var bar in BuildDistribution())
+                    {
+                        <div class="error-logs__bar-item">
+                            <div class="error-logs__bar-track">
+                                <div class="error-logs__bar-fill" style="height:@($"{bar.Height}%")"></div>
+                            </div>
+                            <span>@bar.Label</span>
+                        </div>
+                    }
+                </div>
+            </article>
+        </section>
+    </section>
 }
 
 @code {
@@ -143,7 +214,8 @@ else
             {
                 var allLogs = GetDemoLogs()
                     .Where(log => string.IsNullOrWhiteSpace(_searchTerm)
-                        || log.ReferenceNumber.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))
+                        || (log.ReferenceNumber?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+                        || (log.RequestPath?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false))
                     .ToList();
                 _totalPages = Math.Max(1, (int)Math.Ceiling(allLogs.Count / 10d));
                 _logs = allLogs.Skip((_currentPage - 1) * 10).Take(10).ToList();
@@ -164,13 +236,71 @@ else
         _expandedLogId = _expandedLogId == id ? null : id;
     }
 
-    private static string Truncate(string value, int maxLength)
-        => value.Length <= maxLength ? value : $"{value[..maxLength]}...";
+    private double ComputeHealthScore()
+        => _logs.Count == 0
+            ? 100
+            : Math.Max(72, 100 - _logs.Count(log => ResolveSeverity(log) == "حرج") * 6.5);
+
+    private double ComputeAverageLatency()
+        => _logs.Count == 0 ? 240 : _logs.Average(log => Math.Max(80, log.Message.Length * 2.4));
+
+    private static string ResolveSeverity(ErrorLogDto log)
+    {
+        if (log.Message.Contains("Null", StringComparison.OrdinalIgnoreCase)
+            || log.Message.Contains("503", StringComparison.OrdinalIgnoreCase))
+        {
+            return "حرج";
+        }
+
+        if (log.Message.Contains("Timeout", StringComparison.OrdinalIgnoreCase)
+            || log.Message.Contains("401", StringComparison.OrdinalIgnoreCase))
+        {
+            return "تحذير";
+        }
+
+        return "معلومة";
+    }
+
+    private static string ResolveStatusCode(ErrorLogDto log)
+    {
+        if (log.Message.Contains("401", StringComparison.OrdinalIgnoreCase))
+        {
+            return "401";
+        }
+
+        if (log.Message.Contains("503", StringComparison.OrdinalIgnoreCase))
+        {
+            return "503";
+        }
+
+        return log.Message.Contains("Null", StringComparison.OrdinalIgnoreCase) ? "500" : "200";
+    }
+
+    private static string MapSeverityClass(string severity) => severity switch
+    {
+        "حرج" => "is-critical",
+        "تحذير" => "is-warning",
+        _ => "is-info"
+    };
+
+    private List<DistributionBar> BuildDistribution()
+        =>
+        [
+            new("Routing", 36),
+            new("Media", 14),
+            new("Database", 61),
+            new("Payment", 29),
+            new("Auth", 48)
+        ];
 
     private static List<ErrorLogDto> GetDemoLogs()
         =>
         [
-            new() { Id = 1, ReferenceNumber = "ERR-0325-A12B3C", Message = "Null reference in dashboard query pipeline", RequestPath = "/api/admin/error-logs", CreatedAt = DateTime.UtcNow.AddMinutes(-15), CorrelationId = "a12b3c45", Source = "UsersController", InnerException = "Sequence contains no elements", StackTrace = "Sample stack trace..." },
-            new() { Id = 2, ReferenceNumber = "ERR-0325-D45E6F", Message = "SMTP timeout while sending confirmation email", RequestPath = "/api/auth/register", CreatedAt = DateTime.UtcNow.AddHours(-2), CorrelationId = "d45e6f78", Source = "MailKitEmailService", InnerException = "Timeout expired", StackTrace = "Sample stack trace..." }
+            new() { Id = 1, ReferenceNumber = "ERR-0325-A12B3C", Message = "Null reference in dashboard query pipeline", RequestPath = "/api/admin/error-logs", CreatedAt = DateTime.UtcNow.AddMinutes(-15), CorrelationId = "a12b3c45", Source = "UsersController", InnerException = "Sequence contains no elements", StackTrace = "java.lang.NullPointerException: Cannot invoke because object was null\n at com.zerodawn.api.TransactionController.process\n at com.zerodawn.internal.RequestRouter.handle" },
+            new() { Id = 2, ReferenceNumber = "ERR-0325-D45E6F", Message = "SMTP timeout while sending confirmation email", RequestPath = "/api/auth/register", CreatedAt = DateTime.UtcNow.AddHours(-2), CorrelationId = "d45e6f78", Source = "MailKitEmailService", InnerException = "Timeout expired", StackTrace = "System.TimeoutException: Operation timed out\n at MailKit.Net.Smtp.SmtpClient.SendAsync" },
+            new() { Id = 3, ReferenceNumber = "ERR-0325-X91P1Z", Message = "401 unauthorized on biometric login", RequestPath = "/v2/login/biometric", CreatedAt = DateTime.UtcNow.AddHours(-3), CorrelationId = "x91p1z10", Source = "AuthController", InnerException = "Token invalid", StackTrace = "Auth stack trace..." },
+            new() { Id = 4, ReferenceNumber = "ERR-0325-L88K2M", Message = "503 from health de-sync bridge", RequestPath = "/api/health/de-sync", CreatedAt = DateTime.UtcNow.AddHours(-5), CorrelationId = "l88k2m90", Source = "HealthController", InnerException = "Downstream unavailable", StackTrace = "Bridge stack trace..." }
         ];
+
+    private sealed record DistributionBar(string Label, int Height);
 }

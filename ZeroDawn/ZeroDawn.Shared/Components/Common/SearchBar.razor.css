@@ -1,17 +1,19 @@
 .search-bar {
     position: relative;
-    max-width: 28rem;
+    width: min(100%, 28rem);
 }
 
 .search-bar__icon {
     position: absolute;
-    left: 0.85rem;
+    right: 0.85rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--color-text-muted);
+    color: var(--color-outline);
     pointer-events: none;
 }
 
 .search-bar__input {
-    padding-left: 2.5rem;
+    padding-right: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-surface-low);
 }

@@ -22,7 +22,9 @@
                 @onclick="OnToggleCollapse"
                 aria-label="@L["ToggleNavigation"]"
                 title="@L["ToggleNavigation"]">
-            @(IsCollapsed ? "»" : "«")
+            <span class="material-symbols-outlined" aria-hidden="true">
+                @(IsCollapsed ? "keyboard_double_arrow_left" : "keyboard_double_arrow_right")
+            </span>
         </button>
     </div>
 
@@ -33,32 +35,32 @@
                 <div class="sidebar__section-title">@L["Home"]</div>
             }
 
-            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="" Match="NavLinkMatch.All" @onclick="HandleNavigateAsync">
-                <span class="sidebar__icon">⌂</span>
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/" Match="NavLinkMatch.All" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">home</span>
                 @if (!IsCollapsed)
                 {
                     <span>@L["Home"]</span>
                 }
             </NavLink>
 
-            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="dashboard" @onclick="HandleNavigateAsync">
-                <span class="sidebar__icon">◌</span>
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="@DashboardHref" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">space_dashboard</span>
                 @if (!IsCollapsed)
                 {
                     <span>@L["Dashboard"]</span>
                 }
             </NavLink>
 
-            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="profile" @onclick="HandleNavigateAsync">
-                <span class="sidebar__icon">☺</span>
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/profile" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">account_circle</span>
                 @if (!IsCollapsed)
                 {
                     <span>@L["Profile"]</span>
                 }
             </NavLink>
 
-            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="about" @onclick="HandleNavigateAsync">
-                <span class="sidebar__icon">ℹ</span>
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/about" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">info</span>
                 @if (!IsCollapsed)
                 {
                     <span>@L["About"]</span>
@@ -74,8 +76,8 @@
                     <div class="sidebar__section-title">@L["Admin"]</div>
                 }
 
-                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/users" @onclick="HandleNavigateAsync">
-                    <span class="sidebar__icon">👥</span>
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/admin/users" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">group</span>
                     @if (!IsCollapsed)
                     {
                         <span>@L["Users"]</span>
@@ -92,24 +94,24 @@
                     <div class="sidebar__section-title">@L["SuperAdmin"]</div>
                 }
 
-                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/admins" @onclick="HandleNavigateAsync">
-                    <span class="sidebar__icon">🛡</span>
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/admin/admins" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">shield_person</span>
                     @if (!IsCollapsed)
                     {
                         <span>@L["AdminManagement"]</span>
                     }
                 </NavLink>
 
-                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/error-logs" @onclick="HandleNavigateAsync">
-                    <span class="sidebar__icon">⚠</span>
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/admin/error-logs" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">warning</span>
                     @if (!IsCollapsed)
                     {
                         <span>@L["ErrorLogs"]</span>
                     }
                 </NavLink>
 
-                <NavLink class="sidebar__link nav-link" ActiveClass="sidebar__link--active" href="/admin/health" @onclick="HandleNavigateAsync">
-                    <span class="sidebar__icon">🏥</span>
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="/admin/health" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon material-symbols-outlined" aria-hidden="true">health_and_safety</span>
                     @if (!IsCollapsed)
                     {
                         <span>@L["Health"]</span>
@@ -129,6 +131,12 @@
     private bool CanViewAdminLinks => User.IsInRole(Roles.Admin) || User.IsInRole(Roles.SuperAdmin);
 
     private bool CanViewSuperAdminLinks => User.IsInRole(Roles.SuperAdmin);
+
+    private string DashboardHref => User.IsInRole(Roles.SuperAdmin)
+        ? "/dashboard/superadmin"
+        : User.IsInRole(Roles.Admin)
+            ? "/dashboard/admin"
+            : "/dashboard";
 
     private Task HandleNavigateAsync()
         => OnNavigate.InvokeAsync();

@@ -6,11 +6,11 @@
 
 .form-input__icon {
     position: absolute;
-    right: 0.85rem;
+    left: 1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-text-muted);
+    color: var(--color-outline);
     pointer-events: none;
 }
 
@@ -19,5 +19,5 @@
 }
 
 .form-input__icon + .form-input__control {
-    padding-right: 2.65rem;
+    padding-left: 3rem;
 }

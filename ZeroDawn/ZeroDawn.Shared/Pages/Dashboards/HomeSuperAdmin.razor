@@ -3,34 +3,131 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin")]
 @inherits AppPageBase
 
-<PageHeader Title='@L["Dashboard"]'
-            Breadcrumb='@L["Home"]'
-            Subtitle='@($"{L["Welcome", _userName]}")' />
-
-<div class="row g-3 mb-4">
-    @foreach (var card in _cards)
-    {
-        <div class="col-12 col-md-6 col-xl-3">
-            <div class="card h-100">
-                <div class="text-muted mb-2">@card.Label</div>
-                <div class="fs-2 fw-bold">@card.Value</div>
-                <Badge Text="@card.Badge" Variant="@card.Variant" />
-            </div>
+<section class="sa-dashboard">
+    <header class="sa-dashboard__header">
+        <div>
+            <div class="sa-dashboard__eyebrow">@L["Dashboard"]</div>
+            <h1 class="sa-dashboard__title">لوحة التحكم الشاملة</h1>
+            <p class="sa-dashboard__subtitle">نظرة عامة على المقاييس الحيوية وسير التشغيل داخل بيئة ZeroDawn.</p>
         </div>
-    }
-</div>
 
-<div class="card">
-    <PageHeader Title='@L["Search"]' Subtitle='@L["Dashboard"]' />
-    <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-primary" href="/admin/error-logs">Error Logs</a>
-        <a class="btn btn-secondary" href="/admin/users">User Management</a>
-        <a class="btn btn-secondary" href="/admin/admins">Admin Management</a>
-    </div>
-</div>
+        <div class="sa-dashboard__actions">
+            <a class="btn btn-secondary" href="/admin/error-logs">تصدير البيانات</a>
+            <a class="btn btn-primary" href="/admin/health">تقرير جديد</a>
+        </div>
+    </header>
+
+    <section class="sa-dashboard__grid">
+        <article class="sa-dashboard__hero card">
+            <div class="sa-dashboard__hero-top">
+                <div>
+                    <div class="sa-dashboard__meta-label">Traffic Growth</div>
+                    <h2>إجمالي النشاط السحابي</h2>
+                </div>
+                <div class="sa-dashboard__hero-tools">
+                    <button type="button" class="sa-dashboard__icon-button"><span class="material-symbols-outlined">filter_list</span></button>
+                    <button type="button" class="sa-dashboard__icon-button"><span class="material-symbols-outlined">more_horiz</span></button>
+                </div>
+            </div>
+
+            <div class="sa-dashboard__stats">
+                @foreach (var metric in _heroMetrics)
+                {
+                    <div class="sa-dashboard__stat">
+                        <p>@metric.Label</p>
+                        <div>
+                            <strong>@metric.Value</strong>
+                            <span class="@metric.TrendClass">@metric.Trend</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="sa-dashboard__chart" aria-hidden="true">
+                @foreach (var bar in _chartBars)
+                {
+                    <span style="height:@bar"></span>
+                }
+            </div>
+        </article>
+
+        <div class="sa-dashboard__sidebar-stack">
+            <article class="card sa-dashboard__panel">
+                <div class="sa-dashboard__panel-head">
+                    <h3>التوزيع الجغرافي</h3>
+                    <span class="material-symbols-outlined">public</span>
+                </div>
+
+                @foreach (var region in _regions)
+                {
+                    <div class="sa-dashboard__region">
+                        <div class="sa-dashboard__region-row">
+                            <div class="sa-dashboard__region-label">
+                                <span style="background:@region.Color"></span>
+                                <span>@region.Name</span>
+                            </div>
+                            <strong>@region.Percent%</strong>
+                        </div>
+                        <div class="sa-dashboard__progress">
+                            <div style="width:@($"{region.Percent}%"); background:@region.Color"></div>
+                        </div>
+                    </div>
+                }
+            </article>
+
+            <article class="sa-dashboard__health">
+                <div class="sa-dashboard__panel-head">
+                    <h3>حالة النظام</h3>
+                    <span class="material-symbols-outlined">bolt</span>
+                </div>
+
+                <div class="sa-dashboard__health-stats">
+                    <div>
+                        <span>الخوادم النشطة</span>
+                        <strong>99.99%</strong>
+                    </div>
+                    <div>
+                        <span>زمن التأخير</span>
+                        <strong>12ms</strong>
+                    </div>
+                </div>
+
+                <div class="sa-dashboard__health-note">
+                    <span></span>
+                    جميع الأنظمة تعمل بكفاءة عالية
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="sa-dashboard__bottom">
+        <article class="card sa-dashboard__quick">
+            <h3>إجراءات سريعة</h3>
+            <div class="sa-dashboard__quick-grid">
+                @foreach (var action in _quickActions)
+                {
+                    <a class="sa-dashboard__quick-card" href="@action.Href">
+                        <span class="material-symbols-outlined">@action.Icon</span>
+                        <span>@action.Label</span>
+                    </a>
+                }
+            </div>
+        </article>
+
+        <article class="card sa-dashboard__snapshot">
+            @foreach (var card in _cards)
+            {
+                <div class="sa-dashboard__snapshot-card">
+                    <div class="sa-dashboard__snapshot-label">@card.Label</div>
+                    <div class="sa-dashboard__snapshot-value">@card.Value</div>
+                    <Badge Text="@card.Badge" Variant="@card.Variant" />
+                </div>
+            }
+        </article>
+    </section>
+</section>
 
 @code {
-    private string _userName = "SuperAdmin";
     private readonly List<DashboardCard> _cards =
     [
         new("Users", "128", "Live", "info"),
@@ -39,11 +136,32 @@
         new("System Status", "Healthy", "Online", "success")
     ];
 
-    protected override async Task OnInitializedAsync()
-    {
-        var user = await GetCurrentUserAsync();
-        _userName = GetDisplayName(user);
-    }
+    private readonly List<HeroMetric> _heroMetrics =
+    [
+        new("الزيارات النشطة", "1.2M", "+14%", "sa-dashboard__trend sa-dashboard__trend--up"),
+        new("متوسط وقت الاستجابة", "84ms", "-2%", "sa-dashboard__trend sa-dashboard__trend--down"),
+        new("معدل التحويل", "12.4%", "+3%", "sa-dashboard__trend sa-dashboard__trend--up")
+    ];
+
+    private readonly List<string> _chartBars = ["40%", "60%", "45%", "70%", "90%", "55%", "30%", "50%", "75%", "65%", "40%", "55%"];
+
+    private readonly List<RegionItem> _regions =
+    [
+        new("الشرق الأوسط", 45, "var(--color-primary)"),
+        new("أوروبا", 30, "var(--color-secondary)"),
+        new("آسيا", 25, "var(--color-tertiary)")
+    ];
+
+    private readonly List<QuickAction> _quickActions =
+    [
+        new("person_add", "مستخدم جديد", "/admin/users"),
+        new("database", "قاعدة البيانات", "/admin/health"),
+        new("shield_person", "إدارة المدراء", "/admin/admins"),
+        new("error", "سجل الأخطاء", "/admin/error-logs")
+    ];
 
     private sealed record DashboardCard(string Label, string Value, string Badge, string Variant);
+    private sealed record HeroMetric(string Label, string Value, string Trend, string TrendClass);
+    private sealed record RegionItem(string Name, int Percent, string Color);
+    private sealed record QuickAction(string Icon, string Label, string Href);
 }

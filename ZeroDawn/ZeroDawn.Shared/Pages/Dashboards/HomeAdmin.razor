@@ -3,39 +3,139 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
 @inherits AppPageBase
 
-<PageHeader Title='@L["Dashboard"]'
-            Breadcrumb='@L["Home"]'
-            Subtitle='@($"{L["Welcome", _userName]}")' />
-
-<div class="row g-3 mb-4">
-    <div class="col-12 col-lg-6">
-        <div class="card h-100">
-            <div class="text-muted mb-2">Users</div>
-            <div class="fs-2 fw-bold">84</div>
-            <Badge Text="Managed" Variant="info" />
+<section class="admin-dashboard">
+    <header class="admin-dashboard__header">
+        <div>
+            <div class="admin-dashboard__eyebrow">Admin Workspace</div>
+            <h1 class="admin-dashboard__title">لوحة العمليات اليومية</h1>
+            <p class="admin-dashboard__subtitle">مرحبًا بك مجددًا، راقب النشاط المباشر والمهام المعلقة من مكان واحد.</p>
         </div>
-    </div>
+    </header>
 
-    <div class="col-12 col-lg-6">
-        <div class="card h-100">
-            <div class="text-muted mb-2">Recent Activity</div>
-            <div class="fs-2 fw-bold">12</div>
-            <Badge Text="Today" Variant="success" />
+    <section class="admin-dashboard__metrics">
+        <article class="admin-dashboard__metric admin-dashboard__metric--hero card">
+            <div>
+                <div class="admin-dashboard__metric-label">إجمالي المستخدمين النشطين</div>
+                <strong>12,482</strong>
+            </div>
+            <div class="admin-dashboard__metric-trend">
+                <span class="material-symbols-outlined">trending_up</span>
+                <span>+14% مقارنة بالأمس</span>
+            </div>
+        </article>
+
+        <article class="admin-dashboard__metric card">
+            <span class="material-symbols-outlined">pending_actions</span>
+            <strong>48</strong>
+            <p>مهام قيد الانتظار</p>
+        </article>
+
+        <article class="admin-dashboard__metric card">
+            <span class="material-symbols-outlined">bolt</span>
+            <strong>1.2s</strong>
+            <p>زمن الاستجابة</p>
+        </article>
+    </section>
+
+    <section class="admin-dashboard__content">
+        <div class="admin-dashboard__main">
+            <article class="card admin-dashboard__activity">
+                <div class="admin-dashboard__section-head">
+                    <h2>النشاط الأخير للمستخدمين</h2>
+                    <a href="/admin/users">عرض الكل</a>
+                </div>
+
+                <div class="admin-dashboard__activity-list">
+                    @foreach (var item in _activities)
+                    {
+                        <div class="admin-dashboard__activity-item">
+                            <div class="admin-dashboard__avatar @item.ColorClass">@item.Initials</div>
+                            <div class="admin-dashboard__activity-copy">
+                                <p><strong>@item.Name</strong> <span>@item.Action</span></p>
+                                <small>@item.Meta</small>
+                            </div>
+                            <button type="button" class="admin-dashboard__dots"><span class="material-symbols-outlined">more_vert</span></button>
+                        </div>
+                    }
+                </div>
+            </article>
+
+            <article class="card admin-dashboard__tasks">
+                <h2>المهام التشغيلية</h2>
+                <div class="admin-dashboard__task-grid">
+                    @foreach (var task in _tasks)
+                    {
+                        <div class="admin-dashboard__task-card">
+                            <div class="admin-dashboard__task-main">
+                                <span class="material-symbols-outlined">@task.Icon</span>
+                                <span>@task.Label</span>
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(task.Counter))
+                            {
+                                <span class="admin-dashboard__task-count">@task.Counter</span>
+                            }
+                            else
+                            {
+                                <span class="material-symbols-outlined admin-dashboard__task-check">check_circle</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </article>
         </div>
-    </div>
-</div>
 
-<div class="card">
-    <PageHeader Title="Quick Links" Subtitle='@L["Users"]' />
-    <a class="btn btn-primary" href="/admin/users">User Management</a>
-</div>
+        <aside class="admin-dashboard__side">
+            <article class="admin-dashboard__quick">
+                <h3>إجراءات سريعة</h3>
+                <a class="btn btn-secondary" href="/admin/users"><span class="material-symbols-outlined">person_add</span>إضافة مستخدم جديد</a>
+                <a class="btn btn-primary" href="/admin/error-logs"><span class="material-symbols-outlined">description</span>تصدير بيانات اليوم</a>
+            </article>
+
+            <article class="card admin-dashboard__health">
+                <div class="admin-dashboard__section-head">
+                    <h3>حالة النظام</h3>
+                    <span class="admin-dashboard__health-dot"></span>
+                </div>
+
+                @foreach (var state in _systemStates)
+                {
+                    <div class="admin-dashboard__health-row">
+                        <div class="admin-dashboard__health-label">
+                            <span>@state.Label</span>
+                            <strong>@state.Value</strong>
+                        </div>
+                        <div class="admin-dashboard__health-bar">
+                            <div style="width:@state.Value; background:@state.Color"></div>
+                        </div>
+                    </div>
+                }
+            </article>
+        </aside>
+    </section>
+</section>
 
 @code {
-    private string _userName = "Admin";
+    private readonly List<ActivityItem> _activities =
+    [
+        new("سامي أحمد", "قام بتحديث ملفه الشخصي", "منذ 5 دقائق • الموقع: الرياض", "SA", "admin-dashboard__avatar--secondary"),
+        new("محمد حسن", "أنشأ تقريرًا جديدًا", "منذ 12 دقيقة • تقرير العمليات", "MH", "admin-dashboard__avatar--primary"),
+        new("لينا ناصر", "قامت بتسجيل الدخول", "منذ 18 دقيقة • متصفح Chrome", "LN", "admin-dashboard__avatar--tertiary")
+    ];
 
-    protected override async Task OnInitializedAsync()
-    {
-        var user = await GetCurrentUserAsync();
-        _userName = GetDisplayName(user);
-    }
+    private readonly List<TaskItem> _tasks =
+    [
+        new("verified_user", "توثيق الحسابات المعلقة", "12"),
+        new("database", "مزامنة البيانات السحابية", null)
+    ];
+
+    private readonly List<SystemState> _systemStates =
+    [
+        new("وحدة المعالجة", "42%", "var(--color-primary)"),
+        new("الذاكرة المستخدمة", "68%", "var(--color-secondary)")
+    ];
+
+    private sealed record ActivityItem(string Name, string Action, string Meta, string Initials, string ColorClass);
+    private sealed record TaskItem(string Icon, string Label, string? Counter);
+    private sealed record SystemState(string Label, string Value, string Color);
 }

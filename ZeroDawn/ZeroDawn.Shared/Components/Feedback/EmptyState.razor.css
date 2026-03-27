@@ -1,17 +1,40 @@
 .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    justify-items: center;
     gap: 0.85rem;
+    padding: 2.2rem 1.5rem;
+    border-radius: 1.8rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(243,244,255,0.9));
+    border: 1px solid rgba(70, 89, 169, 0.08);
+    box-shadow: 0 22px 40px rgba(24, 34, 70, 0.05);
     text-align: center;
-    padding: 2rem 1.5rem;
 }
 
 .empty-state__icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1.2rem;
+    background: rgba(92, 111, 193, 0.1);
+    color: var(--color-primary);
+}
+
+.empty-state__icon .material-symbols-outlined {
     font-size: 2rem;
-    color: var(--color-text-muted);
 }
 
 .empty-state__message {
     color: var(--color-text-muted);
+}
+
+.empty-state__action {
+    border: 0;
+    border-radius: 999px;
+    padding: 0.8rem 1.1rem;
+    background: var(--color-primary);
+    color: white;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
 }

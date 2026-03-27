@@ -3,10 +3,6 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inherits AppPageBase
 
-<PageHeader Title='@L["Profile"]'
-            Breadcrumb='@L["Home"]'
-            Subtitle='@L["Edit"]' />
-
 @if (HasError)
 {
     <ErrorDisplay Message="@ErrorMessage"
@@ -17,47 +13,107 @@
 }
 else
 {
-    <div class="row g-3">
-        <div class="col-12 col-lg-4">
-            <div class="card text-center h-100">
-                <div class="mx-auto mb-3 d-grid place-items-center rounded-circle" style="width:88px;height:88px;background:var(--color-primary);color:white;font-size:2rem;">
-                    @_initials
+    <section class="profile-page">
+        <header class="profile-page__hero">
+            <div class="profile-page__hero-copy">
+                <div class="profile-page__meta">
+                    <span class="profile-page__role-chip">@_role</span>
+                    <small>عضو منذ @_profile.CreatedAt.ToLocalTime().ToString("MMMM yyyy")</small>
                 </div>
-                <h3 class="mb-1">@_profile.FullName</h3>
-                <div class="text-muted mb-2">@_profile.Email</div>
-                <Badge Text="@_role" Variant="info" />
-                <div class="text-muted mt-3">Member since @_profile.CreatedAt.ToLocalTime().ToString("d")</div>
+
+                <h1>@_profile.FullName</h1>
+                <p>@_profile.Email</p>
+            </div>
+
+            <div class="profile-page__hero-actions">
+                <button type="button" class="profile-page__ghost-action" @onclick="LoadAsync">إلغاء</button>
+                <button type="button" class="profile-page__primary-action" @onclick="SaveAsync" disabled="@_isSaving">
+                    @(_isSaving ? "جاري الحفظ..." : "حفظ التغييرات")
+                </button>
+            </div>
+
+            <div class="profile-page__avatar-shell">
+                <div class="profile-page__avatar">@_initials</div>
+                <button type="button" aria-label="تعديل الصورة">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="profile-page__grid">
+            <aside class="profile-page__rail">
+                <article class="profile-page__insight-card">
+                    <p>إحصائيات النشاط</p>
+                    <strong>128</strong>
+                    <span>تقرير تم إنشاؤه خلال الفترة الأخيرة</span>
+                    <div class="profile-page__progress">
+                        <i></i>
+                    </div>
+                    <small>تم إنجاز 75% من الأهداف التشغيلية الحالية.</small>
+                </article>
+
+                <article class="profile-page__sessions-card">
+                    <h2>جلسات تسجيل الدخول</h2>
+                    <div>
+                        <strong>MacBook Pro</strong>
+                        <small>نشط الآن</small>
+                    </div>
+                    <div>
+                        <strong>iPhone 15</strong>
+                        <small>منذ ساعتين</small>
+                    </div>
+                </article>
+            </aside>
+
+            <div class="profile-page__content">
+                <article class="profile-page__panel">
+                    <header>
+                        <h2>المعلومات الشخصية</h2>
+                        <span class="material-symbols-outlined">person</span>
+                    </header>
+
+                    <EditForm Model="_request" class="profile-page__form" OnValidSubmit="SaveAsync">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <FormField TValue="string" Label="الاسم الكامل" For="() => _request.FullName">
+                            <FormInput @bind-Value="_request.FullName" placeholder="اكتب الاسم الكامل" />
+                        </FormField>
+
+                        <div class="profile-page__readonly-grid">
+                            <div>
+                                <label>المسمى الوظيفي</label>
+                                <div>@(_role == "SuperAdmin" ? "مدير النظام الرئيسي" : _role == "Admin" ? "إداري تشغيلي" : "مستخدم")</div>
+                            </div>
+
+                            <div class="profile-page__readonly profile-page__readonly--locked">
+                                <label>البريد الإلكتروني</label>
+                                <div>
+                                    <span>@_profile.Email</span>
+                                    <span class="material-symbols-outlined">lock</span>
+                                </div>
+                            </div>
+                        </div>
+                    </EditForm>
+                </article>
+
+                <article class="profile-page__panel">
+                    <header>
+                        <h2>الأمان والوصول</h2>
+                        <span class="material-symbols-outlined">security</span>
+                    </header>
+
+                    <div class="profile-page__security-item">
+                        <div>
+                            <strong>المصادقة الثنائية</strong>
+                            <p>مفعلة منذ 4 أشهر</p>
+                        </div>
+                        <button type="button" @onclick="@(() => ToastService.ShowInfo("إدارة 2FA ستتضاف لاحقًا."))">إدارة</button>
+                    </div>
+                </article>
             </div>
         </div>
-
-        <div class="col-12 col-lg-8">
-            <div class="card">
-                <EditForm Model="_request" OnValidSubmit="SaveAsync" class="d-flex flex-column gap-4">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-
-                    <FormField TValue="string" Label='@L["FullName"]' For="() => _request.FullName">
-                        <FormInput @bind-Value="_request.FullName" placeholder='@L["FullName"]' />
-                    </FormField>
-
-                    <div>
-                        <div class="text-muted mb-1">@L["Email"]</div>
-                        <div>@_profile.Email</div>
-                    </div>
-
-                    <div>
-                        <div class="text-muted mb-1">Role</div>
-                        <div>@_role</div>
-                    </div>
-
-                    <SubmitButton Text='@L["Save"]'
-                                  LoadingText='@L["ProcessingRequest"]'
-                                  IsLoading="@_isSaving"
-                                  IsDisabled="@_isSaving" />
-                </EditForm>
-            </div>
-        </div>
-    </div>
+    </section>
 }
 
 @code {
@@ -150,7 +206,7 @@ else
             }
 
             _initials = GetInitials(_profile.FullName);
-            ShowSuccess("Profile updated.");
+            ShowSuccess("تم تحديث الملف الشخصي.");
         }
         catch (Exception ex)
         {

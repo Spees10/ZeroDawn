@@ -2,13 +2,13 @@
 @layout AuthLayout
 @inherits AuthPageBase
 @using ZeroDawn.Shared.Contracts.Auth
-@using ZeroDawn.Shared.Layout
 
-<div class="d-flex flex-column gap-4">
-    <div>
-        <h1 class="mb-2">@L["Login"]</h1>
-        <p class="text-muted mb-0">@L["Welcome", L["AppName"]]</p>
-    </div>
+<div class="auth-flow">
+    <header class="auth-flow__header">
+        <div class="auth-flow__eyebrow">@L["SecureAccessPortal"]</div>
+        <h1 class="auth-flow__title">@L["Login"]</h1>
+        <p class="auth-flow__subtitle">أدخل بيانات الاعتماد الخاصة بك للوصول إلى لوحة التحكم وإدارة النظام بهدوء ووضوح.</p>
+    </header>
 
     @if (HasUnhandledError)
     {
@@ -19,35 +19,37 @@
                       OnRetry="SubmitAsync" />
     }
 
-    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="auth-flow__form">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <FormField TValue="string" Label="@L["Email"]" For="() => _model.Email">
             <FormInput @bind-Value="_model.Email"
                        IconContent="@EmailIcon"
-                       placeholder="@L["Email"]"
-                       type="email" />
+                       placeholder="name@company.com"
+                       type="email"
+                       dir="ltr" />
         </FormField>
 
         <FormField TValue="string" Label="@L["Password"]" For="() => _model.Password">
             <FormPasswordInput @bind-Value="_model.Password"
-                               placeholder="@L["Password"]" />
+                               placeholder="••••••••"
+                               dir="ltr" />
         </FormField>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <a href="/forgot-password">@L["ForgotPassword"]</a>
+        <div class="auth-flow__links">
+            <a class="auth-link" href="/forgot-password">@L["ForgotPassword"]</a>
 
             @if (AllowSelfRegistration)
             {
                 <span class="text-muted">
                     @L["NeedAnAccount"]
-                    <a href="/register">@L["Register"]</a>
+                    <a class="auth-footer__link" href="/register">@L["Register"]</a>
                 </span>
             }
         </div>
 
-        <SubmitButton Text="@L["Login"]"
+        <SubmitButton Text="الدخول إلى النظام"
                       LoadingText="@L["SigningIn"]"
                       IsLoading="@_isLoading"
                       IsDisabled="@_isLoading" />
@@ -58,7 +60,7 @@
     private readonly LoginRequest _model = new();
     private bool _isLoading;
 
-    private RenderFragment EmailIcon => @<span>✉</span>;
+    private RenderFragment EmailIcon => @<span class="material-symbols-outlined">mail</span>;
 
     private async Task SubmitAsync()
     {

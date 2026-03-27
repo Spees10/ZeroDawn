@@ -2,13 +2,13 @@
 @layout AuthLayout
 @inherits AuthPageBase
 @using ZeroDawn.Shared.Contracts.Auth
-@using ZeroDawn.Shared.Layout
 
-<div class="d-flex flex-column gap-4">
-    <div>
-        <h1 class="mb-2">@L["Register"]</h1>
-        <p class="text-muted mb-0">@L["NeedAnAccount"]</p>
-    </div>
+<div class="auth-flow">
+    <header class="auth-flow__header">
+        <div class="auth-flow__eyebrow">ZeroDawn Premium</div>
+        <h1 class="auth-flow__title">إنشاء حساب جديد</h1>
+        <p class="auth-flow__subtitle">انضم إلى مساحة العمل الآمنة وابدأ إدارة حسابك ضمن نفس اللغة البصرية الهادئة للنظام.</p>
+    </header>
 
     @if (HasUnhandledError)
     {
@@ -21,46 +21,61 @@
 
     @if (!string.IsNullOrWhiteSpace(_successMessage))
     {
-        <div class="card text-center">
-            <h3 class="mb-2">@L["CheckYourEmail"]</h3>
-            <p class="text-muted mb-3">@_successMessage</p>
-            <a href="/login">@L["BackToLogin"]</a>
+        <div class="auth-state auth-state--success">
+            <div class="auth-state__icon">
+                <span class="material-symbols-outlined">mark_email_read</span>
+            </div>
+            <h3 class="auth-state__title">@L["CheckYourEmail"]</h3>
+            <p class="auth-state__copy">@_successMessage</p>
+            <div class="auth-flow__actions mt-4">
+                <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
+            </div>
         </div>
     }
     else
     {
-        <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+        <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="auth-flow__form">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
             <FormField TValue="string" Label="@L["FullName"]" For="() => _model.FullName">
                 <FormInput @bind-Value="_model.FullName"
-                           placeholder="@L["FullName"]" />
+                           placeholder="أدخل اسمك الكامل" />
             </FormField>
 
             <FormField TValue="string" Label="@L["Email"]" For="() => _model.Email">
                 <FormInput @bind-Value="_model.Email"
-                           placeholder="@L["Email"]" />
+                           placeholder="name@company.com"
+                           dir="ltr" />
             </FormField>
 
-            <FormField TValue="string" Label="@L["Password"]" For="() => _model.Password">
-                <FormPasswordInput @bind-Value="_model.Password"
-                                   placeholder="@L["Password"]" />
-            </FormField>
+            <div class="auth-flow__grid">
+                <FormField TValue="string" Label="@L["Password"]" For="() => _model.Password">
+                    <FormPasswordInput @bind-Value="_model.Password"
+                                       placeholder="••••••••"
+                                       dir="ltr" />
+                </FormField>
 
-            <FormField TValue="string" Label="@L["ConfirmPassword"]" For="() => _model.ConfirmPassword">
-                <FormPasswordInput @bind-Value="_model.ConfirmPassword"
-                                   placeholder="@L["ConfirmPassword"]" />
-            </FormField>
+                <FormField TValue="string" Label="@L["ConfirmPassword"]" For="() => _model.ConfirmPassword">
+                    <FormPasswordInput @bind-Value="_model.ConfirmPassword"
+                                       placeholder="••••••••"
+                                       dir="ltr" />
+                </FormField>
+            </div>
 
-            <SubmitButton Text="@L["Register"]"
+            <div class="auth-note">
+                <div class="auth-note__title">اتفاق الاستخدام</div>
+                <p class="auth-note__body">بإنشاء الحساب فأنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بـ ZeroDawn.</p>
+            </div>
+
+            <SubmitButton Text="إنشاء الحساب"
                           LoadingText="@L["CreatingAccount"]"
                           IsLoading="@_isLoading"
                           IsDisabled="@_isLoading" />
 
-            <div class="text-muted">
+            <div class="auth-flow__footer">
                 @L["AlreadyHaveAccount"]
-                <a href="/login">@L["Login"]</a>
+                <a class="auth-footer__link" href="/login">@L["Login"]</a>
             </div>
         </EditForm>
     }

@@ -3,18 +3,55 @@
 
 <div class="auth-layout">
     <div class="auth-layout__shell">
-        <div class="auth-layout__brand">
-            <div class="auth-layout__brand-mark">ZD</div>
-            <div class="auth-layout__brand-copy">
-                <div class="auth-layout__brand-title">@L["AppName"]</div>
-                <div class="auth-layout__brand-subtitle text-muted">@L["SecureAccessPortal"]</div>
-            </div>
-        </div>
+        <section class="auth-layout__panel">
+            <div class="auth-layout__panel-inner">
+                <div class="auth-layout__brand">
+                    <div class="auth-layout__brand-mark">
+                        <span class="material-symbols-outlined">security</span>
+                    </div>
+                    <div class="auth-layout__brand-copy">
+                        <div class="auth-layout__brand-title">@L["AppName"]</div>
+                        <div class="auth-layout__brand-subtitle">@L["SecureAccessPortal"]</div>
+                    </div>
+                </div>
 
-        <section class="auth-layout__card card">
-            <OfflineBanner />
-            @Body
+                <OfflineBanner />
+                @Body
+
+                <footer class="auth-layout__footer">
+                    <span>© ZeroDawn Premium</span>
+                    <div class="auth-layout__footer-links">
+                        <a href="/about">@L["About"]</a>
+                        <a href="/contact">@L["ContactUs"]</a>
+                    </div>
+                </footer>
+            </div>
         </section>
+
+        <aside class="auth-layout__story" aria-hidden="true">
+            <div class="auth-layout__story-backdrop"></div>
+            <div class="auth-layout__story-content">
+                <div class="auth-layout__story-chip">ZeroDawn Premium</div>
+                <h1 class="auth-layout__story-title">الهدوء الرقمي لإدارة احترافية بلا ضوضاء</h1>
+                <p class="auth-layout__story-copy">
+                    مساحة عمل موثوقة تجمع التحكم والأمان والوضوح في تجربة واحدة هادئة، مصممة لتخدم فرق الإدارة والتشغيل بدون تعقيد بصري أو تشتيت.
+                </p>
+
+                <div class="auth-layout__story-grid">
+                    <div class="auth-layout__story-card">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        <h2>تشفير متقدم</h2>
+                        <p>حماية عملية للهوية والبيانات على كل خطوة داخل النظام.</p>
+                    </div>
+
+                    <div class="auth-layout__story-card">
+                        <span class="material-symbols-outlined">speed</span>
+                        <h2>تجربة هادئة</h2>
+                        <p>تركيز أعلى على العمل نفسه بدل الزخرفة والتشتت المعتاد.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <ToastContainer />

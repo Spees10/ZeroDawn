@@ -3,26 +3,126 @@
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "User")]
 @inherits AppPageBase
 
-<PageHeader Title='@L["Dashboard"]'
-            Breadcrumb='@L["Home"]'
-            Subtitle='@L["Welcome", _userName]' />
-
-<div class="row g-3">
-    <div class="col-12 col-lg-8">
-        <div class="card h-100">
-            <h3 class="mb-2">@L["Profile"]</h3>
-            <p class="text-muted mb-3">@L["Welcome", _userName]</p>
-            <a class="btn btn-primary" href="/profile">@L["Profile"]</a>
+<section class="user-dashboard">
+    <header class="user-dashboard__header">
+        <div>
+            <div class="user-dashboard__eyebrow">@L["Dashboard"]</div>
+            <h1 class="user-dashboard__title">مرحبًا بك، @_userName</h1>
+            <p class="user-dashboard__subtitle">إليك نظرة سريعة على نشاطك اليوم وتطورات حسابك الشخصية.</p>
         </div>
-    </div>
-</div>
+
+        <div class="user-dashboard__date">
+            <span>التاريخ الحالي</span>
+            <strong>@DateTime.Now.ToString("dddd، dd MMMM yyyy", new System.Globalization.CultureInfo("ar"))</strong>
+        </div>
+    </header>
+
+    <section class="user-dashboard__grid">
+        <article class="card user-dashboard__profile">
+            <div class="user-dashboard__profile-main">
+                <div class="user-dashboard__avatar">@_initials</div>
+                <div class="user-dashboard__profile-copy">
+                    <h2>@_userName</h2>
+                    <p>@_roleName • ZeroDawn</p>
+                    <div class="user-dashboard__chips">
+                        <span class="user-dashboard__chip user-dashboard__chip--primary">
+                            <span class="material-symbols-outlined">verified</span>
+                            حساب موثق
+                        </span>
+                        <span class="user-dashboard__chip user-dashboard__chip--secondary">
+                            <span class="material-symbols-outlined">bolt</span>
+                            خطة بريميوم
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-dashboard__profile-actions">
+                <a class="btn btn-primary" href="/profile">تعديل الملف</a>
+                <a class="btn btn-secondary" href="/profile">عرض الإحصائيات</a>
+            </div>
+        </article>
+
+        <article class="user-dashboard__balance">
+            <div>
+                <p>الرصيد المتاح</p>
+                <strong>$12,450.00</strong>
+            </div>
+            <div class="user-dashboard__balance-meta">
+                <div>
+                    <span>المدخرات الشهرية</span>
+                    <b>+12%</b>
+                </div>
+                <div class="user-dashboard__balance-bar">
+                    <div></div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary">تحويل سريع</button>
+        </article>
+
+        <article class="card user-dashboard__activity">
+            <div class="user-dashboard__section-head">
+                <h3>آخر النشاطات</h3>
+                <a href="/profile">عرض السجل الكامل</a>
+            </div>
+
+            @foreach (var activity in _activities)
+            {
+                <div class="user-dashboard__activity-item">
+                    <div class="user-dashboard__activity-icon @activity.IconClass">
+                        <span class="material-symbols-outlined">@activity.Icon</span>
+                    </div>
+                    <div class="user-dashboard__activity-copy">
+                        <p>@activity.Title</p>
+                        <small>@activity.Meta</small>
+                    </div>
+                    <span class="user-dashboard__activity-time">@activity.Time</span>
+                </div>
+            }
+        </article>
+
+        <article class="user-dashboard__security">
+            <div class="user-dashboard__security-tag">نصيحة الأمان</div>
+            <h3>قم بتفعيل المصادقة الثنائية</h3>
+            <p>احمِ حسابك وبياناتك الشخصية عبر تفعيل ميزة التحقق بخطوتين لضمان وصولك الآمن دائمًا.</p>
+            <a href="/change-password">تفعيل الآن</a>
+        </article>
+
+        <div class="user-dashboard__mini-grid">
+            <article class="card user-dashboard__mini-card">
+                <div class="user-dashboard__mini-icon"><span class="material-symbols-outlined">calendar_today</span></div>
+                <p>المهام القادمة</p>
+                <strong>04</strong>
+            </article>
+
+            <article class="card user-dashboard__mini-card">
+                <div class="user-dashboard__mini-icon user-dashboard__mini-icon--secondary"><span class="material-symbols-outlined">mail</span></div>
+                <p>رسائل جديدة</p>
+                <strong>12</strong>
+            </article>
+        </div>
+    </section>
+</section>
 
 @code {
-    private string _userName = "User";
+    private string _userName = "أحمد المنصور";
+    private string _roleName = "مستخدم";
+    private string _initials = "أم";
+
+    private readonly List<UserActivity> _activities =
+    [
+        new("description", "user-dashboard__activity-icon--tertiary", "تم تحديث تقرير الربع الأول", "منذ ساعتين • ملفات المشاريع", "14:20"),
+        new("login", "user-dashboard__activity-icon--primary", "تسجيل دخول جديد", "منذ 5 ساعات • Chrome - Windows", "11:05"),
+        new("payments", "user-dashboard__activity-icon--secondary", "استلام دفعة مالية", "منذ يوم • عميل رقم #9422", "أمس")
+    ];
 
     protected override async Task OnInitializedAsync()
     {
         var user = await GetCurrentUserAsync();
         _userName = GetDisplayName(user);
+        _roleName = GetRole(user) ?? "مستخدم";
+        _initials = GetInitials(_userName);
     }
+
+    private sealed record UserActivity(string Icon, string IconClass, string Title, string Meta, string Time);
 }

@@ -2,13 +2,13 @@
 @layout AuthLayout
 @inherits AuthPageBase
 @using ZeroDawn.Shared.Contracts.Auth
-@using ZeroDawn.Shared.Layout
 
-<div class="d-flex flex-column gap-4">
-    <div>
-        <h1 class="mb-2">@L["ResendEmail"]</h1>
-        <p class="text-muted mb-0">@L["Email"]</p>
-    </div>
+<div class="auth-flow">
+    <header class="auth-flow__header">
+        <div class="auth-flow__eyebrow">@L["ResendEmail"]</div>
+        <h1 class="auth-flow__title">إعادة إرسال التأكيد</h1>
+        <p class="auth-flow__subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابط تحقق جديد لتفعيل حسابك بسرعة.</p>
+    </header>
 
     @if (HasUnhandledError)
     {
@@ -19,19 +19,25 @@
                       OnRetry="SubmitAsync" />
     }
 
-    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="auth-flow__form">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <FormField TValue="string" Label="@L["Email"]" For="() => _model.Email">
             <FormInput @bind-Value="_model.Email"
-                       placeholder="@L["Email"]" />
+                       placeholder="name@company.com"
+                       dir="ltr" />
         </FormField>
 
-        <SubmitButton Text="@L["ResendEmail"]"
+        <SubmitButton Text="إرسال الرابط الآن"
                       LoadingText="@L["SendingEmail"]"
                       IsLoading="@_isLoading"
                       IsDisabled="@_isLoading" />
+
+        <div class="auth-note">
+            <div class="auth-note__title">معلومة مهمة</div>
+            <p class="auth-note__body">لو لم تصل الرسالة، افحص البريد غير الهام ثم أعد المحاولة بعد دقائق قليلة.</p>
+        </div>
     </EditForm>
 </div>
 

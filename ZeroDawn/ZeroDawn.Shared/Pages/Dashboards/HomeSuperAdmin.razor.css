@@ -1,0 +1,300 @@
+.sa-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sa-dashboard__header,
+.sa-dashboard__hero-top,
+.sa-dashboard__panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.sa-dashboard__eyebrow,
+.sa-dashboard__meta-label,
+.sa-dashboard__snapshot-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+}
+
+.sa-dashboard__title {
+    margin: 0.3rem 0 0.55rem;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+}
+
+.sa-dashboard__subtitle {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+.sa-dashboard__actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.sa-dashboard__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+    gap: 1.5rem;
+}
+
+.sa-dashboard__hero h2,
+.sa-dashboard__panel h3,
+.sa-dashboard__quick h3 {
+    margin: 0.35rem 0 0;
+    font-size: 1.8rem;
+    letter-spacing: -0.03em;
+}
+
+.sa-dashboard__icon-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    background: var(--color-surface-low);
+    color: var(--color-primary);
+}
+
+.sa-dashboard__hero-tools {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sa-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.sa-dashboard__stat p,
+.sa-dashboard__health-stats span {
+    margin: 0 0 0.35rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.sa-dashboard__stat div,
+.sa-dashboard__health-stats strong {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.sa-dashboard__stat strong,
+.sa-dashboard__snapshot-value {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.sa-dashboard__trend {
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.sa-dashboard__trend--up {
+    color: var(--color-success);
+}
+
+.sa-dashboard__trend--down {
+    color: var(--color-error);
+}
+
+.sa-dashboard__chart {
+    height: 17rem;
+    display: flex;
+    align-items: end;
+    gap: 0.55rem;
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface-low) 70%, white), transparent);
+}
+
+.sa-dashboard__chart span {
+    flex: 1;
+    border-radius: 0.35rem 0.35rem 0 0;
+    background: color-mix(in srgb, var(--color-primary) 55%, white);
+}
+
+.sa-dashboard__chart span:nth-child(5n) {
+    background: var(--color-primary);
+}
+
+.sa-dashboard__sidebar-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sa-dashboard__panel,
+.sa-dashboard__health {
+    padding: 1.5rem;
+}
+
+.sa-dashboard__panel-head h3 {
+    font-size: 1.15rem;
+}
+
+.sa-dashboard__panel-head .material-symbols-outlined,
+.sa-dashboard__health .material-symbols-outlined {
+    color: var(--color-text-muted);
+}
+
+.sa-dashboard__region + .sa-dashboard__region {
+    margin-top: 1rem;
+}
+
+.sa-dashboard__region-row,
+.sa-dashboard__region-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.sa-dashboard__region-label {
+    justify-content: flex-start;
+    color: var(--color-text-muted);
+}
+
+.sa-dashboard__region-label span:first-child {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+}
+
+.sa-dashboard__progress {
+    height: 0.35rem;
+    margin-top: 0.5rem;
+    background: var(--color-surface-highest);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.sa-dashboard__progress div {
+    height: 100%;
+    border-radius: inherit;
+}
+
+.sa-dashboard__health {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--color-primary) 82%, white), var(--color-primary));
+    color: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.sa-dashboard__health .sa-dashboard__panel-head .material-symbols-outlined,
+.sa-dashboard__health span {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.sa-dashboard__health-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.sa-dashboard__health-stats strong {
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.sa-dashboard__health-note {
+    margin-top: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.sa-dashboard__health-note span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #7df8d7;
+}
+
+.sa-dashboard__bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1.5rem;
+}
+
+.sa-dashboard__quick-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.sa-dashboard__quick-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 1rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-low);
+    color: var(--color-text);
+}
+
+.sa-dashboard__quick-card:hover {
+    text-decoration: none;
+    background: var(--color-surface-high);
+}
+
+.sa-dashboard__quick-card .material-symbols-outlined {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+}
+
+.sa-dashboard__snapshot {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.sa-dashboard__snapshot-card {
+    padding: 1.35rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-low);
+}
+
+@media (max-width: 980px) {
+    .sa-dashboard__grid,
+    .sa-dashboard__bottom {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 720px) {
+    .sa-dashboard__header,
+    .sa-dashboard__hero-top,
+    .sa-dashboard__panel-head {
+        flex-direction: column;
+    }
+
+    .sa-dashboard__stats,
+    .sa-dashboard__snapshot,
+    .sa-dashboard__quick-grid,
+    .sa-dashboard__health-stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

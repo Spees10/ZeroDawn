@@ -3,12 +3,16 @@
 @inject IStringLocalizer<SharedResources> L
 
 <div class="toast @TypeClass" role="status" aria-live="polite">
-    <div class="accent"></div>
-    <div class="body">
-        <div class="title">@Title</div>
-        <div class="message">@Message</div>
+    <div class="toast__icon">
+        <span class="material-symbols-outlined">@Icon</span>
     </div>
-    <button class="close-button" type="button" @onclick="CloseAsync" aria-label="@L["Close"]">×</button>
+    <div class="toast__body">
+        <div class="toast__title">@Title</div>
+        <div class="toast__message">@Message</div>
+    </div>
+    <button class="toast__close" type="button" @onclick="CloseAsync" aria-label="@L["Close"]">
+        <span class="material-symbols-outlined">close</span>
+    </button>
 </div>
 
 @code {
@@ -26,6 +30,14 @@
         ToastType.Warning => L["Warning"],
         ToastType.Error => L["Error"],
         _ => L["Info"]
+    };
+
+    private string Icon => Type switch
+    {
+        ToastType.Success => "check_circle",
+        ToastType.Warning => "warning",
+        ToastType.Error => "error",
+        _ => "info"
     };
 
     private string TypeClass => Type.ToString().ToLowerInvariant();

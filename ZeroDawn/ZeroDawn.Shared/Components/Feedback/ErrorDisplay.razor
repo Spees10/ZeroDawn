@@ -5,58 +5,67 @@
 @inject IServiceProvider Services
 @inject IStringLocalizer<SharedResources> L
 
-<div class="error-display" role="alert" aria-live="assertive">
-    <div class="icon" aria-hidden="true">⚠️</div>
+<section class="error-display" role="alert" aria-live="assertive">
+    <div class="error-display__visual">
+        <span class="material-symbols-outlined">warning</span>
+    </div>
 
-    <div class="content">
-        <div class="header">
-            <h3>@L["SomethingWentWrong"]</h3>
+    <div class="error-display__content">
+        <div class="error-display__header">
+            <div>
+                <p class="error-display__eyebrow">@L["SomethingWentWrong"]</p>
+                <h3>@DisplayMessage</h3>
+            </div>
+
             @if (!string.IsNullOrWhiteSpace(ReferenceNumber))
             {
-                <span class="reference">@L["ReferenceNumber"]: @ReferenceNumber</span>
+                <span class="error-display__reference">@L["ReferenceNumber"]: @ReferenceNumber</span>
             }
         </div>
 
-        <p class="message">@DisplayMessage</p>
+        <p class="error-display__support">
+            @if (!string.IsNullOrWhiteSpace(ReferenceNumber))
+            {
+                @($"{L["ContactSupport"]} {ReferenceNumber}")
+            }
+            else
+            {
+                @L["UnexpectedErrorOccurred"]
+            }
+        </p>
 
-        @if (!string.IsNullOrWhiteSpace(ReferenceNumber))
-        {
-            <p class="support">@L["ContactSupport"] @ReferenceNumber</p>
-        }
-        else
-        {
-            <p class="support">@L["UnexpectedErrorOccurred"]</p>
-        }
+        <div class="error-display__actions">
+            @if (OnRetry.HasDelegate)
+            {
+                <button class="error-display__retry" type="button" @onclick="HandleRetry">@L["TryAgain"]</button>
+            }
 
-        @if (OnRetry.HasDelegate)
-        {
-            <button class="retry-button" type="button" @onclick="HandleRetry">@L["TryAgain"]</button>
-        }
-
-        @if (ShouldShowTechnicalDetails)
-        {
-            <div class="technical-section">
-                <button class="toggle-button" type="button" @onclick="ToggleDetails">
+            @if (ShouldShowTechnicalDetails)
+            {
+                <button class="error-display__toggle" type="button" @onclick="ToggleDetails">
                     @(detailsVisible ? L["HideTechnicalDetails"] : L["ShowTechnicalDetails"])
                 </button>
+            }
+        </div>
 
-                @if (detailsVisible)
+        @if (ShouldShowTechnicalDetails && detailsVisible)
+        {
+            <div class="error-display__technical">
+                <div class="error-display__technical-header">
+                    <strong>Debug</strong>
+                    <button class="error-display__copy" type="button" @onclick="ShowCopyHint">@L["CopyDetails"]</button>
+                </div>
+
+                @if (copyHintVisible)
                 {
-                    <div class="technical-panel">
-                        <button class="copy-button" type="button" @onclick="ShowCopyHint">@L["CopyDetails"]</button>
-
-                        @if (copyHintVisible)
-                        {
-                            <p class="copy-hint">@L["CopyDetailsHint"]</p>
-                        }
-
-                        <pre class="technical-details">@TechnicalDetails</pre>
-                    </div>
+                    <p class="error-display__hint">@L["CopyDetailsHint"]</p>
                 }
+
+                <pre>@TechnicalDetails</pre>
             </div>
         }
     </div>
-</div>
+</section>
 
 @code {
     [Parameter] public string? Message { get; set; }
