@@ -16,17 +16,37 @@
                         </LayoutView>
                     </Authorizing>
                     <NotAuthorized>
-                        <LayoutView Layout="typeof(Layout.AuthLayout)">
-                            <div class="card text-center">
-                                <h1 class="mb-2">@L["Login"]</h1>
-                                <p class="text-muted mb-3">
-                                    @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
-                                        ? "يجب تسجيل الدخول للوصول إلى هذه الصفحة."
-                                        : "You must sign in to access this page.")
-                                </p>
-                                <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
-                            </div>
-                        </LayoutView>
+                        <AuthorizeView>
+                            <Authorized Context="authorizedContext">
+                                <LayoutView Layout="typeof(Layout.AuthLayout)">
+                                    <div class="card text-center">
+                                        <h1 class="mb-2">
+                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                                                ? "غير مصرح"
+                                                : "Access denied")
+                                        </h1>
+                                        <p class="text-muted mb-0">
+                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                                                ? "ليس لديك صلاحية للوصول إلى هذه الصفحة."
+                                                : "You do not have permission to access this page.")
+                                        </p>
+                                    </div>
+                                </LayoutView>
+                            </Authorized>
+                            <NotAuthorized Context="anonymousContext">
+                                <LayoutView Layout="typeof(Layout.AuthLayout)">
+                                    <div class="card text-center">
+                                        <h1 class="mb-2">@L["Login"]</h1>
+                                        <p class="text-muted mb-3">
+                                            @(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar"
+                                                ? "يجب تسجيل الدخول للوصول إلى هذه الصفحة."
+                                                : "You must sign in to access this page.")
+                                        </p>
+                                        <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
+                                    </div>
+                                </LayoutView>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </NotAuthorized>
                 </AuthorizeRouteView>
                 <FocusOnNavigate RouteData="routeData" Selector="h1" />
