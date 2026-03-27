@@ -1,0 +1,47 @@
+@implements IDisposable
+@inject IPermissionPromptService PermissionPromptService
+
+<ConfirmDialog IsVisible="@(_request is not null)"
+               Title="@(_request?.Title ?? string.Empty)"
+               Message="@(_request?.Message ?? string.Empty)"
+               ConfirmText="@(_request?.ConfirmText ?? string.Empty)"
+               CancelText="@(_request?.CancelText ?? string.Empty)"
+               OnConfirm="HandleConfirmAsync"
+               OnCancel="HandleCancelAsync" />
+
+@code {
+    private PermissionPromptRequest? _request;
+
+    protected override void OnInitialized()
+    {
+        PermissionPromptService.OnRequest += HandleRequest;
+    }
+
+    private void HandleRequest(PermissionPromptRequest request)
+    {
+        _ = InvokeAsync(() =>
+        {
+            _request = request;
+            StateHasChanged();
+        });
+    }
+
+    private Task HandleConfirmAsync()
+    {
+        _request?.Completion.TrySetResult(true);
+        _request = null;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    private Task HandleCancelAsync()
+    {
+        _request?.Completion.TrySetResult(false);
+        _request = null;
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        PermissionPromptService.OnRequest -= HandleRequest;
+    }
+}

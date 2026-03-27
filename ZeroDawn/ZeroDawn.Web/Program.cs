@@ -74,6 +74,7 @@ try
     builder.Services.AddScoped<IEmailService, MailKitEmailService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IToastService, ToastService>();
+    builder.Services.AddScoped<IPermissionPromptService, PermissionPromptService>();
     builder.Services.AddScoped<IAuthService, DefaultAuthService>();
     builder.Services.AddLocalization(options =>
         options.ResourcesPath = "Localization/Resources");

@@ -10,25 +10,25 @@
 }
 
 .badge--info {
-    color: var(--color-primary-hover);
+    color: var(--color-info-ink);
     background: color-mix(in srgb, var(--color-primary) 14%, transparent);
     border-color: color-mix(in srgb, var(--color-primary) 24%, transparent);
 }
 
 .badge--success {
-    color: color-mix(in srgb, var(--color-success) 72%, black);
+    color: var(--color-success-ink);
     background: color-mix(in srgb, var(--color-success) 14%, transparent);
     border-color: color-mix(in srgb, var(--color-success) 24%, transparent);
 }
 
 .badge--warning {
-    color: color-mix(in srgb, var(--color-warning) 78%, black);
+    color: var(--color-warning-ink);
     background: color-mix(in srgb, var(--color-warning) 18%, transparent);
     border-color: color-mix(in srgb, var(--color-warning) 28%, transparent);
 }
 
 .badge--error {
-    color: color-mix(in srgb, var(--color-error) 82%, black);
+    color: var(--color-error-ink);
     background: color-mix(in srgb, var(--color-error) 14%, transparent);
     border-color: color-mix(in srgb, var(--color-error) 24%, transparent);
 }

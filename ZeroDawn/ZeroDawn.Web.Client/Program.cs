@@ -23,6 +23,7 @@ builder.Services.AddSingleton<IConnectivityService, WebConnectivityService>();
 builder.Services.AddScoped<IPreferencesService, BrowserPreferencesService>();
 builder.Services.AddScoped<ITokenStorageService, BrowserTokenStorage>();
 builder.Services.AddScoped<IToastService, ToastService>();
+builder.Services.AddScoped<IPermissionPromptService, PermissionPromptService>();
 builder.Services.AddScoped<IAuthService, DefaultAuthService>();
 builder.Services.AddScoped<WebAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<WebAuthStateProvider>());

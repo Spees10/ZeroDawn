@@ -46,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ISecureStorageService, MauiSecureStorageService>();
         builder.Services.AddSingleton<ITokenStorageService, SecureStorageTokenService>();
         builder.Services.AddScoped<IToastService, ToastService>();
+        builder.Services.AddScoped<IPermissionPromptService, PermissionPromptService>();
         builder.Services.AddScoped<IAuthService, DefaultAuthService>();
         builder.Services.AddScoped<AuthenticationStateProvider, MauiAuthStateProvider>();
         builder.Services.AddTransient<MauiAuthHttpHandler>();

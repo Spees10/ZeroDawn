@@ -109,3 +109,9 @@
     justify-content: center;
     padding-inline: 0.6rem;
 }
+
+@media (max-width: 960px) {
+    .sidebar__collapse {
+        display: none;
+    }
+}

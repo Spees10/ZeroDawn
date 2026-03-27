@@ -7,7 +7,7 @@
         @onclick="ToggleThemeAsync"
         aria-label="@AriaLabel"
         title="@AriaLabel">
-    <span class="theme-toggle__icon" aria-hidden="true">@(_isDarkTheme ? "☀" : "☾")</span>
+    <span class="theme-toggle__icon material-symbols-outlined" aria-hidden="true">@(_isDarkTheme ? "light_mode" : "dark_mode")</span>
     <span class="theme-toggle__text">@(_isDarkTheme ? L["LightTheme"] : L["DarkTheme"])</span>
     <span class="theme-toggle__sr-only">@L["ToggleTheme"]</span>
 </button>
@@ -15,21 +15,30 @@
 @code {
     private IJSObjectReference? _module;
     private bool _isDarkTheme;
+    private bool _disposed;
 
     private string AriaLabel => _isDarkTheme ? L["SwitchToLightTheme"] : L["SwitchToDarkTheme"];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
+        if (!firstRender || _disposed)
         {
             return;
         }
 
         try
         {
-            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/ZeroDawn.Shared/themeToggle.js");
-            var currentTheme = await _module.InvokeAsync<string>("getTheme");
+            var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/ZeroDawn.Shared/themeToggle.js");
 
+            if (_disposed)
+            {
+                await module.DisposeAsync();
+                return;
+            }
+
+            _module = module;
+
+            var currentTheme = await _module.InvokeAsync<string>("getTheme");
             if (currentTheme is "dark" or "light")
             {
                 _isDarkTheme = currentTheme == "dark";
@@ -37,7 +46,13 @@
                 await InvokeAsync(StateHasChanged);
             }
         }
+        catch (JSDisconnectedException)
+        {
+        }
         catch (JSException)
+        {
+        }
+        catch (ObjectDisposedException)
         {
         }
     }
@@ -46,17 +61,49 @@
     {
         _isDarkTheme = !_isDarkTheme;
 
-        if (_module is not null)
+        if (_module is null || _disposed)
+        {
+            return;
+        }
+
+        try
         {
             await _module.InvokeVoidAsync("setTheme", _isDarkTheme ? "dark" : "light");
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+        catch (JSException)
+        {
+        }
+        catch (ObjectDisposedException)
+        {
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (_module is not null)
+        _disposed = true;
+
+        if (_module is null)
+        {
+            return;
+        }
+
+        try
         {
             await _module.DisposeAsync();
         }
+        catch (JSDisconnectedException)
+        {
+        }
+        catch (JSException)
+        {
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        _module = null;
     }
 }
