@@ -40,6 +40,9 @@ public abstract class AuthPageBase : ComponentBase
         ErrorMessage = L["ErrorOccurred"];
         ErrorReferenceNumber = BuildClientReferenceNumber();
         ErrorTechnicalDetails = exception.ToString();
+
+        var toastMessage = $"{ErrorMessage} ({ErrorReferenceNumber})";
+        ToastService.ShowError(toastMessage);
     }
 
     protected void ShowApiErrors(ApiResponse response)
@@ -51,6 +54,18 @@ public abstract class AuthPageBase : ComponentBase
                 ToastService.ShowError(validationError);
             }
 
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(response.Message))
+        {
+            var message = response.Message;
+            if (!string.IsNullOrWhiteSpace(response.ReferenceNumber))
+            {
+                message = $"{message} ({response.ReferenceNumber})";
+            }
+
+            ToastService.ShowError(message!);
             return;
         }
 
@@ -66,7 +81,13 @@ public abstract class AuthPageBase : ComponentBase
             return;
         }
 
-        ToastService.ShowError(L["ErrorOccurred"]);
+        var fallbackMessage = L["ErrorOccurred"].Value;
+        if (!string.IsNullOrWhiteSpace(response.ReferenceNumber))
+        {
+            fallbackMessage = $"{fallbackMessage} ({response.ReferenceNumber})";
+        }
+
+        ToastService.ShowError(fallbackMessage);
     }
 
     protected void ShowSuccess(string fallbackMessage, string? message = null)

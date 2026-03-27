@@ -22,22 +22,22 @@
 
         if (user.Identity?.IsAuthenticated != true)
         {
-            NavigationManager.NavigateTo("/login", forceLoad: true);
+            NavigationManager.NavigateTo("/login");
             return;
         }
 
         if (user.IsInRole("SuperAdmin"))
         {
-            NavigationManager.NavigateTo("/dashboard/superadmin", forceLoad: true);
+            NavigationManager.NavigateTo("/dashboard/superadmin");
             return;
         }
 
         if (user.IsInRole("Admin"))
         {
-            NavigationManager.NavigateTo("/dashboard/admin", forceLoad: true);
+            NavigationManager.NavigateTo("/dashboard/admin");
             return;
         }
 
-        NavigationManager.NavigateTo("/dashboard", forceLoad: true);
+        NavigationManager.NavigateTo("/dashboard");
     }
 }

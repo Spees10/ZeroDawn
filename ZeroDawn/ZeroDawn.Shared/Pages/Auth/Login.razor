@@ -81,7 +81,7 @@
 
             await NotifyAuthStateChangedAsync();
             ShowSuccess(L["Login"], response.Message);
-            NavigationManager.NavigateTo("/", forceLoad: true);
+            NavigationManager.NavigateTo("/");
         }
         catch (Exception ex)
         {

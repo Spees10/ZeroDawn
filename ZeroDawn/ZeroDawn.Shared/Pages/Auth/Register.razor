@@ -94,7 +94,7 @@
             {
                 await NotifyAuthStateChangedAsync();
                 ShowSuccess(L["Register"], response.Message);
-                NavigationManager.NavigateTo("/", forceLoad: true);
+                NavigationManager.NavigateTo("/");
                 return;
             }
 

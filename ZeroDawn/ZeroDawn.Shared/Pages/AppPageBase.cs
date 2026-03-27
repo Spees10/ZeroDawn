@@ -40,11 +40,18 @@ public abstract class AppPageBase : ComponentBase
         ErrorMessage = L["ErrorOccurred"];
         ErrorReferenceNumber = BuildClientReferenceNumber();
         ErrorTechnicalDetails = exception.ToString();
+
+        var toastMessage = $"{ErrorMessage} ({ErrorReferenceNumber})";
+        ToastService.ShowError(toastMessage);
     }
 
     protected void SetApiError(ApiResponse response)
     {
-        ErrorMessage = string.IsNullOrWhiteSpace(response.Error) ? L["ErrorOccurred"] : response.Error;
+        ErrorMessage = !string.IsNullOrWhiteSpace(response.Error)
+            ? response.Error
+            : !string.IsNullOrWhiteSpace(response.Message)
+                ? response.Message
+                : L["ErrorOccurred"];
         ErrorReferenceNumber = response.ReferenceNumber;
     }
 
@@ -60,7 +67,12 @@ public abstract class AppPageBase : ComponentBase
             return;
         }
 
-        var message = string.IsNullOrWhiteSpace(response.Error) ? L["ErrorOccurred"].Value : response.Error!;
+        var message = !string.IsNullOrWhiteSpace(response.Error)
+            ? response.Error!
+            : !string.IsNullOrWhiteSpace(response.Message)
+                ? response.Message!
+                : L["ErrorOccurred"].Value;
+
         if (!string.IsNullOrWhiteSpace(response.ReferenceNumber))
         {
             message = $"{message} ({response.ReferenceNumber})";
