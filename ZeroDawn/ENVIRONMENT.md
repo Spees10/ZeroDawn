@@ -1,0 +1,104 @@
+# ENVIRONMENT
+
+## Configuration Precedence
+
+For `ZeroDawn.Web`, config resolves in this order:
+
+1. [appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
+2. [appsettings.Development.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.Development.json) or the active environment file
+3. User Secrets in development
+4. Environment variables
+
+Main binding happens in [Program.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Program.cs).
+
+For `ZeroDawn.Web.Client`, runtime config comes from:
+
+- [wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+- [wwwroot/appsettings.Development.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.Development.json)
+
+These client files must never contain secrets.
+
+## Config Keys
+
+| Key | Purpose | Where set now | Secret? |
+|---|---|---|---|
+| `Jwt:Secret` | JWT signing key | User Secrets / env vars | Yes |
+| `Jwt:Issuer` | token issuer | `ZeroDawn.Web/appsettings.json` | No |
+| `Jwt:Audience` | token audience | `ZeroDawn.Web/appsettings.json` | No |
+| `Jwt:AccessTokenExpirationMinutes` | access token lifetime | `ZeroDawn.Web/appsettings.json` | No |
+| `Jwt:RefreshTokenExpirationDays` | refresh token lifetime | `ZeroDawn.Web/appsettings.json` | No |
+| `Smtp:Host` | SMTP host | `ZeroDawn.Web/appsettings.json` | No |
+| `Smtp:Port` | SMTP port | `ZeroDawn.Web/appsettings.json` | No |
+| `Smtp:Username` | SMTP username | User Secrets / env vars | Yes |
+| `Smtp:Password` | SMTP password | User Secrets / env vars | Yes |
+| `Smtp:FromEmail` | sender email | `ZeroDawn.Web/appsettings.json` | No |
+| `Smtp:FromName` | sender name | `ZeroDawn.Web/appsettings.json` | No |
+| `Smtp:UseSsl` | SMTP SSL flag | `ZeroDawn.Web/appsettings.json` | No |
+| `App:AppName` | app display name | `ZeroDawn.Web/appsettings.json` | No |
+| `App:BaseUrl` | public app URL used in links | `ZeroDawn.Web/appsettings.json` | No |
+| `App:AllowSelfRegistration` | self-registration toggle | `ZeroDawn.Web/appsettings.json` | No |
+| `App:RequireEmailConfirmation` | email confirmation toggle | `ZeroDawn.Web/appsettings.json` | No |
+| `App:DefaultLanguage` | default culture | `ZeroDawn.Web/appsettings.json` | No |
+| `Database:ConnectionString` | SQL connection string | `ZeroDawn.Web/appsettings.json` or env vars | Usually yes in production |
+| `Logging:LogLevel:Default` | app log level | appsettings files | No |
+| `ApiBaseUrl` | browser client API URL | `ZeroDawn.Web.Client/wwwroot/appsettings*.json` | No |
+
+## Environment Variable Examples
+
+Use double underscores:
+
+```powershell
+$env:Jwt__Secret = "replace-with-a-long-random-secret"
+$env:Smtp__Username = "smtp-user"
+$env:Smtp__Password = "smtp-password"
+$env:Database__ConnectionString = "Server=...;Database=...;User Id=...;Password=...;TrustServerCertificate=True;"
+$env:App__BaseUrl = "https://your-domain.example"
+```
+
+## API URL Strategy
+
+### Web Host
+
+Used for generated links:
+
+- key: `App:BaseUrl`
+- file: [ZeroDawn.Web/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
+
+### Blazor WASM
+
+Used for API calls:
+
+- key: `ApiBaseUrl`
+- file: [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+- current dev value: `https://localhost:7001`
+
+### MAUI
+
+Configured in code, not JSON:
+
+- file: [MauiProgram.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\MauiProgram.cs)
+- Android emulator: `https://10.0.2.2:7001`
+- Windows: `https://localhost:7001`
+- physical device: `https://<your-machine-ip>:7001`
+
+## Add A New Config Key
+
+### Server key
+
+1. Add the property to the correct options class in [ZeroDawn.Web/Configuration](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Configuration)
+2. Add a non-secret default to [appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
+3. If it is secret, keep it out of checked-in JSON
+4. Bind/read it in [Program.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Program.cs)
+5. Document it here
+
+### Browser client key
+
+1. Add it to `ZeroDawn.Web.Client/wwwroot/appsettings*.json`
+2. Read it from [ZeroDawn.Web.Client/Program.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\Program.cs)
+3. Do not store secrets there
+
+## Practical Notes
+
+- JWT middleware in [ZeroDawn.Web/Program.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Program.cs) only turns on when `Jwt:Secret` is configured
+- SMTP failures are logged without crashing forgot-password/resend-confirmation style flows
+- The checked-in DB connection string is development-only; production should override it externally

@@ -1,0 +1,22 @@
+<div class="form-input">
+    @if (IconContent is not null)
+    {
+        <div class="form-input__icon">
+            @IconContent
+        </div>
+    }
+
+    <InputText Value="@Value"
+               ValueChanged="@ValueChanged"
+               ValueExpression="@ValueExpression"
+               class="form-input__control"
+               @attributes="AdditionalAttributes" />
+</div>
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public Expression<Func<string?>>? ValueExpression { get; set; }
+    [Parameter] public RenderFragment? IconContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+}

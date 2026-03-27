@@ -1,6 +1,6 @@
 #nullable enable
 
-namespace ZeroDawn.Shared.Localization;
+namespace ZeroDawn.Shared;
 
 // Marker class for IStringLocalizer<SharedResources>
 public class SharedResources

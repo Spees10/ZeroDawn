@@ -1,0 +1,65 @@
+@page "/contact"
+@layout MainLayout
+@inherits AppPageBase
+
+<PageHeader Title='@L["ContactUs"]'
+            Breadcrumb='@L["Home"]'
+            Subtitle="UI only placeholder" />
+
+<div class="card">
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <FormField TValue="string" Label='@L["FullName"]' For="() => _model.Name">
+            <FormInput @bind-Value="_model.Name" placeholder='@L["FullName"]' />
+        </FormField>
+
+        <FormField TValue="string" Label='@L["Email"]' For="() => _model.Email">
+            <FormInput @bind-Value="_model.Email" placeholder='@L["Email"]' />
+        </FormField>
+
+        <FormField TValue="string" Label="Message" For="() => _model.Message">
+            <InputTextArea @bind-Value="_model.Message" class="form-control" rows="5" placeholder="Message" />
+        </FormField>
+
+        <SubmitButton Text='@L["Submit"]'
+                      LoadingText='@L["ProcessingRequest"]'
+                      IsLoading="@_isSubmitting"
+                      IsDisabled="@_isSubmitting" />
+    </EditForm>
+</div>
+
+@code {
+    private readonly ContactModel _model = new();
+    private bool _isSubmitting;
+
+    private async Task SubmitAsync()
+    {
+        if (_isSubmitting)
+        {
+            return;
+        }
+
+        _isSubmitting = true;
+        await Task.Delay(350);
+        ShowSuccess("Message captured. Backend will be wired later.");
+        _isSubmitting = false;
+        _model.Name = string.Empty;
+        _model.Email = string.Empty;
+        _model.Message = string.Empty;
+    }
+
+    private sealed class ContactModel
+    {
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Message { get; set; } = string.Empty;
+    }
+}

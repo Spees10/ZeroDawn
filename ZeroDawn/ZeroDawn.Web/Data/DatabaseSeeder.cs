@@ -28,11 +28,13 @@ public static class DatabaseSeeder
             }
         }
 
-        // Seed super admin
-        const string adminEmail = "admin@zerodawn.local";
-        if (await userManager.FindByEmailAsync(adminEmail) is null)
+        // Seed static super admin
+        const string adminEmail = "loai.asp97@gmail.com";
+        const string adminPassword = "012Shbl10@ZD";
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+        if (admin is null)
         {
-            var admin = new ApplicationUser
+            admin = new ApplicationUser
             {
                 UserName = adminEmail,
                 Email = adminEmail,
@@ -41,17 +43,51 @@ public static class DatabaseSeeder
                 IsActive = true
             };
 
-            var result = await userManager.CreateAsync(admin, "Admin@123");
+            var result = await userManager.CreateAsync(admin, adminPassword);
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(admin, Roles.SuperAdmin);
-                logger.LogInformation("Seeded super admin: {Email}", adminEmail);
+                logger.LogInformation("Seeded static super admin account.");
             }
             else
             {
-                logger.LogError("Failed to seed super admin: {Errors}",
+                logger.LogError("Failed to seed static super admin: {Errors}",
                     string.Join(", ", result.Errors.Select(e => e.Description)));
             }
+        }
+
+        if (admin is not null)
+        {
+            admin.UserName = adminEmail;
+            admin.Email = adminEmail;
+            admin.FullName = "Super Admin";
+            admin.EmailConfirmed = true;
+            admin.IsActive = true;
+
+            await userManager.UpdateAsync(admin);
+
+            if (!await userManager.IsInRoleAsync(admin, Roles.SuperAdmin))
+            {
+                await userManager.AddToRoleAsync(admin, Roles.SuperAdmin);
+            }
+
+            if (!await userManager.CheckPasswordAsync(admin, adminPassword))
+            {
+                var resetToken = await userManager.GeneratePasswordResetTokenAsync(admin);
+                await userManager.ResetPasswordAsync(admin, resetToken, adminPassword);
+            }
+        }
+
+        var legacyAdmin = await userManager.FindByEmailAsync("admin@zerodawn.local");
+        if (legacyAdmin is not null && legacyAdmin.Id != admin?.Id)
+        {
+            if (await userManager.IsInRoleAsync(legacyAdmin, Roles.SuperAdmin))
+            {
+                await userManager.RemoveFromRoleAsync(legacyAdmin, Roles.SuperAdmin);
+            }
+
+            legacyAdmin.IsActive = false;
+            await userManager.UpdateAsync(legacyAdmin);
         }
     }
 }

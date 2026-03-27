@@ -1,0 +1,280 @@
+@page "/admin/users"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,SuperAdmin")]
+@inherits AppPageBase
+
+<PageHeader Title="User Management"
+            Breadcrumb='@L["Users"]'
+            Subtitle="Manage users, roles, and status" />
+
+@if (HasError)
+{
+    <ErrorDisplay Message="@ErrorMessage"
+                  ReferenceNumber="@ErrorReferenceNumber"
+                  TechnicalDetails="@ErrorTechnicalDetails"
+                  ShowTechnicalDetails="true"
+                  OnRetry="@(async () => await LoadAsync())" />
+}
+else
+{
+    <div class="card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <SearchBar Placeholder='@L["Search"]' OnSearch="HandleSearchAsync" />
+            @if (_isLoading)
+            {
+                <LoadingSpinner Size="small" />
+            }
+        </div>
+
+        @if (_isLoading)
+        {
+            <div class="d-flex flex-column gap-2">
+                <Skeleton Height="3rem" />
+                <Skeleton Height="3rem" />
+                <Skeleton Height="3rem" />
+            </div>
+        }
+        else if (_users.Count == 0)
+        {
+            <EmptyState Message='@L["NoResults"]' />
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>@L["FullName"]</th>
+                            <th>@L["Email"]</th>
+                            <th>Roles</th>
+                            <th>Status</th>
+                            <th>@L["Edit"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in _users)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="/admin/users/@user.Id">@user.FullName</a>
+                                </td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <Badge Text="@role" Variant="info" />
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <Badge Text="@(user.IsActive ? "Active" : "Inactive")"
+                                           Variant="@(user.IsActive ? "success" : "error")" />
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button type="button" class="btn btn-secondary" @onclick="() => ToggleStatusAsync(user)">
+                                            @(user.IsActive ? "Disable" : "Enable")
+                                        </button>
+
+                                        @if (_isSuperAdmin)
+                                        {
+                                            <button type="button" class="btn btn-primary" @onclick="() => CycleRoleAsync(user)">
+                                                Change Role
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <Pagination CurrentPage="@_currentPage"
+                        TotalPages="@_totalPages"
+                        OnPageChanged="HandlePageChangedAsync" />
+        }
+    </div>
+}
+
+@code {
+    private List<UserDto> _users = [];
+    private bool _isLoading = true;
+    private bool _isSuperAdmin;
+    private int _totalPages = 1;
+    private int _currentPage = 1;
+    private string _searchTerm = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserAsync();
+        _isSuperAdmin = user.IsInRole("SuperAdmin");
+        await LoadAsync();
+    }
+
+    private async Task HandleSearchAsync(string term)
+    {
+        _searchTerm = term;
+        await LoadAsync(page: 1);
+    }
+
+    private Task HandlePageChangedAsync(int page)
+        => LoadAsync(page);
+
+    private async Task LoadAsync(int? page = null)
+    {
+        ClearError();
+        _isLoading = true;
+        StateHasChanged();
+
+        try
+        {
+            var currentPage = page ?? _currentPage;
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.GetUsersAsync(new PagedRequest
+                {
+                    Page = currentPage,
+                    PageSize = 10,
+                    SearchTerm = _searchTerm
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    SetApiError(response);
+                    ShowApiErrors(response);
+                    _users = [];
+                    _totalPages = 1;
+                    return;
+                }
+
+                _users = response.Data.Items;
+                _totalPages = Math.Max(1, response.Data.TotalPages);
+            }
+            else
+            {
+                var allUsers = GetDemoUsers()
+                    .Where(user => string.IsNullOrWhiteSpace(_searchTerm)
+                        || user.FullName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase)
+                        || user.Email.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                _totalPages = Math.Max(1, (int)Math.Ceiling(allUsers.Count / 10d));
+                _users = allUsers.Skip((currentPage - 1) * 10).Take(10).ToList();
+            }
+
+            _currentPage = currentPage;
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task ToggleStatusAsync(UserDto user)
+    {
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.UpdateStatusAsync(user.Id, new UpdateUserStatusRequest
+                {
+                    UserId = user.Id,
+                    IsActive = !user.IsActive
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                ReplaceUser(response.Data);
+            }
+            else
+            {
+                ReplaceUser(CloneUser(user, isActive: !user.IsActive));
+            }
+
+            ShowSuccess("User status updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private async Task CycleRoleAsync(UserDto user)
+    {
+        var nextRole = user.Roles.Contains("Admin") ? "User" : "Admin";
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.AssignRoleAsync(user.Id, new AssignRoleRequest
+                {
+                    UserId = user.Id,
+                    Role = nextRole
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                ReplaceUser(response.Data);
+            }
+            else
+            {
+                ReplaceUser(CloneUser(user, roles: [nextRole]));
+            }
+
+            ShowSuccess("Role updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private void ReplaceUser(UserDto updatedUser)
+    {
+        var index = _users.FindIndex(user => user.Id == updatedUser.Id);
+        if (index >= 0)
+        {
+            _users[index] = updatedUser;
+        }
+    }
+
+    private static List<UserDto> GetDemoUsers()
+        =>
+        [
+            new() { Id = "1", FullName = "Super Admin", Email = "admin@zerodawn.local", Roles = ["SuperAdmin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-8), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddMinutes(-25) },
+            new() { Id = "2", FullName = "Ops Admin", Email = "ops@zerodawn.local", Roles = ["Admin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-6), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddHours(-3) },
+            new() { Id = "3", FullName = "Sarah User", Email = "sarah@zerodawn.local", Roles = ["User"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-2), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddDays(-1) },
+            new() { Id = "4", FullName = "Inactive User", Email = "inactive@zerodawn.local", Roles = ["User"], IsActive = false, CreatedAt = DateTime.UtcNow.AddMonths(-1), EmailConfirmed = false, LastLoginAt = DateTime.UtcNow.AddDays(-12) }
+        ];
+
+    internal static UserDto CloneUser(
+        UserDto user,
+        List<string>? roles = null,
+        bool? isActive = null)
+        => new()
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Roles = roles ?? [.. user.Roles],
+            IsActive = isActive ?? user.IsActive,
+            CreatedAt = user.CreatedAt,
+            LastLoginAt = user.LastLoginAt,
+            EmailConfirmed = user.EmailConfirmed
+        };
+}

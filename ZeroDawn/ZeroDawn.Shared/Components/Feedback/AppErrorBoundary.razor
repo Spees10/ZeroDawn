@@ -1,0 +1,59 @@
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResources> L
+
+<ErrorBoundary @ref="_errorBoundary">
+    <ChildContent>
+        @ChildContent
+    </ChildContent>
+    <ErrorContent Context="exception">
+        <div class="card">
+            <ErrorDisplay Message="@L["UnexpectedScreenErrorOccurred"]"
+                          ReferenceNumber="@GetReferenceNumber(exception)"
+                          TechnicalDetails="@BuildTechnicalDetails(exception)"
+                          ShowTechnicalDetails="true"
+                          OnRetry="RecoverAsync" />
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private ErrorBoundary? _errorBoundary;
+    private Exception? _currentException;
+    private string? _referenceNumber;
+
+    private Task RecoverAsync()
+    {
+        _currentException = null;
+        _referenceNumber = null;
+        _errorBoundary?.Recover();
+        return Task.CompletedTask;
+    }
+
+    private string GetReferenceNumber(Exception exception)
+    {
+        if (!ReferenceEquals(_currentException, exception) || string.IsNullOrWhiteSpace(_referenceNumber))
+        {
+            _currentException = exception;
+            _referenceNumber = $"UI-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid():N}"[..20];
+        }
+
+        return _referenceNumber;
+    }
+
+    private string BuildTechnicalDetails(Exception exception)
+    {
+        var path = "/";
+
+        try
+        {
+            path = new Uri(NavigationManager.Uri).PathAndQuery;
+        }
+        catch
+        {
+        }
+
+        return $"Location: {path}{Environment.NewLine}{Environment.NewLine}{exception}";
+    }
+}

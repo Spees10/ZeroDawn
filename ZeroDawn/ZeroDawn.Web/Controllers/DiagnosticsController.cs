@@ -6,6 +6,7 @@ namespace ZeroDawn.Web.Controllers;
 
 [ApiController]
 [Route("api/debug")]
+[IgnoreAntiforgeryToken]
 public class DiagnosticsController : ControllerBase
 {
     private readonly IWebHostEnvironment _environment;

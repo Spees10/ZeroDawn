@@ -1,12 +1,7 @@
 using Microsoft.Maui.Networking;
+using ZeroDawn.Shared.Services;
 
 namespace ZeroDawn.Services;
-
-public interface IConnectivityService
-{
-    bool IsConnected { get; }
-    event EventHandler<bool> ConnectivityChanged;
-}
 
 public class MauiConnectivityService : IConnectivityService, IDisposable
 {

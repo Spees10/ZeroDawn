@@ -1,0 +1,116 @@
+@page "/register"
+@layout AuthLayout
+@inherits AuthPageBase
+@using ZeroDawn.Shared.Contracts.Auth
+@using ZeroDawn.Shared.Layout
+
+<div class="d-flex flex-column gap-4">
+    <div>
+        <h1 class="mb-2">@L["Register"]</h1>
+        <p class="text-muted mb-0">@L["NeedAnAccount"]</p>
+    </div>
+
+    @if (HasUnhandledError)
+    {
+        <ErrorDisplay Message="@ErrorMessage"
+                      ReferenceNumber="@ErrorReferenceNumber"
+                      TechnicalDetails="@ErrorTechnicalDetails"
+                      ShowTechnicalDetails="true"
+                      OnRetry="SubmitAsync" />
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_successMessage))
+    {
+        <div class="card text-center">
+            <h3 class="mb-2">@L["CheckYourEmail"]</h3>
+            <p class="text-muted mb-3">@_successMessage</p>
+            <a href="/login">@L["BackToLogin"]</a>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <FormField TValue="string" Label="@L["FullName"]" For="() => _model.FullName">
+                <FormInput @bind-Value="_model.FullName"
+                           placeholder="@L["FullName"]" />
+            </FormField>
+
+            <FormField TValue="string" Label="@L["Email"]" For="() => _model.Email">
+                <FormInput @bind-Value="_model.Email"
+                           placeholder="@L["Email"]" />
+            </FormField>
+
+            <FormField TValue="string" Label="@L["Password"]" For="() => _model.Password">
+                <FormPasswordInput @bind-Value="_model.Password"
+                                   placeholder="@L["Password"]" />
+            </FormField>
+
+            <FormField TValue="string" Label="@L["ConfirmPassword"]" For="() => _model.ConfirmPassword">
+                <FormPasswordInput @bind-Value="_model.ConfirmPassword"
+                                   placeholder="@L["ConfirmPassword"]" />
+            </FormField>
+
+            <SubmitButton Text="@L["Register"]"
+                          LoadingText="@L["CreatingAccount"]"
+                          IsLoading="@_isLoading"
+                          IsDisabled="@_isLoading" />
+
+            <div class="text-muted">
+                @L["AlreadyHaveAccount"]
+                <a href="/login">@L["Login"]</a>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private readonly RegisterRequest _model = new();
+    private bool _isLoading;
+    private string? _successMessage;
+
+    private async Task SubmitAsync()
+    {
+        if (_isLoading)
+        {
+            return;
+        }
+
+        ClearUnhandledError();
+        _isLoading = true;
+
+        try
+        {
+            var response = await AuthService.RegisterAsync(_model);
+            if (!response.Succeeded)
+            {
+                ShowApiErrors(response);
+                return;
+            }
+
+            if (response.Data is not null)
+            {
+                await NotifyAuthStateChangedAsync();
+                ShowSuccess(L["Register"], response.Message);
+                NavigationManager.NavigateTo("/", forceLoad: true);
+                return;
+            }
+
+            _successMessage = string.IsNullOrWhiteSpace(response.Message)
+                ? L["CheckYourEmailMessage"]
+                : response.Message;
+
+            ShowSuccess(L["CheckYourEmail"], _successMessage);
+        }
+        catch (Exception ex)
+        {
+            SetUnhandledError(ex);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

@@ -1,0 +1,95 @@
+@page "/login"
+@layout AuthLayout
+@inherits AuthPageBase
+@using ZeroDawn.Shared.Contracts.Auth
+@using ZeroDawn.Shared.Layout
+
+<div class="d-flex flex-column gap-4">
+    <div>
+        <h1 class="mb-2">@L["Login"]</h1>
+        <p class="text-muted mb-0">@L["Welcome", L["AppName"]]</p>
+    </div>
+
+    @if (HasUnhandledError)
+    {
+        <ErrorDisplay Message="@ErrorMessage"
+                      ReferenceNumber="@ErrorReferenceNumber"
+                      TechnicalDetails="@ErrorTechnicalDetails"
+                      ShowTechnicalDetails="true"
+                      OnRetry="SubmitAsync" />
+    }
+
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync" class="d-flex flex-column gap-4">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <FormField TValue="string" Label="@L["Email"]" For="() => _model.Email">
+            <FormInput @bind-Value="_model.Email"
+                       IconContent="@EmailIcon"
+                       placeholder="@L["Email"]"
+                       type="email" />
+        </FormField>
+
+        <FormField TValue="string" Label="@L["Password"]" For="() => _model.Password">
+            <FormPasswordInput @bind-Value="_model.Password"
+                               placeholder="@L["Password"]" />
+        </FormField>
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a href="/forgot-password">@L["ForgotPassword"]</a>
+
+            @if (AllowSelfRegistration)
+            {
+                <span class="text-muted">
+                    @L["NeedAnAccount"]
+                    <a href="/register">@L["Register"]</a>
+                </span>
+            }
+        </div>
+
+        <SubmitButton Text="@L["Login"]"
+                      LoadingText="@L["SigningIn"]"
+                      IsLoading="@_isLoading"
+                      IsDisabled="@_isLoading" />
+    </EditForm>
+</div>
+
+@code {
+    private readonly LoginRequest _model = new();
+    private bool _isLoading;
+
+    private RenderFragment EmailIcon => @<span>✉</span>;
+
+    private async Task SubmitAsync()
+    {
+        if (_isLoading)
+        {
+            return;
+        }
+
+        ClearUnhandledError();
+        _isLoading = true;
+
+        try
+        {
+            var response = await AuthService.LoginAsync(_model);
+            if (!response.Succeeded || response.Data is null)
+            {
+                ShowApiErrors(response);
+                return;
+            }
+
+            await NotifyAuthStateChangedAsync();
+            ShowSuccess(L["Login"], response.Message);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            SetUnhandledError(ex);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

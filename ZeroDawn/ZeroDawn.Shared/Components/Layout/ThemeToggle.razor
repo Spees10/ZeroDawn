@@ -1,0 +1,62 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+@inject IStringLocalizer<SharedResources> L
+
+<button type="button"
+        class="theme-toggle"
+        @onclick="ToggleThemeAsync"
+        aria-label="@AriaLabel"
+        title="@AriaLabel">
+    <span class="theme-toggle__icon" aria-hidden="true">@(_isDarkTheme ? "☀" : "☾")</span>
+    <span class="theme-toggle__text">@(_isDarkTheme ? L["LightTheme"] : L["DarkTheme"])</span>
+    <span class="theme-toggle__sr-only">@L["ToggleTheme"]</span>
+</button>
+
+@code {
+    private IJSObjectReference? _module;
+    private bool _isDarkTheme;
+
+    private string AriaLabel => _isDarkTheme ? L["SwitchToLightTheme"] : L["SwitchToDarkTheme"];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        try
+        {
+            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/ZeroDawn.Shared/themeToggle.js");
+            var currentTheme = await _module.InvokeAsync<string>("getTheme");
+
+            if (currentTheme is "dark" or "light")
+            {
+                _isDarkTheme = currentTheme == "dark";
+                await _module.InvokeVoidAsync("setTheme", currentTheme);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (JSException)
+        {
+        }
+    }
+
+    private async Task ToggleThemeAsync()
+    {
+        _isDarkTheme = !_isDarkTheme;
+
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("setTheme", _isDarkTheme ? "dark" : "light");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module is not null)
+        {
+            await _module.DisposeAsync();
+        }
+    }
+}

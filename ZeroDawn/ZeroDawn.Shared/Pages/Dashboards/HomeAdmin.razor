@@ -1,0 +1,41 @@
+@page "/dashboard/admin"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+@inherits AppPageBase
+
+<PageHeader Title='@L["Dashboard"]'
+            Breadcrumb='@L["Home"]'
+            Subtitle='@($"{L["Welcome", _userName]}")' />
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="text-muted mb-2">Users</div>
+            <div class="fs-2 fw-bold">84</div>
+            <Badge Text="Managed" Variant="info" />
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="text-muted mb-2">Recent Activity</div>
+            <div class="fs-2 fw-bold">12</div>
+            <Badge Text="Today" Variant="success" />
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <PageHeader Title="Quick Links" Subtitle='@L["Users"]' />
+    <a class="btn btn-primary" href="/admin/users">User Management</a>
+</div>
+
+@code {
+    private string _userName = "Admin";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserAsync();
+        _userName = GetDisplayName(user);
+    }
+}

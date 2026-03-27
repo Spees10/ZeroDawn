@@ -1,27 +1,27 @@
-﻿@page "/Error"
+@page "/Error"
 @using System.Diagnostics
 
-<PageTitle>Error</PageTitle>
+<PageTitle>خطأ</PageTitle>
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h1 class="text-danger">خطأ</h1>
+<h2 class="text-danger">حدث خطأ أثناء معالجة الطلب.</h2>
 
 @if (ShowRequestId)
 {
     <p>
-        <strong>Request ID:</strong> <code>@RequestId</code>
+        <strong>رقم الطلب:</strong> <code>@RequestId</code>
     </p>
 }
 
-<h3>Development Mode</h3>
+<h3>وضع التطوير</h3>
 <p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+    تفعيل بيئة <strong>Development</strong> سيعرض تفاصيل أكثر عن الخطأ الذي حدث.
 </p>
 <p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
+    <strong>لا يجب تفعيل بيئة Development على التطبيقات المنشورة.</strong>
+    قد يؤدي ذلك إلى عرض معلومات حساسة للمستخدمين النهائيين.
+    للتشخيص المحلي، فعّل متغير البيئة <strong>ASPNETCORE_ENVIRONMENT</strong> بقيمة <strong>Development</strong>
+    ثم أعد تشغيل التطبيق.
 </p>
 
 @code{

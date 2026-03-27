@@ -7,5 +7,5 @@ public class AppOptions
     public string BaseUrl { get; set; } = "";
     public bool AllowSelfRegistration { get; set; } = true;
     public bool RequireEmailConfirmation { get; set; } = true;
-    public string DefaultLanguage { get; set; } = "en";
+    public string DefaultLanguage { get; set; } = "ar";
 }

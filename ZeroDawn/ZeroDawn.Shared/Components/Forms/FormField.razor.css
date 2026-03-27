@@ -1,0 +1,19 @@
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.form-field__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-field__help {
+    font-size: 0.85rem;
+}
+
+.form-field__validation {
+    font-size: 0.85rem;
+}

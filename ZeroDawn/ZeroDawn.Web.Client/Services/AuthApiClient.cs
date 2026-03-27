@@ -26,6 +26,9 @@ public class AuthApiClient : IAuthApiClient
     public Task<ApiResponse<AuthResponse>> RegisterAsync(RegisterRequest request)
         => PostAuthAsync(ApiEndpoints.Auth.Register, request);
 
+    public Task<ApiResponse<AuthResponse>> RefreshTokenAsync(RefreshTokenRequest request)
+        => PostAuthAsync(ApiEndpoints.Auth.RefreshToken, request);
+
     public Task<ApiResponse> ForgotPasswordAsync(ForgotPasswordRequest request)
         => PostAsync(ApiEndpoints.Auth.ForgotPassword, request);
 

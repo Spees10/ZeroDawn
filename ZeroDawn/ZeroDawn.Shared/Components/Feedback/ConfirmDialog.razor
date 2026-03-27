@@ -1,0 +1,33 @@
+@inject IStringLocalizer<SharedResources> L
+
+@if (IsVisible)
+{
+    <div class="confirm-dialog">
+        <div class="confirm-dialog__backdrop" @onclick="OnCancel"></div>
+
+        <div class="confirm-dialog__panel card" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title">
+            <div class="confirm-dialog__icon">⚠</div>
+            <h3 id="confirm-dialog-title" class="confirm-dialog__title">@ResolvedTitle</h3>
+            <p class="confirm-dialog__message">@Message</p>
+
+            <div class="confirm-dialog__actions">
+                <button type="button" class="btn btn-secondary" @onclick="OnCancel">@ResolvedCancelText</button>
+                <button type="button" class="btn btn-danger" @onclick="OnConfirm">@ResolvedConfirmText</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string ConfirmText { get; set; } = string.Empty;
+    [Parameter] public string CancelText { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public bool IsVisible { get; set; }
+
+    private string ResolvedTitle => string.IsNullOrWhiteSpace(Title) ? L["ConfirmAction"] : Title;
+    private string ResolvedConfirmText => string.IsNullOrWhiteSpace(ConfirmText) ? L["Confirm"] : ConfirmText;
+    private string ResolvedCancelText => string.IsNullOrWhiteSpace(CancelText) ? L["Cancel"] : CancelText;
+}

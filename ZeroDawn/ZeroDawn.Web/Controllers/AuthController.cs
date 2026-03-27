@@ -22,6 +22,7 @@ namespace ZeroDawn.Web.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[IgnoreAntiforgeryToken]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -69,20 +70,31 @@ public class AuthController : ControllerBase
             return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
         }
 
+        if (await _userManager.IsLockedOutAsync(user))
+        {
+            _logger.LogWarning("Locked out user attempted login: {UserId}", user.Id);
+            return StatusCode(
+                StatusCodes.Status429TooManyRequests,
+                Failure<AuthResponse>("Account is temporarily locked. Please try again later."));
+        }
+
         var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordValid)
         {
+            await _userManager.AccessFailedAsync(user);
             return Unauthorized(Failure<AuthResponse>("Invalid credentials."));
         }
 
+        await _userManager.ResetAccessFailedCountAsync(user);
+
         if (!user.IsActive)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Account is disabled."));
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("تم تعطيل الحساب."));
         }
 
         if (_appOptions.RequireEmailConfirmation && !user.EmailConfirmed)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Email not confirmed."));
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("البريد الإلكتروني غير مؤكد."));
         }
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -98,7 +110,7 @@ public class AuthController : ControllerBase
         {
             return StatusCode(
                 StatusCodes.Status500InternalServerError,
-                Failure<AuthResponse>("Failed to update authentication state."));
+                Failure<AuthResponse>("تعذر تحديث حالة المصادقة."));
         }
 
         _logger.LogInformation("User logged in: {UserId}", user.Id);
@@ -112,7 +124,7 @@ public class AuthController : ControllerBase
     {
         if (!_appOptions.AllowSelfRegistration)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("Self-registration is disabled."));
+            return StatusCode(StatusCodes.Status403Forbidden, Failure<AuthResponse>("إنشاء الحسابات الجديدة غير متاح."));
         }
 
         await using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -141,15 +153,16 @@ public class AuthController : ControllerBase
 
         if (_appOptions.RequireEmailConfirmation)
         {
-            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = Uri.EscapeDataString(token);
+            var confirmationLink = $"{_appOptions.BaseUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
             try
             {
                 await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send confirmation email for user: {UserId}", user.Id);
+                _logger.LogError(ex, "Failed to send confirmation email");
             }
 
             await transaction.CommitAsync();
@@ -159,7 +172,7 @@ public class AuthController : ControllerBase
             return Ok(new ApiResponse<AuthResponse>
             {
                 Succeeded = true,
-                Message = "Please confirm your email."
+                Message = "من فضلك أكد بريدك الإلكتروني."
             });
         }
 
@@ -212,19 +225,19 @@ public class AuthController : ControllerBase
         var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
         if (principal is null)
         {
-            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+            return Unauthorized(Failure<AuthResponse>("الرمز غير صالح."));
         }
 
         var userId = GetUserId(principal);
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+            return Unauthorized(Failure<AuthResponse>("الرمز غير صالح."));
         }
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
-            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+            return Unauthorized(Failure<AuthResponse>("الرمز غير صالح."));
         }
 
         if (string.IsNullOrWhiteSpace(user.RefreshToken) ||
@@ -232,7 +245,7 @@ public class AuthController : ControllerBase
             user.RefreshTokenExpiryTime <= DateTime.UtcNow ||
             !RefreshTokenMatches(user.RefreshToken, request.RefreshToken))
         {
-            return Unauthorized(Failure<AuthResponse>("Invalid token."));
+            return Unauthorized(Failure<AuthResponse>("الرمز غير صالح."));
         }
 
         var roles = await _userManager.GetRolesAsync(user);
@@ -257,20 +270,22 @@ public class AuthController : ControllerBase
     [HttpPost("forgot-password")]
     public async Task<ActionResult<ApiResponse<string>>> ForgotPassword(ForgotPasswordRequest request)
     {
-        const string message = "If the email exists, a reset link has been sent.";
+        const string message = "إذا كان البريد موجودًا، فقد تم إرسال رابط إعادة التعيين.";
 
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not null && user.IsActive)
         {
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = BuildResetPasswordLink(user.Email!, resetToken);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = Uri.EscapeDataString(token);
+            var encodedEmail = Uri.EscapeDataString(request.Email);
+            var resetLink = $"{_appOptions.BaseUrl}/reset-password?email={encodedEmail}&token={encodedToken}";
             try
             {
                 await _emailService.SendPasswordResetEmailAsync(user.Email!, user.FullName, resetLink);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send password reset email for user: {UserId}", user.Id);
+                _logger.LogError(ex, "Failed to send password reset email");
             }
         }
 
@@ -284,7 +299,7 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is null)
         {
-            return BadRequest(ValidationFailure<string>(["Invalid email or token."]));
+            return BadRequest(ValidationFailure<string>(["البريد الإلكتروني أو الرمز غير صالح."]));
         }
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
@@ -295,7 +310,7 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Password reset completed for user: {UserId}", user.Id);
 
-        return Ok(SuccessMessage("Password has been reset successfully."));
+        return Ok(SuccessMessage("تمت إعادة تعيين كلمة المرور بنجاح."));
     }
 
     [Authorize]
@@ -311,13 +326,13 @@ public class AuthController : ControllerBase
         var userId = GetUserId(User);
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return Unauthorized(Failure<string>("Unauthorized."));
+            return Unauthorized(Failure<string>("غير مصرح."));
         }
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
-            return Unauthorized(Failure<string>("Unauthorized."));
+            return Unauthorized(Failure<string>("غير مصرح."));
         }
 
         var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
@@ -326,9 +341,13 @@ public class AuthController : ControllerBase
             return BadRequest(ValidationFailure<string>(result.Errors.Select(e => e.Description).ToList()));
         }
 
+        user.RefreshToken = null;
+        user.RefreshTokenExpiryTime = null;
+        await _userManager.UpdateAsync(user);
+        _logger.LogInformation("Invalidated refresh tokens after password change for user: {UserId}", user.Id);
         _logger.LogInformation("Password changed for user: {UserId}", user.Id);
 
-        return Ok(SuccessMessage("Password changed successfully."));
+        return Ok(SuccessMessage("تم تغيير كلمة المرور بنجاح."));
     }
 
     [EnableRateLimiting("auth-resend")]
@@ -338,7 +357,7 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user is null)
         {
-            return BadRequest(ValidationFailure<string>(["Invalid confirmation request."]));
+            return BadRequest(ValidationFailure<string>(["طلب تأكيد البريد غير صالح."]));
         }
 
         var result = await _userManager.ConfirmEmailAsync(user, request.Token);
@@ -349,7 +368,7 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("Email confirmed for user: {UserId}", user.Id);
 
-        return Ok(SuccessMessage("Email confirmed successfully."));
+        return Ok(SuccessMessage("تم تأكيد البريد الإلكتروني بنجاح."));
     }
 
     [EnableRateLimiting("auth-resend")]
@@ -359,19 +378,20 @@ public class AuthController : ControllerBase
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user is not null && !user.EmailConfirmed)
         {
-            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationLink = BuildConfirmationLink(user.Id, confirmationToken);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = Uri.EscapeDataString(token);
+            var confirmationLink = $"{_appOptions.BaseUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
             try
             {
                 await _emailService.SendConfirmationEmailAsync(user.Email!, user.FullName, confirmationLink);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to resend confirmation email for user: {UserId}", user.Id);
+                _logger.LogError(ex, "Failed to send confirmation email");
             }
         }
 
-        return Ok(SuccessMessage("If the account exists, a confirmation email will be sent."));
+        return Ok(SuccessMessage("إذا كان الحساب موجودًا، فسيتم إرسال رسالة تأكيد."));
     }
 
     [Authorize]
@@ -387,13 +407,13 @@ public class AuthController : ControllerBase
         var userId = GetUserId(User);
         if (string.IsNullOrWhiteSpace(userId))
         {
-            return Unauthorized(Failure<string>("Unauthorized."));
+            return Unauthorized(Failure<string>("غير مصرح."));
         }
 
         var user = await _userManager.FindByIdAsync(userId);
         if (user is null)
         {
-            return Unauthorized(Failure<string>("Unauthorized."));
+            return Unauthorized(Failure<string>("غير مصرح."));
         }
 
         user.RefreshToken = null;
@@ -407,7 +427,7 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("User logged out: {UserId}", user.Id);
 
-        return Ok(SuccessMessage("Logged out successfully."));
+        return Ok(SuccessMessage("تم تسجيل الخروج بنجاح."));
     }
 
     private AuthResponse CreateAuthResponse(
@@ -452,7 +472,7 @@ public class AuthController : ControllerBase
         => new()
         {
             Succeeded = false,
-            Error = "Validation failed.",
+            Error = "فشل التحقق من البيانات.",
             ErrorCode = "VALIDATION_ERROR",
             ValidationErrors = validationErrors
         };
@@ -466,7 +486,7 @@ public class AuthController : ControllerBase
 
         return StatusCode(
             StatusCodes.Status503ServiceUnavailable,
-            Failure<T>("Authentication is not configured.", "AUTH_NOT_CONFIGURED"));
+            Failure<T>("المصادقة غير مهيأة بعد.", "AUTH_NOT_CONFIGURED"));
     }
 
     private static string HashToken(string token)

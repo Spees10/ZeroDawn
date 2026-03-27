@@ -1,0 +1,16 @@
+<label class="form-checkbox">
+    <InputCheckbox Value="@Value"
+                   ValueChanged="@ValueChanged"
+                   ValueExpression="@ValueExpression"
+                   class="form-checkbox__input"
+                   @attributes="AdditionalAttributes" />
+    <span class="form-checkbox__label">@Label</span>
+</label>
+
+@code {
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
+    [Parameter] public Expression<Func<bool>>? ValueExpression { get; set; }
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+}

@@ -16,22 +16,22 @@ public class PasswordStrengthAttribute : ValidationAttribute
 
         if (password.Length < 6)
         {
-            return new ValidationResult("Password must be at least 6 characters.");
+            return new ValidationResult("كلمة المرور يجب ألا تقل عن 6 أحرف.");
         }
 
         if (!password.Any(char.IsDigit))
         {
-            return new ValidationResult("Password must contain at least one digit.");
+            return new ValidationResult("كلمة المرور يجب أن تحتوي على رقم واحد على الأقل.");
         }
 
         if (!password.Any(char.IsUpper))
         {
-            return new ValidationResult("Password must contain at least one uppercase letter.");
+            return new ValidationResult("كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل.");
         }
 
         if (!password.Any(char.IsLower))
         {
-            return new ValidationResult("Password must contain at least one lowercase letter.");
+            return new ValidationResult("كلمة المرور يجب أن تحتوي على حرف صغير واحد على الأقل.");
         }
 
         return ValidationResult.Success;

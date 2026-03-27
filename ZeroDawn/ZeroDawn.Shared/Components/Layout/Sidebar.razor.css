@@ -1,0 +1,111 @@
+.sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.75rem;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 94%, var(--color-primary)), var(--color-surface));
+}
+
+.sidebar--collapsed {
+    align-items: center;
+}
+
+.sidebar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.sidebar__brand-mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.9rem;
+    background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 74%, white));
+    color: #fff;
+    font-weight: 700;
+    box-shadow: var(--shadow-md);
+    flex-shrink: 0;
+}
+
+.sidebar__brand-title {
+    font-weight: 700;
+}
+
+.sidebar__brand-subtitle {
+    font-size: 0.85rem;
+}
+
+.sidebar__collapse {
+    min-width: 2.5rem;
+    padding-inline: 0.65rem;
+}
+
+.sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.sidebar__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.sidebar__section-title {
+    padding: 0 0.6rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+}
+
+.sidebar__link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 2.9rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.sidebar__link:hover {
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    color: var(--color-primary-hover);
+    text-decoration: none;
+}
+
+.sidebar__link--active {
+    background: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+    color: var(--color-primary-hover);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 26%, transparent);
+}
+
+.sidebar__icon {
+    width: 1.25rem;
+    text-align: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.sidebar--collapsed .sidebar__header {
+    flex-direction: column;
+}
+
+.sidebar--collapsed .sidebar__link {
+    justify-content: center;
+    padding-inline: 0.6rem;
+}

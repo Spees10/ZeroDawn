@@ -1,0 +1,22 @@
+@inject IStringLocalizer<SharedResources> L
+
+<div class="empty-state card">
+    <div class="empty-state__icon">@Icon</div>
+    <div class="empty-state__message">@ResolvedMessage</div>
+
+    @if (!string.IsNullOrWhiteSpace(ActionText))
+    {
+        <button type="button" class="btn btn-primary" @onclick="OnAction">
+            @ActionText
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter] public string Icon { get; set; } = "⌕";
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string? ActionText { get; set; }
+    [Parameter] public EventCallback OnAction { get; set; }
+
+    private string ResolvedMessage => string.IsNullOrWhiteSpace(Message) ? L["NoResults"] : Message;
+}

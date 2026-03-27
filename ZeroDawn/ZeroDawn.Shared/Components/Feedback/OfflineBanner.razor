@@ -1,0 +1,47 @@
+@implements IDisposable
+@inject IServiceProvider Services
+@inject IStringLocalizer<SharedResources> L
+
+@if (!_isConnected)
+{
+    <div class="offline-banner" role="status" aria-live="polite">
+        <div class="offline-banner__icon" aria-hidden="true">⚠</div>
+        <div class="offline-banner__content">
+            <div class="offline-banner__title">@L["OfflineTitle"]</div>
+            <div class="offline-banner__message">@L["OfflineMessage"]</div>
+        </div>
+    </div>
+}
+
+@code {
+    private IConnectivityService? _connectivityService;
+    private bool _isConnected = true;
+
+    protected override void OnInitialized()
+    {
+        _connectivityService = Services.GetService(typeof(IConnectivityService)) as IConnectivityService;
+        _isConnected = _connectivityService?.IsConnected ?? true;
+
+        if (_connectivityService is not null)
+        {
+            _connectivityService.ConnectivityChanged += HandleConnectivityChanged;
+        }
+    }
+
+    private void HandleConnectivityChanged(object? sender, bool isConnected)
+    {
+        _ = InvokeAsync(() =>
+        {
+            _isConnected = isConnected;
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        if (_connectivityService is not null)
+        {
+            _connectivityService.ConnectivityChanged -= HandleConnectivityChanged;
+        }
+    }
+}

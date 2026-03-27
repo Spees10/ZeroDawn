@@ -1,0 +1,19 @@
+.form-select-shell {
+    position: relative;
+}
+
+.form-select-shell::after {
+    content: "▾";
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+.form-select-shell__control {
+    width: 100%;
+    appearance: none;
+    padding-right: 2.4rem;
+}

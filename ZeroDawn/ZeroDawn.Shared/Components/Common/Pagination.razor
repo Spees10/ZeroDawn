@@ -1,0 +1,49 @@
+@if (TotalPages > 1)
+{
+    <nav class="pagination" aria-label="Pagination">
+        <button type="button" class="pagination__button btn btn-secondary" disabled="@(CurrentPage <= 1)" @onclick="() => ChangePageAsync(CurrentPage - 1)">
+            Prev
+        </button>
+
+        @foreach (var pageNumber in VisiblePages)
+        {
+            <button type="button"
+                    class="pagination__button btn @(pageNumber == CurrentPage ? "btn-primary" : "btn-secondary")"
+                    @onclick="() => ChangePageAsync(pageNumber)">
+                @pageNumber
+            </button>
+        }
+
+        <button type="button" class="pagination__button btn btn-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="() => ChangePageAsync(CurrentPage + 1)">
+            Next
+        </button>
+    </nav>
+}
+
+@code {
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public int TotalPages { get; set; }
+    [Parameter] public EventCallback<int> OnPageChanged { get; set; }
+
+    private IEnumerable<int> VisiblePages
+    {
+        get
+        {
+            var start = Math.Max(1, CurrentPage - 2);
+            var end = Math.Min(TotalPages, start + 4);
+            start = Math.Max(1, end - 4);
+
+            return Enumerable.Range(start, end - start + 1);
+        }
+    }
+
+    private Task ChangePageAsync(int pageNumber)
+    {
+        if (pageNumber < 1 || pageNumber > TotalPages || pageNumber == CurrentPage)
+        {
+            return Task.CompletedTask;
+        }
+
+        return OnPageChanged.InvokeAsync(pageNumber);
+    }
+}

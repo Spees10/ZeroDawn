@@ -12,103 +12,123 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppName" xml:space="preserve">
-    <value>زيرو دون</value>
-  </data>
-  <data name="Login" xml:space="preserve">
-    <value>تسجيل الدخول</value>
-  </data>
-  <data name="Register" xml:space="preserve">
-    <value>إنشاء حساب</value>
-  </data>
-  <data name="Email" xml:space="preserve">
-    <value>البريد الإلكتروني</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>كلمة المرور</value>
-  </data>
-  <data name="ConfirmPassword" xml:space="preserve">
-    <value>تأكيد كلمة المرور</value>
-  </data>
-  <data name="ForgotPassword" xml:space="preserve">
-    <value>نسيت كلمة المرور؟</value>
-  </data>
-  <data name="ResetPassword" xml:space="preserve">
-    <value>إعادة تعيين كلمة المرور</value>
-  </data>
-  <data name="ChangePassword" xml:space="preserve">
-    <value>تغيير كلمة المرور</value>
-  </data>
-  <data name="FullName" xml:space="preserve">
-    <value>الاسم الكامل</value>
-  </data>
-  <data name="Submit" xml:space="preserve">
-    <value>إرسال</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>إلغاء</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>حفظ</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>حذف</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>تعديل</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>بحث</value>
-  </data>
-  <data name="Loading" xml:space="preserve">
-    <value>جارٍ التحميل...</value>
-  </data>
-  <data name="NoResults" xml:space="preserve">
-    <value>لم يتم العثور على نتائج.</value>
-  </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>حدث خطأ. يرجى المحاولة مرة أخرى.</value>
-  </data>
-  <data name="ContactSupport" xml:space="preserve">
-    <value>إذا استمرت المشكلة، تواصل مع الدعم مع رقم المرجع:</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>الرئيسية</value>
-  </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>لوحة التحكم</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>الملف الشخصي</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>المستخدمون</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>الإعدادات</value>
-  </data>
-  <data name="Logout" xml:space="preserve">
-    <value>تسجيل الخروج</value>
-  </data>
-  <data name="About" xml:space="preserve">
-    <value>حول</value>
-  </data>
-  <data name="ContactUs" xml:space="preserve">
-    <value>اتصل بنا</value>
-  </data>
-  <data name="NotFound" xml:space="preserve">
-    <value>الصفحة غير موجودة</value>
-  </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>أهلًا، {0}!</value>
-  </data>
-  <data name="ConfirmEmail" xml:space="preserve">
-    <value>تأكيد البريد الإلكتروني</value>
-  </data>
-  <data name="ResendEmail" xml:space="preserve">
-    <value>إعادة إرسال التأكيد</value>
-  </data>
-  <data name="Back" xml:space="preserve">
-    <value>رجوع</value>
-  </data>
+  <data name="AppName" xml:space="preserve"><value>زيرو دون</value></data>
+  <data name="Login" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Register" xml:space="preserve"><value>إنشاء حساب</value></data>
+  <data name="Email" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Password" xml:space="preserve"><value>كلمة المرور</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>تأكيد كلمة المرور</value></data>
+  <data name="ForgotPassword" xml:space="preserve"><value>نسيت كلمة المرور؟</value></data>
+  <data name="ResetPassword" xml:space="preserve"><value>إعادة تعيين كلمة المرور</value></data>
+  <data name="ChangePassword" xml:space="preserve"><value>تغيير كلمة المرور</value></data>
+  <data name="FullName" xml:space="preserve"><value>الاسم الكامل</value></data>
+  <data name="Submit" xml:space="preserve"><value>إرسال</value></data>
+  <data name="Cancel" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Confirm" xml:space="preserve"><value>تأكيد</value></data>
+  <data name="ConfirmAction" xml:space="preserve"><value>تأكيد الإجراء</value></data>
+  <data name="Save" xml:space="preserve"><value>حفظ</value></data>
+  <data name="Delete" xml:space="preserve"><value>حذف</value></data>
+  <data name="Edit" xml:space="preserve"><value>تعديل</value></data>
+  <data name="Search" xml:space="preserve"><value>بحث</value></data>
+  <data name="Loading" xml:space="preserve"><value>جارٍ التحميل...</value></data>
+  <data name="NoResults" xml:space="preserve"><value>لا توجد نتائج.</value></data>
+  <data name="ErrorOccurred" xml:space="preserve"><value>حدث خطأ. حاول مرة أخرى.</value></data>
+  <data name="ContactSupport" xml:space="preserve"><value>إذا استمرت المشكلة، تواصل مع الدعم واذكر رقم المرجع:</value></data>
+  <data name="Home" xml:space="preserve"><value>الرئيسية</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Profile" xml:space="preserve"><value>الملف الشخصي</value></data>
+  <data name="Users" xml:space="preserve"><value>المستخدمون</value></data>
+  <data name="Settings" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Logout" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="About" xml:space="preserve"><value>عن التطبيق</value></data>
+  <data name="ContactUs" xml:space="preserve"><value>اتصل بنا</value></data>
+  <data name="NotFound" xml:space="preserve"><value>الصفحة غير موجودة</value></data>
+  <data name="Welcome" xml:space="preserve"><value>أهلاً، {0}!</value></data>
+  <data name="ConfirmEmail" xml:space="preserve"><value>تأكيد البريد الإلكتروني</value></data>
+  <data name="ResendEmail" xml:space="preserve"><value>إعادة إرسال التأكيد</value></data>
+  <data name="Back" xml:space="preserve"><value>رجوع</value></data>
+  <data name="CurrentPassword" xml:space="preserve"><value>كلمة المرور الحالية</value></data>
+  <data name="NewPassword" xml:space="preserve"><value>كلمة المرور الجديدة</value></data>
+  <data name="NeedAnAccount" xml:space="preserve"><value>محتاج حساب؟</value></data>
+  <data name="AlreadyHaveAccount" xml:space="preserve"><value>عندك حساب بالفعل؟</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>العودة لتسجيل الدخول</value></data>
+  <data name="CheckYourEmail" xml:space="preserve"><value>تحقق من بريدك الإلكتروني</value></data>
+  <data name="CheckYourEmailMessage" xml:space="preserve"><value>أرسلنا لك رسالة فيها الخطوات التالية.</value></data>
+  <data name="SendResetLink" xml:space="preserve"><value>إرسال رابط إعادة التعيين</value></data>
+  <data name="RequestSubmitted" xml:space="preserve"><value>تم إرسال الطلب</value></data>
+  <data name="InvalidLink" xml:space="preserve"><value>الرابط غير صالح أو غير مكتمل.</value></data>
+  <data name="ResetPasswordSuccess" xml:space="preserve"><value>تمت إعادة تعيين كلمة المرور بنجاح.</value></data>
+  <data name="ChangePasswordSuccess" xml:space="preserve"><value>تم تغيير كلمة المرور بنجاح.</value></data>
+  <data name="ConfirmingEmail" xml:space="preserve"><value>جارٍ تأكيد بريدك الإلكتروني...</value></data>
+  <data name="EmailConfirmedSuccess" xml:space="preserve"><value>تم تأكيد بريدك الإلكتروني بنجاح.</value></data>
+  <data name="EmailConfirmationFailed" xml:space="preserve"><value>تعذر تأكيد بريدك الإلكتروني.</value></data>
+  <data name="SigningIn" xml:space="preserve"><value>جارٍ تسجيل الدخول...</value></data>
+  <data name="CreatingAccount" xml:space="preserve"><value>جارٍ إنشاء الحساب...</value></data>
+  <data name="SendingEmail" xml:space="preserve"><value>جارٍ إرسال البريد...</value></data>
+  <data name="ProcessingRequest" xml:space="preserve"><value>جارٍ المعالجة...</value></data>
+  <data name="Retry" xml:space="preserve"><value>إعادة المحاولة</value></data>
+  <data name="OfflineTitle" xml:space="preserve"><value>أنت غير متصل بالإنترنت</value></data>
+  <data name="OfflineMessage" xml:space="preserve"><value>الاتصال غير متاح الآن. بعض الإجراءات قد لا تعمل حتى تعود للاتصال.</value></data>
+  <data name="SecureAccessPortal" xml:space="preserve"><value>بوابة دخول آمنة</value></data>
+  <data name="OpenNavigation" xml:space="preserve"><value>فتح القائمة</value></data>
+  <data name="ToggleNavigation" xml:space="preserve"><value>توسيع أو طي القائمة</value></data>
+  <data name="LanguageSelector" xml:space="preserve"><value>اختيار اللغة</value></data>
+  <data name="LanguageArabic" xml:space="preserve"><value>العربية</value></data>
+  <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="Guest" xml:space="preserve"><value>زائر</value></data>
+  <data name="Admin" xml:space="preserve"><value>مدير</value></data>
+  <data name="SuperAdmin" xml:space="preserve"><value>سوبر أدمن</value></data>
+  <data name="UserRole" xml:space="preserve"><value>مستخدم</value></data>
+  <data name="AdminManagement" xml:space="preserve"><value>إدارة المدراء</value></data>
+  <data name="ErrorLogs" xml:space="preserve"><value>سجل الأخطاء</value></data>
+  <data name="Health" xml:space="preserve"><value>الحالة الصحية</value></data>
+  <data name="Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Description" xml:space="preserve"><value>الوصف</value></data>
+  <data name="Duration" xml:space="preserve"><value>المدة</value></data>
+  <data name="Refresh" xml:space="preserve"><value>تحديث</value></data>
+  <data name="OverallStatus" xml:space="preserve"><value>الحالة العامة</value></data>
+  <data name="SystemHealth" xml:space="preserve"><value>الحالة الصحية للنظام</value></data>
+  <data name="CheckName" xml:space="preserve"><value>الفحص</value></data>
+  <data name="LightTheme" xml:space="preserve"><value>فاتح</value></data>
+  <data name="DarkTheme" xml:space="preserve"><value>داكن</value></data>
+  <data name="ToggleTheme" xml:space="preserve"><value>تبديل المظهر</value></data>
+  <data name="SwitchToLightTheme" xml:space="preserve"><value>التبديل للمظهر الفاتح</value></data>
+  <data name="SwitchToDarkTheme" xml:space="preserve"><value>التبديل للمظهر الداكن</value></data>
+  <data name="Close" xml:space="preserve"><value>إغلاق</value></data>
+  <data name="Info" xml:space="preserve"><value>معلومة</value></data>
+  <data name="Success" xml:space="preserve"><value>نجاح</value></data>
+  <data name="Warning" xml:space="preserve"><value>تنبيه</value></data>
+  <data name="Error" xml:space="preserve"><value>خطأ</value></data>
+  <data name="SomethingWentWrong" xml:space="preserve"><value>حدثت مشكلة</value></data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve"><value>حدث خطأ غير متوقع.</value></data>
+  <data name="UnexpectedScreenErrorOccurred" xml:space="preserve"><value>حدث خطأ غير متوقع أثناء عرض الشاشة.</value></data>
+  <data name="ReferenceNumber" xml:space="preserve"><value>المرجع</value></data>
+  <data name="TryAgain" xml:space="preserve"><value>حاول مرة أخرى</value></data>
+  <data name="ShowTechnicalDetails" xml:space="preserve"><value>إظهار التفاصيل التقنية</value></data>
+  <data name="HideTechnicalDetails" xml:space="preserve"><value>إخفاء التفاصيل التقنية</value></data>
+  <data name="CopyDetails" xml:space="preserve"><value>نسخ التفاصيل</value></data>
+  <data name="CopyDetailsHint" xml:space="preserve"><value>نسخ الحافظة يحتاج دعمًا من التطبيق. إذا لم يحدث شيء، حدّد التفاصيل وانسخها يدويًا.</value></data>
+  <data name="HidePassword" xml:space="preserve"><value>إخفاء كلمة المرور</value></data>
+  <data name="ShowPassword" xml:space="preserve"><value>إظهار كلمة المرور</value></data>
+  <data name="Reload" xml:space="preserve"><value>إعادة التحميل</value></data>
+  <data name="UnableToLogout" xml:space="preserve"><value>تعذر تسجيل الخروج الآن.</value></data>
+  <data name="NetworkError" xml:space="preserve"><value>حدثت مشكلة في الشبكة. تأكد من الاتصال بالإنترنت.</value></data>
+  <data name="EmptyResponse" xml:space="preserve"><value>الخادم أعاد استجابة فارغة.</value></data>
+  <data name="RequestFailedWithStatus" xml:space="preserve"><value>فشل الطلب بكود الحالة {0}.</value></data>
+  <data name="TooManyRequests" xml:space="preserve"><value>عدد المحاولات كبير جدًا. حاول مرة أخرى لاحقًا.</value></data>
+  <data name="InvalidCredentials" xml:space="preserve"><value>بيانات الدخول غير صحيحة.</value></data>
+  <data name="AccountDisabled" xml:space="preserve"><value>تم تعطيل الحساب.</value></data>
+  <data name="EmailNotConfirmed" xml:space="preserve"><value>البريد الإلكتروني غير مؤكد.</value></data>
+  <data name="SelfRegistrationDisabled" xml:space="preserve"><value>إنشاء الحسابات الجديدة غير متاح.</value></data>
+  <data name="PleaseConfirmEmail" xml:space="preserve"><value>من فضلك أكد بريدك الإلكتروني.</value></data>
+  <data name="InvalidToken" xml:space="preserve"><value>الرمز غير صالح.</value></data>
+  <data name="InvalidEmailOrToken" xml:space="preserve"><value>البريد الإلكتروني أو الرمز غير صالح.</value></data>
+  <data name="PasswordResetSentIfExists" xml:space="preserve"><value>إذا كان البريد موجودًا، فقد تم إرسال رابط إعادة التعيين.</value></data>
+  <data name="PasswordResetCompleted" xml:space="preserve"><value>تمت إعادة تعيين كلمة المرور بنجاح.</value></data>
+  <data name="PasswordChangedSuccessMessage" xml:space="preserve"><value>تم تغيير كلمة المرور بنجاح.</value></data>
+  <data name="ConfirmationRequestInvalid" xml:space="preserve"><value>طلب تأكيد البريد غير صالح.</value></data>
+  <data name="ConfirmationSentIfExists" xml:space="preserve"><value>إذا كان الحساب موجودًا، فسيتم إرسال رسالة تأكيد.</value></data>
+  <data name="LoggedOutSuccess" xml:space="preserve"><value>تم تسجيل الخروج بنجاح.</value></data>
+  <data name="AuthenticationNotConfigured" xml:space="preserve"><value>المصادقة غير مهيأة بعد.</value></data>
+  <data name="ValidationFailed" xml:space="preserve"><value>فشل التحقق من البيانات.</value></data>
 </root>

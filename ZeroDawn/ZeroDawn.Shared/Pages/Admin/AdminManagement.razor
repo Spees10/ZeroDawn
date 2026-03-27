@@ -1,0 +1,170 @@
+@page "/admin/admins"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin")]
+@inherits AppPageBase
+
+<PageHeader Title="Admin Management"
+            Breadcrumb='@L["Users"]'
+            Subtitle="Promote or demote administrators" />
+
+@if (HasError)
+{
+    <ErrorDisplay Message="@ErrorMessage"
+                  ReferenceNumber="@ErrorReferenceNumber"
+                  TechnicalDetails="@ErrorTechnicalDetails"
+                  ShowTechnicalDetails="true"
+                  OnRetry="LoadAsync" />
+}
+else
+{
+    <div class="card">
+        @if (_isLoading)
+        {
+            <div class="d-flex flex-column gap-2">
+                <Skeleton Height="3rem" />
+                <Skeleton Height="3rem" />
+            </div>
+        }
+        else if (_admins.Count == 0)
+        {
+            <EmptyState Message='@L["NoResults"]' />
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>@L["FullName"]</th>
+                            <th>@L["Email"]</th>
+                            <th>Roles</th>
+                            <th>@L["Edit"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var admin in _admins)
+                        {
+                            <tr>
+                                <td>@admin.FullName</td>
+                                <td>@admin.Email</td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        @foreach (var role in admin.Roles)
+                                        {
+                                            <Badge Text="@role" Variant="warning" />
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-secondary" @onclick="() => ToggleAdminAsync(admin)">
+                                        @(admin.Roles.Contains("Admin") ? "Demote" : "Promote")
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<UserDto> _admins = [];
+    private bool _isLoading = true;
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        ClearError();
+        _isLoading = true;
+
+        try
+        {
+            if (AdminApiClient is not null)
+            {
+                var response = await AdminApiClient.GetAdminsAsync();
+                if (!response.Succeeded || response.Data is null)
+                {
+                    SetApiError(response);
+                    ShowApiErrors(response);
+                    _admins = [];
+                    return;
+                }
+
+                _admins = response.Data;
+            }
+            else
+            {
+                _admins =
+                [
+                    new() { Id = "1", FullName = "Super Admin", Email = "admin@zerodawn.local", Roles = ["SuperAdmin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-8), EmailConfirmed = true },
+                    new() { Id = "2", FullName = "Ops Admin", Email = "ops@zerodawn.local", Roles = ["Admin", "User"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-6), EmailConfirmed = true }
+                ];
+            }
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task ToggleAdminAsync(UserDto admin)
+    {
+        var nextRole = admin.Roles.Contains("Admin") ? "User" : "Admin";
+
+        try
+        {
+            if (AdminApiClient is not null)
+            {
+                var response = await AdminApiClient.UpdateAdminRoleAsync(admin.Id, new AssignRoleRequest
+                {
+                    UserId = admin.Id,
+                    Role = nextRole
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                ReplaceAdmin(response.Data);
+            }
+            else
+            {
+                ReplaceAdmin(new UserDto
+                {
+                    Id = admin.Id,
+                    FullName = admin.FullName,
+                    Email = admin.Email,
+                    Roles = nextRole == "Admin" ? ["Admin", "User"] : ["User"],
+                    IsActive = admin.IsActive,
+                    CreatedAt = admin.CreatedAt,
+                    LastLoginAt = admin.LastLoginAt,
+                    EmailConfirmed = admin.EmailConfirmed
+                });
+            }
+
+            ShowSuccess("Admin role updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private void ReplaceAdmin(UserDto updatedAdmin)
+    {
+        var index = _admins.FindIndex(admin => admin.Id == updatedAdmin.Id);
+        if (index >= 0)
+        {
+            _admins[index] = updatedAdmin;
+        }
+    }
+}

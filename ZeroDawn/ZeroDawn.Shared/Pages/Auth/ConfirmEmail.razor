@@ -1,0 +1,122 @@
+@page "/confirm-email"
+@layout AuthLayout
+@inherits AuthPageBase
+@using Microsoft.AspNetCore.Components
+@using ZeroDawn.Shared.Contracts.Auth
+@using ZeroDawn.Shared.Layout
+
+<div class="d-flex flex-column gap-4">
+    <div>
+        <h1 class="mb-2">@L["ConfirmEmail"]</h1>
+        <p class="text-muted mb-0">@(_isSubmitting ? L["ConfirmingEmail"] : _statusMessage)</p>
+    </div>
+
+    @if (HasUnhandledError)
+    {
+        <ErrorDisplay Message="@ErrorMessage"
+                      ReferenceNumber="@ErrorReferenceNumber"
+                      TechnicalDetails="@ErrorTechnicalDetails"
+                      ShowTechnicalDetails="true"
+                      OnRetry="SubmitAsync" />
+    }
+    else if (_invalidLink)
+    {
+        <ErrorDisplay Message="@L["InvalidLink"]"
+                      TechnicalDetails="Missing userId or token query parameter."
+                      ShowTechnicalDetails="true"
+                      OnRetry="SubmitAsync" />
+    }
+    else if (_isSubmitting)
+    {
+        <div class="card text-center">
+            <LoadingSpinner Size="large" />
+            <p class="mt-3 mb-0 text-muted">@L["ConfirmingEmail"]</p>
+        </div>
+    }
+    else
+    {
+        <div class="card text-center">
+            <h3 class="mb-2">@(_isSuccess ? L["EmailConfirmedSuccess"] : L["EmailConfirmationFailed"])</h3>
+            <p class="text-muted mb-3">@_statusMessage</p>
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                @if (!_isSuccess)
+                {
+                    <button type="button" class="btn btn-secondary" @onclick="SubmitAsync">@L["Retry"]</button>
+                }
+
+                <a class="btn btn-primary" href="/login">@L["BackToLogin"]</a>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool _submitted;
+    private bool _isSubmitting;
+    private bool _invalidLink;
+    private bool _isSuccess;
+    private string _statusMessage = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "userId")]
+    public string? UserId { get; set; }
+
+    [SupplyParameterFromQuery(Name = "token")]
+    public string? Token { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _invalidLink = string.IsNullOrWhiteSpace(UserId) || string.IsNullOrWhiteSpace(Token);
+
+        if (_submitted || _invalidLink)
+        {
+            return;
+        }
+
+        _submitted = true;
+        await SubmitAsync();
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_isSubmitting || _invalidLink)
+        {
+            return;
+        }
+
+        ClearUnhandledError();
+        _isSubmitting = true;
+
+        try
+        {
+            var response = await AuthService.ConfirmEmailAsync(new ConfirmEmailRequest
+            {
+                UserId = UserId ?? string.Empty,
+                Token = Token ?? string.Empty
+            });
+
+            _isSuccess = response.Succeeded;
+            _statusMessage = response.Succeeded
+                ? (string.IsNullOrWhiteSpace(response.Message) ? L["EmailConfirmedSuccess"] : response.Message!)
+                : (!string.IsNullOrWhiteSpace(response.Error) ? response.Error! : L["EmailConfirmationFailed"]);
+
+            if (!response.Succeeded)
+            {
+                ShowApiErrors(response);
+            }
+            else
+            {
+                ShowSuccess(L["EmailConfirmedSuccess"], _statusMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            _isSuccess = false;
+            _statusMessage = L["EmailConfirmationFailed"];
+            SetUnhandledError(ex);
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+    }
+}

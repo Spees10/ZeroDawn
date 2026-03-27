@@ -1,5 +1,7 @@
-﻿@using System.Net.Http
+@using System.Net.Http
 @using System.Net.Http.Json
+@using System.Linq.Expressions
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -9,5 +11,13 @@
 @using Microsoft.JSInterop
 @using ZeroDawn
 @using ZeroDawn.Shared
+@using ZeroDawn.Shared.Contracts.Auth
+@using ZeroDawn.Shared.Contracts.Common
+@using ZeroDawn.Shared.Contracts.Users
+@using ZeroDawn.Shared.Components.Common
+@using ZeroDawn.Shared.Components.Feedback
+@using ZeroDawn.Shared.Components.Forms
+@using ZeroDawn.Shared.Components.Layout
 @using ZeroDawn.Shared.Layout
-@using ZeroDawn.Shared.Localization
+@using ZeroDawn.Shared.Pages
+@using ZeroDawn.Shared.Services

@@ -4,9 +4,9 @@ namespace ZeroDawn.Shared.Contracts.Validation;
 
 public static class ValidationMessages
 {
-    public const string Required = "{0} is required.";
-    public const string EmailInvalid = "Invalid email address.";
-    public const string PasswordTooShort = "Password must be at least {1} characters.";
-    public const string PasswordsDoNotMatch = "Passwords do not match.";
-    public const string NameTooLong = "Name cannot exceed {1} characters.";
+    public const string Required = "حقل {0} مطلوب.";
+    public const string EmailInvalid = "البريد الإلكتروني غير صالح.";
+    public const string PasswordTooShort = "كلمة المرور يجب ألا تقل عن {1} أحرف.";
+    public const string PasswordsDoNotMatch = "كلمتا المرور غير متطابقتين.";
+    public const string NameTooLong = "الاسم يجب ألا يزيد عن {1} حرفًا.";
 }

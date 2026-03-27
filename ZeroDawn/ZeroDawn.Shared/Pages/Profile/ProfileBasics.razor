@@ -1,0 +1,164 @@
+@page "/profile"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inherits AppPageBase
+
+<PageHeader Title='@L["Profile"]'
+            Breadcrumb='@L["Home"]'
+            Subtitle='@L["Edit"]' />
+
+@if (HasError)
+{
+    <ErrorDisplay Message="@ErrorMessage"
+                  ReferenceNumber="@ErrorReferenceNumber"
+                  TechnicalDetails="@ErrorTechnicalDetails"
+                  ShowTechnicalDetails="true"
+                  OnRetry="LoadAsync" />
+}
+else
+{
+    <div class="row g-3">
+        <div class="col-12 col-lg-4">
+            <div class="card text-center h-100">
+                <div class="mx-auto mb-3 d-grid place-items-center rounded-circle" style="width:88px;height:88px;background:var(--color-primary);color:white;font-size:2rem;">
+                    @_initials
+                </div>
+                <h3 class="mb-1">@_profile.FullName</h3>
+                <div class="text-muted mb-2">@_profile.Email</div>
+                <Badge Text="@_role" Variant="info" />
+                <div class="text-muted mt-3">Member since @_profile.CreatedAt.ToLocalTime().ToString("d")</div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <div class="card">
+                <EditForm Model="_request" OnValidSubmit="SaveAsync" class="d-flex flex-column gap-4">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <FormField TValue="string" Label='@L["FullName"]' For="() => _request.FullName">
+                        <FormInput @bind-Value="_request.FullName" placeholder='@L["FullName"]' />
+                    </FormField>
+
+                    <div>
+                        <div class="text-muted mb-1">@L["Email"]</div>
+                        <div>@_profile.Email</div>
+                    </div>
+
+                    <div>
+                        <div class="text-muted mb-1">Role</div>
+                        <div>@_role</div>
+                    </div>
+
+                    <SubmitButton Text='@L["Save"]'
+                                  LoadingText='@L["ProcessingRequest"]'
+                                  IsLoading="@_isSaving"
+                                  IsDisabled="@_isSaving" />
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private UserDto _profile = new() { FullName = "User", Email = "user@zerodawn.local", Roles = ["User"], CreatedAt = DateTime.UtcNow.AddMonths(-1) };
+    private UpdateProfileRequest _request = new();
+    private bool _isSaving;
+    private string _role = "User";
+    private string _initials = "U";
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        ClearError();
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.GetProfileAsync();
+                if (!response.Succeeded || response.Data is null)
+                {
+                    SetApiError(response);
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                _profile = response.Data;
+            }
+            else
+            {
+                var user = await GetCurrentUserAsync();
+                _profile = new UserDto
+                {
+                    Id = "self",
+                    FullName = GetDisplayName(user),
+                    Email = user.FindFirst(ClaimTypes.Email)?.Value ?? "user@zerodawn.local",
+                    Roles = [GetRole(user) ?? "User"],
+                    CreatedAt = DateTime.UtcNow.AddMonths(-3),
+                    EmailConfirmed = true
+                };
+            }
+
+            _request = new UpdateProfileRequest { FullName = _profile.FullName };
+            _role = _profile.Roles.FirstOrDefault() ?? "User";
+            _initials = GetInitials(_profile.FullName);
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_isSaving)
+        {
+            return;
+        }
+
+        _isSaving = true;
+        ClearError();
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.UpdateProfileAsync(_request);
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                _profile = response.Data;
+            }
+            else
+            {
+                _profile = new UserDto
+                {
+                    Id = _profile.Id,
+                    FullName = _request.FullName,
+                    Email = _profile.Email,
+                    Roles = _profile.Roles,
+                    IsActive = _profile.IsActive,
+                    CreatedAt = _profile.CreatedAt,
+                    LastLoginAt = _profile.LastLoginAt,
+                    EmailConfirmed = _profile.EmailConfirmed
+                };
+            }
+
+            _initials = GetInitials(_profile.FullName);
+            ShowSuccess("Profile updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+}

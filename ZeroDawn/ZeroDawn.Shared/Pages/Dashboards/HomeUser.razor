@@ -1,0 +1,28 @@
+@page "/dashboard"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "User")]
+@inherits AppPageBase
+
+<PageHeader Title='@L["Dashboard"]'
+            Breadcrumb='@L["Home"]'
+            Subtitle='@L["Welcome", _userName]' />
+
+<div class="row g-3">
+    <div class="col-12 col-lg-8">
+        <div class="card h-100">
+            <h3 class="mb-2">@L["Profile"]</h3>
+            <p class="text-muted mb-3">@L["Welcome", _userName]</p>
+            <a class="btn btn-primary" href="/profile">@L["Profile"]</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _userName = "User";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserAsync();
+        _userName = GetDisplayName(user);
+    }
+}

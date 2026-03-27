@@ -1,0 +1,17 @@
+.form-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    color: var(--color-text);
+}
+
+.form-checkbox__input {
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: var(--color-primary);
+}
+
+.form-checkbox__label {
+    font-size: 0.95rem;
+}

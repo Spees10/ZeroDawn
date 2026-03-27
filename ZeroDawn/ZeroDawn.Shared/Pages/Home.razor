@@ -1,14 +1,43 @@
-﻿@page "/"
-@using ZeroDawn.Shared.Services
-@inject IFormFactor FormFactor
+@page "/"
+@layout MainLayout
+@inherits AppPageBase
 
-<PageTitle>Home</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+<div class="card text-center">
+    <LoadingSpinner Size="large" />
+    <p class="mt-3 mb-0 text-muted">@L["Loading"]</p>
+</div>
 
 @code {
-    private string factor => FormFactor.GetFormFactor();
-    private string platform => FormFactor.GetPlatform();
+    private bool _redirected;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _redirected)
+        {
+            return;
+        }
+
+        _redirected = true;
+        var user = await GetCurrentUserAsync();
+
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            NavigationManager.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+
+        if (user.IsInRole("SuperAdmin"))
+        {
+            NavigationManager.NavigateTo("/dashboard/superadmin", forceLoad: true);
+            return;
+        }
+
+        if (user.IsInRole("Admin"))
+        {
+            NavigationManager.NavigateTo("/dashboard/admin", forceLoad: true);
+            return;
+        }
+
+        NavigationManager.NavigateTo("/dashboard", forceLoad: true);
+    }
 }

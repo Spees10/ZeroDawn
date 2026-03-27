@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Threading.RateLimiting;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
@@ -62,19 +64,25 @@ try
         options.Password.RequiredLength = 6;
         options.User.RequireUniqueEmail = true;
         options.SignIn.RequireConfirmedEmail = false; // controlled by AppOptions at runtime
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+        options.Lockout.AllowedForNewUsers = true;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
     builder.Services.AddScoped<IEmailService, MailKitEmailService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
+    builder.Services.AddScoped<IToastService, ToastService>();
+    builder.Services.AddScoped<IAuthService, DefaultAuthService>();
     builder.Services.AddLocalization(options =>
         options.ResourcesPath = "Localization/Resources");
 
-    var supportedCultures = new[] { "en", "ar" };
+    var supportedCultures = new[] { "ar", "en" };
     builder.Services.Configure<RequestLocalizationOptions>(options =>
     {
-        options.SetDefaultCulture("en");
+        var defaultCulture = builder.Configuration["App:DefaultLanguage"] is "en" ? "en" : "ar";
+        options.SetDefaultCulture(defaultCulture);
         options.AddSupportedCultures(supportedCultures);
         options.AddSupportedUICultures(supportedCultures);
     });
@@ -112,6 +120,12 @@ try
 
     // Add device-specific services used by the ZeroDawn.Shared project
     builder.Services.AddSingleton<IFormFactor, FormFactor>();
+    builder.Services.AddHttpClient<IAuthApiClient, DefaultAuthApiClient>(client =>
+    {
+        var baseUrl = builder.Configuration["App:BaseUrl"]
+            ?? throw new InvalidOperationException("App:BaseUrl is not configured.");
+        client.BaseAddress = new Uri(baseUrl);
+    });
     builder.Services.AddRateLimiter(options =>
     {
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -130,7 +144,7 @@ try
             var response = new ApiResponse
             {
                 Succeeded = false,
-                Error = "Too many requests. Please try again later.",
+                Error = "عدد المحاولات كبير جدًا. حاول مرة أخرى لاحقًا.",
                 ErrorCode = "RATE_LIMIT_EXCEEDED"
             };
 
@@ -163,10 +177,39 @@ try
                     QueueLimit = 0
                 }));
     });
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("DevCors", policy =>
+        {
+            policy
+                .WithOrigins(
+                    "https://localhost:7001",
+                    "https://localhost:5001",
+                    "http://localhost:5000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+    });
+    builder.Services.AddHealthChecks()
+        .AddDbContextCheck<ApplicationDbContext>("database");
+    builder.Services.AddResponseCompression(options =>
+    {
+        options.EnableForHttps = true;
+        options.Providers.Add<BrotliCompressionProvider>();
+        options.Providers.Add<GzipCompressionProvider>();
+        options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+            ["application/octet-stream", "application/wasm"]);
+    });
+    builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+    {
+        options.Level = System.IO.Compression.CompressionLevel.Fastest;
+    });
 
     var app = builder.Build();
     app.UseMiddleware<CorrelationIdMiddleware>();
     app.UseMiddleware<GlobalExceptionMiddleware>();
+    app.UseResponseCompression();
     app.UseSerilogRequestLogging(options =>
     {
         options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
@@ -193,6 +236,12 @@ try
     app.UseRouting();
     app.UseRequestLocalization();
     app.UseAntiforgery();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseCors("DevCors");
+    }
+
     app.UseRateLimiter();
 
     if (isJwtConfigured)
@@ -202,6 +251,27 @@ try
     }
 
     app.MapControllers();
+    app.MapHealthChecks("/api/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+    {
+        ResponseWriter = async (context, report) =>
+        {
+            context.Response.ContentType = "application/json";
+            var result = new
+            {
+                status = report.Status.ToString(),
+                checks = report.Entries.Select(e => new
+                {
+                    name = e.Key,
+                    status = e.Value.Status.ToString(),
+                    description = e.Value.Description,
+                    duration = e.Value.Duration.TotalMilliseconds
+                }),
+                totalDuration = report.TotalDuration.TotalMilliseconds
+            };
+            await context.Response.WriteAsJsonAsync(result);
+        }
+    }).RequireAuthorization(policy =>
+        policy.RequireRole("SuperAdmin"));
 
     app.MapStaticAssets();
 
@@ -212,6 +282,18 @@ try
             typeof(ZeroDawn.Web.Client._Imports).Assembly);
 
     await DatabaseSeeder.SeedAsync(app.Services, app.Logger);
+
+    var missingSecrets = SecretsChecklist.ValidateSecrets(builder.Configuration);
+    if (missingSecrets.Count > 0)
+    {
+        Log.Warning("Missing required User Secrets! Run these commands in the ZeroDawn.Web directory:\n{Commands}",
+            string.Join("\n", missingSecrets));
+        if (!app.Environment.IsDevelopment())
+        {
+            throw new InvalidOperationException(
+                $"Cannot start in non-development mode with missing secrets: {string.Join(", ", missingSecrets)}");
+        }
+    }
 
     app.Run();
 }

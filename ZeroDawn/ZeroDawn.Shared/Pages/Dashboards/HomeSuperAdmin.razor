@@ -1,0 +1,49 @@
+@page "/dashboard/superadmin"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "SuperAdmin")]
+@inherits AppPageBase
+
+<PageHeader Title='@L["Dashboard"]'
+            Breadcrumb='@L["Home"]'
+            Subtitle='@($"{L["Welcome", _userName]}")' />
+
+<div class="row g-3 mb-4">
+    @foreach (var card in _cards)
+    {
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100">
+                <div class="text-muted mb-2">@card.Label</div>
+                <div class="fs-2 fw-bold">@card.Value</div>
+                <Badge Text="@card.Badge" Variant="@card.Variant" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="card">
+    <PageHeader Title='@L["Search"]' Subtitle='@L["Dashboard"]' />
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary" href="/admin/error-logs">Error Logs</a>
+        <a class="btn btn-secondary" href="/admin/users">User Management</a>
+        <a class="btn btn-secondary" href="/admin/admins">Admin Management</a>
+    </div>
+</div>
+
+@code {
+    private string _userName = "SuperAdmin";
+    private readonly List<DashboardCard> _cards =
+    [
+        new("Users", "128", "Live", "info"),
+        new("Admins", "6", "Secured", "warning"),
+        new("Recent Errors", "3", "Needs review", "error"),
+        new("System Status", "Healthy", "Online", "success")
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserAsync();
+        _userName = GetDisplayName(user);
+    }
+
+    private sealed record DashboardCard(string Label, string Value, string Badge, string Variant);
+}

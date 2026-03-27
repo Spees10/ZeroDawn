@@ -1,23 +1,170 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@implements IDisposable
+@using System.Globalization
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.DependencyInjection
+@using ZeroDawn.Shared.Components.Feedback
+@using ZeroDawn.Shared.Components.Layout
+@using ZeroDawn.Shared.Services
+@inject IServiceProvider Services
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResources> L
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="app-shell @(_isSidebarCollapsed ? "app-shell--collapsed" : string.Empty) @(_isMobileSidebarOpen ? "app-shell--drawer-open" : string.Empty)">
+    <div class="app-shell__backdrop" @onclick="CloseMobileSidebar"></div>
+
+    <aside class="app-shell__sidebar">
+        <Sidebar User="_currentUser"
+                 IsCollapsed="_isSidebarCollapsed"
+                 OnToggleCollapse="ToggleSidebarCollapse"
+                 OnNavigate="HandleSidebarNavigation" />
+    </aside>
+
+    <div class="app-shell__main">
+        <TopBar UserName="_userName"
+                RoleName="_roleName"
+                CurrentCulture="_currentCulture"
+                OnMenuToggle="OpenMobileSidebar"
+                OnCultureChanged="ChangeCultureAsync"
+                OnLogout="LogoutAsync" />
+
+        <main class="app-shell__content">
+            <OfflineBanner />
+            @Body
+        </main>
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <ToastContainer />
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
+    @L["UnexpectedErrorOccurred"]
+    <a href="." class="reload">@L["Reload"]</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private AuthenticationStateProvider? _authenticationStateProvider;
+    private IAuthService? _authService;
+    private ITokenStorageService? _tokenStorageService;
+    private IToastService? _toastService;
+    private ClaimsPrincipal _currentUser = new(new ClaimsIdentity());
+    private string _userName = "زائر";
+    private string? _roleName;
+    private string _currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName is "ar" ? "ar" : "en";
+    private bool _isSidebarCollapsed;
+    private bool _isMobileSidebarOpen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _authenticationStateProvider = Services.GetService<AuthenticationStateProvider>();
+        _authService = Services.GetService<IAuthService>();
+        _tokenStorageService = Services.GetService<ITokenStorageService>();
+        _toastService = Services.GetService<IToastService>();
+
+        if (_authenticationStateProvider is not null)
+        {
+            _authenticationStateProvider.AuthenticationStateChanged += HandleAuthenticationStateChanged;
+
+            var authenticationState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            ApplyAuthenticationState(authenticationState.User);
+        }
+    }
+
+    private void HandleAuthenticationStateChanged(Task<AuthenticationState> authenticationStateTask)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            var authenticationState = await authenticationStateTask;
+            ApplyAuthenticationState(authenticationState.User);
+            StateHasChanged();
+        });
+    }
+
+    private void ApplyAuthenticationState(ClaimsPrincipal user)
+    {
+        _currentUser = user;
+        _userName =
+            user.FindFirst("fullName")?.Value
+            ?? user.Identity?.Name
+            ?? user.FindFirst(ClaimTypes.Name)?.Value
+            ?? "زائر";
+
+        _roleName = user.IsInRole("SuperAdmin")
+            ? "SuperAdmin"
+            : user.IsInRole("Admin")
+                ? "Admin"
+                : user.IsInRole("User")
+                    ? "User"
+                    : null;
+    }
+
+    private Task ToggleSidebarCollapse()
+    {
+        _isSidebarCollapsed = !_isSidebarCollapsed;
+        return Task.CompletedTask;
+    }
+
+    private Task OpenMobileSidebar()
+    {
+        _isMobileSidebarOpen = true;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseMobileSidebar()
+    {
+        _isMobileSidebarOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private Task HandleSidebarNavigation()
+    {
+        _isMobileSidebarOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private Task ChangeCultureAsync(string culture)
+    {
+        var normalizedCulture = culture is "en" ? "en" : "ar";
+        var cultureInfo = new CultureInfo(normalizedCulture);
+
+        CultureInfo.CurrentCulture = cultureInfo;
+        CultureInfo.CurrentUICulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+        CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+        _currentCulture = normalizedCulture;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private async Task LogoutAsync()
+    {
+        try
+        {
+            if (_authService is not null)
+            {
+                await _authService.LogoutAsync();
+            }
+            else if (_tokenStorageService is not null)
+            {
+                await _tokenStorageService.ClearTokensAsync();
+            }
+
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        catch
+        {
+            _toastService?.ShowError(L["UnableToLogout"]);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (_authenticationStateProvider is not null)
+        {
+            _authenticationStateProvider.AuthenticationStateChanged -= HandleAuthenticationStateChanged;
+        }
+    }
+}

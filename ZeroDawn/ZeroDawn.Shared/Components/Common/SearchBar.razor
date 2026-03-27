@@ -1,0 +1,40 @@
+@implements IDisposable
+@inject IStringLocalizer<SharedResources> L
+
+<div class="search-bar">
+    <span class="search-bar__icon">⌕</span>
+    <input class="search-bar__input"
+           type="search"
+           value="@_searchText"
+           placeholder="@ResolvedPlaceholder"
+           @oninput="HandleInput" />
+</div>
+
+@code {
+    private Timer? _debounceTimer;
+    private string _searchText = string.Empty;
+
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> OnSearch { get; set; }
+    [Parameter] public int DebounceMs { get; set; } = 300;
+
+    private string ResolvedPlaceholder => string.IsNullOrWhiteSpace(Placeholder) ? L["Search"] : Placeholder;
+
+    private Task HandleInput(ChangeEventArgs args)
+    {
+        _searchText = args.Value?.ToString() ?? string.Empty;
+
+        _debounceTimer?.Dispose();
+        _debounceTimer = new Timer(async _ =>
+        {
+            await InvokeAsync(() => OnSearch.InvokeAsync(_searchText));
+        }, null, Math.Max(0, DebounceMs), Timeout.Infinite);
+
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _debounceTimer?.Dispose();
+    }
+}

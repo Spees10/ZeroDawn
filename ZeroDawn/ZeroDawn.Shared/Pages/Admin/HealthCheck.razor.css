@@ -1,0 +1,37 @@
+.health-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.health-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 12rem;
+}
+
+.health-page__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.health-page__summary h3 {
+    margin: 0.25rem 0 0;
+}
+
+.health-page__table th,
+.health-page__table td {
+    text-align: start;
+    vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+    .health-page__summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

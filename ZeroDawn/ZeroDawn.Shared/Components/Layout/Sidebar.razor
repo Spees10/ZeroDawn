@@ -1,0 +1,135 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Routing
+@using ZeroDawn.Shared.Core.Constants
+@inject IStringLocalizer<SharedResources> L
+
+<div class="sidebar @(IsCollapsed ? "sidebar--collapsed" : string.Empty)">
+    <div class="sidebar__header">
+        <div class="sidebar__brand">
+            <div class="sidebar__brand-mark">ZD</div>
+
+            @if (!IsCollapsed)
+            {
+                <div class="sidebar__brand-copy">
+                    <div class="sidebar__brand-title">@L["AppName"]</div>
+                    <div class="sidebar__brand-subtitle text-muted">@L["Dashboard"]</div>
+                </div>
+            }
+        </div>
+
+        <button type="button"
+                class="sidebar__collapse btn btn-secondary"
+                @onclick="OnToggleCollapse"
+                aria-label="@L["ToggleNavigation"]"
+                title="@L["ToggleNavigation"]">
+            @(IsCollapsed ? "»" : "«")
+        </button>
+    </div>
+
+    <nav class="sidebar__nav">
+        <div class="sidebar__section">
+            @if (!IsCollapsed)
+            {
+                <div class="sidebar__section-title">@L["Home"]</div>
+            }
+
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="" Match="NavLinkMatch.All" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon">⌂</span>
+                @if (!IsCollapsed)
+                {
+                    <span>@L["Home"]</span>
+                }
+            </NavLink>
+
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="dashboard" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon">◌</span>
+                @if (!IsCollapsed)
+                {
+                    <span>@L["Dashboard"]</span>
+                }
+            </NavLink>
+
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="profile" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon">☺</span>
+                @if (!IsCollapsed)
+                {
+                    <span>@L["Profile"]</span>
+                }
+            </NavLink>
+
+            <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="about" @onclick="HandleNavigateAsync">
+                <span class="sidebar__icon">ℹ</span>
+                @if (!IsCollapsed)
+                {
+                    <span>@L["About"]</span>
+                }
+            </NavLink>
+        </div>
+
+        @if (CanViewAdminLinks)
+        {
+            <div class="sidebar__section">
+                @if (!IsCollapsed)
+                {
+                    <div class="sidebar__section-title">@L["Admin"]</div>
+                }
+
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/users" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon">👥</span>
+                    @if (!IsCollapsed)
+                    {
+                        <span>@L["Users"]</span>
+                    }
+                </NavLink>
+            </div>
+        }
+
+        @if (CanViewSuperAdminLinks)
+        {
+            <div class="sidebar__section">
+                @if (!IsCollapsed)
+                {
+                    <div class="sidebar__section-title">@L["SuperAdmin"]</div>
+                }
+
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/admins" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon">🛡</span>
+                    @if (!IsCollapsed)
+                    {
+                        <span>@L["AdminManagement"]</span>
+                    }
+                </NavLink>
+
+                <NavLink class="sidebar__link" ActiveClass="sidebar__link--active" href="admin/error-logs" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon">⚠</span>
+                    @if (!IsCollapsed)
+                    {
+                        <span>@L["ErrorLogs"]</span>
+                    }
+                </NavLink>
+
+                <NavLink class="sidebar__link nav-link" ActiveClass="sidebar__link--active" href="/admin/health" @onclick="HandleNavigateAsync">
+                    <span class="sidebar__icon">🏥</span>
+                    @if (!IsCollapsed)
+                    {
+                        <span>@L["Health"]</span>
+                    }
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+    [Parameter] public ClaimsPrincipal User { get; set; } = new(new ClaimsIdentity());
+    [Parameter] public bool IsCollapsed { get; set; }
+    [Parameter] public EventCallback OnToggleCollapse { get; set; }
+    [Parameter] public EventCallback OnNavigate { get; set; }
+
+    private bool CanViewAdminLinks => User.IsInRole(Roles.Admin) || User.IsInRole(Roles.SuperAdmin);
+
+    private bool CanViewSuperAdminLinks => User.IsInRole(Roles.SuperAdmin);
+
+    private Task HandleNavigateAsync()
+        => OnNavigate.InvokeAsync();
+}

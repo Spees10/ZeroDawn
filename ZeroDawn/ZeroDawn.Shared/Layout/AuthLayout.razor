@@ -1,0 +1,19 @@
+@inherits LayoutComponentBase
+@inject IStringLocalizer<SharedResources> L
+
+<div class="auth-layout">
+    <div class="auth-layout__shell">
+        <div class="auth-layout__brand">
+            <div class="auth-layout__brand-mark">ZD</div>
+            <div class="auth-layout__brand-copy">
+                <div class="auth-layout__brand-title">@L["AppName"]</div>
+                <div class="auth-layout__brand-subtitle text-muted">@L["SecureAccessPortal"]</div>
+            </div>
+        </div>
+
+        <section class="auth-layout__card card">
+            <OfflineBanner />
+            @Body
+        </section>
+    </div>
+</div>

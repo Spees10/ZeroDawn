@@ -1,0 +1,206 @@
+@page "/admin/users/{UserId}"
+@layout MainLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin,SuperAdmin")]
+@inherits AppPageBase
+
+<PageHeader Title="User Details"
+            Breadcrumb='@L["Users"]'
+            Subtitle="@UserId" />
+
+@if (HasError)
+{
+    <ErrorDisplay Message="@ErrorMessage"
+                  ReferenceNumber="@ErrorReferenceNumber"
+                  TechnicalDetails="@ErrorTechnicalDetails"
+                  ShowTechnicalDetails="true"
+                  OnRetry="LoadAsync" />
+}
+else if (_isLoading)
+{
+    <div class="d-flex flex-column gap-2">
+        <Skeleton Height="8rem" />
+        <Skeleton Height="10rem" />
+    </div>
+}
+else if (_user is null)
+{
+    <EmptyState Message='@L["NoResults"]' />
+}
+else
+{
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="card h-100">
+                <div class="mb-2"><strong>@L["FullName"]:</strong> @_user.FullName</div>
+                <div class="mb-2"><strong>@L["Email"]:</strong> @_user.Email</div>
+                <div class="mb-2"><strong>Roles:</strong> @string.Join(", ", _user.Roles)</div>
+                <div class="mb-2"><strong>Status:</strong> @(_user.IsActive ? "Active" : "Inactive")</div>
+                <div class="mb-2"><strong>Created:</strong> @_user.CreatedAt.ToLocalTime().ToString("g")</div>
+                <div class="mb-0"><strong>Last Login:</strong> @_user.LastLoginAt?.ToLocalTime().ToString("g")</div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card d-flex flex-column gap-2">
+                <button type="button" class="btn btn-secondary" @onclick="ToggleStatusAsync">
+                    @(_user.IsActive ? "Disable User" : "Enable User")
+                </button>
+                <button type="button" class="btn btn-primary" @onclick="CycleRoleAsync">
+                    Change Role
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string UserId { get; set; } = string.Empty;
+
+    private UserDto? _user;
+    private bool _isLoading = true;
+
+    protected override Task OnParametersSetAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        ClearError();
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.GetUserByIdAsync(UserId);
+                if (!response.Succeeded || response.Data is null)
+                {
+                    SetApiError(response);
+                    ShowApiErrors(response);
+                    _user = null;
+                    return;
+                }
+
+                _user = response.Data;
+            }
+            else
+            {
+                _user = GetDemoUsers().FirstOrDefault(user => user.Id == UserId)
+                    ?? GetDemoUsers().FirstOrDefault();
+            }
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task ToggleStatusAsync()
+    {
+        if (_user is null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.UpdateStatusAsync(_user.Id, new UpdateUserStatusRequest
+                {
+                    UserId = _user.Id,
+                    IsActive = !_user.IsActive
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                _user = response.Data;
+            }
+            else
+            {
+                _user = new UserDto
+                {
+                    Id = _user.Id,
+                    FullName = _user.FullName,
+                    Email = _user.Email,
+                    Roles = _user.Roles,
+                    IsActive = !_user.IsActive,
+                    CreatedAt = _user.CreatedAt,
+                    LastLoginAt = _user.LastLoginAt,
+                    EmailConfirmed = _user.EmailConfirmed
+                };
+            }
+
+            ShowSuccess("User status updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private async Task CycleRoleAsync()
+    {
+        if (_user is null)
+        {
+            return;
+        }
+
+        var nextRole = _user.Roles.Contains("Admin") ? "User" : "Admin";
+
+        try
+        {
+            if (UserApiClient is not null)
+            {
+                var response = await UserApiClient.AssignRoleAsync(_user.Id, new AssignRoleRequest
+                {
+                    UserId = _user.Id,
+                    Role = nextRole
+                });
+
+                if (!response.Succeeded || response.Data is null)
+                {
+                    ShowApiErrors(response);
+                    return;
+                }
+
+                _user = response.Data;
+            }
+            else
+            {
+                _user = new UserDto
+                {
+                    Id = _user.Id,
+                    FullName = _user.FullName,
+                    Email = _user.Email,
+                    Roles = [nextRole],
+                    IsActive = _user.IsActive,
+                    CreatedAt = _user.CreatedAt,
+                    LastLoginAt = _user.LastLoginAt,
+                    EmailConfirmed = _user.EmailConfirmed
+                };
+            }
+
+            ShowSuccess("Role updated.");
+        }
+        catch (Exception ex)
+        {
+            SetError(ex);
+        }
+    }
+
+    private static List<UserDto> GetDemoUsers()
+        =>
+        [
+            new() { Id = "1", FullName = "Super Admin", Email = "admin@zerodawn.local", Roles = ["SuperAdmin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-8), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddMinutes(-25) },
+            new() { Id = "2", FullName = "Ops Admin", Email = "ops@zerodawn.local", Roles = ["Admin"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-6), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddHours(-3) },
+            new() { Id = "3", FullName = "Sarah User", Email = "sarah@zerodawn.local", Roles = ["User"], IsActive = true, CreatedAt = DateTime.UtcNow.AddMonths(-2), EmailConfirmed = true, LastLoginAt = DateTime.UtcNow.AddDays(-1) },
+            new() { Id = "4", FullName = "Inactive User", Email = "inactive@zerodawn.local", Roles = ["User"], IsActive = false, CreatedAt = DateTime.UtcNow.AddMonths(-1), EmailConfirmed = false, LastLoginAt = DateTime.UtcNow.AddDays(-12) }
+        ];
+}

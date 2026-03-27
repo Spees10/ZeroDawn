@@ -12,103 +12,123 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppName" xml:space="preserve">
-    <value>ZeroDawn</value>
-  </data>
-  <data name="Login" xml:space="preserve">
-    <value>Login</value>
-  </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm Password</value>
-  </data>
-  <data name="ForgotPassword" xml:space="preserve">
-    <value>Forgot Password?</value>
-  </data>
-  <data name="ResetPassword" xml:space="preserve">
-    <value>Reset Password</value>
-  </data>
-  <data name="ChangePassword" xml:space="preserve">
-    <value>Change Password</value>
-  </data>
-  <data name="FullName" xml:space="preserve">
-    <value>Full Name</value>
-  </data>
-  <data name="Submit" xml:space="preserve">
-    <value>Submit</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Loading...</value>
-  </data>
-  <data name="NoResults" xml:space="preserve">
-    <value>No results found.</value>
-  </data>
-  <data name="ErrorOccurred" xml:space="preserve">
-    <value>An error occurred. Please try again.</value>
-  </data>
-  <data name="ContactSupport" xml:space="preserve">
-    <value>If the problem persists, contact support with reference:</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
-  </data>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="ContactUs" xml:space="preserve">
-    <value>Contact Us</value>
-  </data>
-  <data name="NotFound" xml:space="preserve">
-    <value>Page not found</value>
-  </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome, {0}!</value>
-  </data>
-  <data name="ConfirmEmail" xml:space="preserve">
-    <value>Confirm Email</value>
-  </data>
-  <data name="ResendEmail" xml:space="preserve">
-    <value>Resend Confirmation</value>
-  </data>
-  <data name="Back" xml:space="preserve">
-    <value>Back</value>
-  </data>
+  <data name="AppName" xml:space="preserve"><value>ZeroDawn</value></data>
+  <data name="Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Register" xml:space="preserve"><value>Register</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Password" xml:space="preserve"><value>Password</value></data>
+  <data name="ConfirmPassword" xml:space="preserve"><value>Confirm Password</value></data>
+  <data name="ForgotPassword" xml:space="preserve"><value>Forgot Password?</value></data>
+  <data name="ResetPassword" xml:space="preserve"><value>Reset Password</value></data>
+  <data name="ChangePassword" xml:space="preserve"><value>Change Password</value></data>
+  <data name="FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Submit" xml:space="preserve"><value>Submit</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="ConfirmAction" xml:space="preserve"><value>Confirm action</value></data>
+  <data name="Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="NoResults" xml:space="preserve"><value>No results found.</value></data>
+  <data name="ErrorOccurred" xml:space="preserve"><value>An error occurred. Please try again.</value></data>
+  <data name="ContactSupport" xml:space="preserve"><value>If the problem persists, contact support with reference number:</value></data>
+  <data name="Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Profile" xml:space="preserve"><value>Profile</value></data>
+  <data name="Users" xml:space="preserve"><value>Users</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="About" xml:space="preserve"><value>About</value></data>
+  <data name="ContactUs" xml:space="preserve"><value>Contact Us</value></data>
+  <data name="NotFound" xml:space="preserve"><value>Page not found</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Welcome, {0}!</value></data>
+  <data name="ConfirmEmail" xml:space="preserve"><value>Confirm Email</value></data>
+  <data name="ResendEmail" xml:space="preserve"><value>Resend Confirmation</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="CurrentPassword" xml:space="preserve"><value>Current Password</value></data>
+  <data name="NewPassword" xml:space="preserve"><value>New Password</value></data>
+  <data name="NeedAnAccount" xml:space="preserve"><value>Need an account?</value></data>
+  <data name="AlreadyHaveAccount" xml:space="preserve"><value>Already have an account?</value></data>
+  <data name="BackToLogin" xml:space="preserve"><value>Back to Login</value></data>
+  <data name="CheckYourEmail" xml:space="preserve"><value>Check your email</value></data>
+  <data name="CheckYourEmailMessage" xml:space="preserve"><value>We've sent you an email with the next steps.</value></data>
+  <data name="SendResetLink" xml:space="preserve"><value>Send Reset Link</value></data>
+  <data name="RequestSubmitted" xml:space="preserve"><value>Request submitted</value></data>
+  <data name="InvalidLink" xml:space="preserve"><value>The link is invalid or incomplete.</value></data>
+  <data name="ResetPasswordSuccess" xml:space="preserve"><value>Your password has been reset successfully.</value></data>
+  <data name="ChangePasswordSuccess" xml:space="preserve"><value>Your password has been changed successfully.</value></data>
+  <data name="ConfirmingEmail" xml:space="preserve"><value>Confirming your email...</value></data>
+  <data name="EmailConfirmedSuccess" xml:space="preserve"><value>Your email has been confirmed successfully.</value></data>
+  <data name="EmailConfirmationFailed" xml:space="preserve"><value>We couldn't confirm your email.</value></data>
+  <data name="SigningIn" xml:space="preserve"><value>Signing in...</value></data>
+  <data name="CreatingAccount" xml:space="preserve"><value>Creating account...</value></data>
+  <data name="SendingEmail" xml:space="preserve"><value>Sending email...</value></data>
+  <data name="ProcessingRequest" xml:space="preserve"><value>Processing...</value></data>
+  <data name="Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="OfflineTitle" xml:space="preserve"><value>You're offline</value></data>
+  <data name="OfflineMessage" xml:space="preserve"><value>Your connection is unavailable right now. Some actions may not work until you're back online.</value></data>
+  <data name="SecureAccessPortal" xml:space="preserve"><value>Secure access portal</value></data>
+  <data name="OpenNavigation" xml:space="preserve"><value>Open navigation</value></data>
+  <data name="ToggleNavigation" xml:space="preserve"><value>Toggle navigation width</value></data>
+  <data name="LanguageSelector" xml:space="preserve"><value>Language selector</value></data>
+  <data name="LanguageArabic" xml:space="preserve"><value>العربية</value></data>
+  <data name="LanguageEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="Guest" xml:space="preserve"><value>Guest</value></data>
+  <data name="Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="SuperAdmin" xml:space="preserve"><value>Super Admin</value></data>
+  <data name="UserRole" xml:space="preserve"><value>User</value></data>
+  <data name="AdminManagement" xml:space="preserve"><value>Admin Management</value></data>
+  <data name="ErrorLogs" xml:space="preserve"><value>Error Logs</value></data>
+  <data name="Health" xml:space="preserve"><value>Health</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="OverallStatus" xml:space="preserve"><value>Overall Status</value></data>
+  <data name="SystemHealth" xml:space="preserve"><value>System Health</value></data>
+  <data name="CheckName" xml:space="preserve"><value>Check</value></data>
+  <data name="LightTheme" xml:space="preserve"><value>Light</value></data>
+  <data name="DarkTheme" xml:space="preserve"><value>Dark</value></data>
+  <data name="ToggleTheme" xml:space="preserve"><value>Toggle theme</value></data>
+  <data name="SwitchToLightTheme" xml:space="preserve"><value>Switch to light theme</value></data>
+  <data name="SwitchToDarkTheme" xml:space="preserve"><value>Switch to dark theme</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Success" xml:space="preserve"><value>Success</value></data>
+  <data name="Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Error" xml:space="preserve"><value>Error</value></data>
+  <data name="SomethingWentWrong" xml:space="preserve"><value>Something went wrong</value></data>
+  <data name="UnexpectedErrorOccurred" xml:space="preserve"><value>An unexpected error occurred.</value></data>
+  <data name="UnexpectedScreenErrorOccurred" xml:space="preserve"><value>An unexpected screen error occurred.</value></data>
+  <data name="ReferenceNumber" xml:space="preserve"><value>Reference</value></data>
+  <data name="TryAgain" xml:space="preserve"><value>Try Again</value></data>
+  <data name="ShowTechnicalDetails" xml:space="preserve"><value>Show Technical Details</value></data>
+  <data name="HideTechnicalDetails" xml:space="preserve"><value>Hide Technical Details</value></data>
+  <data name="CopyDetails" xml:space="preserve"><value>Copy Details</value></data>
+  <data name="CopyDetailsHint" xml:space="preserve"><value>Clipboard copy needs host support. Select the details below and copy them manually if nothing happens.</value></data>
+  <data name="HidePassword" xml:space="preserve"><value>Hide password</value></data>
+  <data name="ShowPassword" xml:space="preserve"><value>Show password</value></data>
+  <data name="Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="UnableToLogout" xml:space="preserve"><value>Unable to log out right now.</value></data>
+  <data name="NetworkError" xml:space="preserve"><value>Network error. Please check your connection.</value></data>
+  <data name="EmptyResponse" xml:space="preserve"><value>The server returned an empty response.</value></data>
+  <data name="RequestFailedWithStatus" xml:space="preserve"><value>Request failed with status code {0}.</value></data>
+  <data name="TooManyRequests" xml:space="preserve"><value>Too many requests. Please try again later.</value></data>
+  <data name="InvalidCredentials" xml:space="preserve"><value>Invalid credentials.</value></data>
+  <data name="AccountDisabled" xml:space="preserve"><value>Account is disabled.</value></data>
+  <data name="EmailNotConfirmed" xml:space="preserve"><value>Email not confirmed.</value></data>
+  <data name="SelfRegistrationDisabled" xml:space="preserve"><value>Self-registration is disabled.</value></data>
+  <data name="PleaseConfirmEmail" xml:space="preserve"><value>Please confirm your email.</value></data>
+  <data name="InvalidToken" xml:space="preserve"><value>Invalid token.</value></data>
+  <data name="InvalidEmailOrToken" xml:space="preserve"><value>Invalid email or token.</value></data>
+  <data name="PasswordResetSentIfExists" xml:space="preserve"><value>If the email exists, a reset link has been sent.</value></data>
+  <data name="PasswordResetCompleted" xml:space="preserve"><value>Password has been reset successfully.</value></data>
+  <data name="PasswordChangedSuccessMessage" xml:space="preserve"><value>Password changed successfully.</value></data>
+  <data name="ConfirmationRequestInvalid" xml:space="preserve"><value>Invalid confirmation request.</value></data>
+  <data name="ConfirmationSentIfExists" xml:space="preserve"><value>If the account exists, a confirmation email will be sent.</value></data>
+  <data name="LoggedOutSuccess" xml:space="preserve"><value>Logged out successfully.</value></data>
+  <data name="AuthenticationNotConfigured" xml:space="preserve"><value>Authentication is not configured.</value></data>
+  <data name="ValidationFailed" xml:space="preserve"><value>Validation failed.</value></data>
 </root>

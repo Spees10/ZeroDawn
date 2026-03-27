@@ -1,0 +1,89 @@
+@inject IStringLocalizer<SharedResources> L
+
+<header class="topbar">
+    <div class="topbar__left">
+        <button type="button"
+                class="topbar__menu btn btn-secondary"
+                @onclick="OnMenuToggle"
+                aria-label="@L["OpenNavigation"]"
+                title="@L["OpenNavigation"]">
+            ☰
+        </button>
+
+        <div class="topbar__heading">
+            <div class="topbar__title">@L["AppName"]</div>
+            <div class="topbar__subtitle text-muted">@L["Dashboard"]</div>
+        </div>
+    </div>
+
+    <div class="topbar__actions">
+        <ThemeToggle />
+
+        <label class="topbar__language" aria-label="@L["LanguageSelector"]">
+            <span class="topbar__language-icon">🌐</span>
+            <select value="@CurrentCulture" @onchange="HandleCultureChanged">
+                <option value="ar">@L["LanguageArabic"]</option>
+                <option value="en">@L["LanguageEnglish"]</option>
+            </select>
+        </label>
+
+        <div class="topbar__user">
+            <div class="topbar__avatar">@UserInitials</div>
+            <div class="topbar__meta">
+                <div class="topbar__name">@UserName</div>
+
+                @if (!string.IsNullOrWhiteSpace(RoleName))
+                {
+                    <span class="topbar__role @RoleClass">@DisplayRoleName</span>
+                }
+            </div>
+        </div>
+
+        <button type="button" class="topbar__logout btn btn-secondary" @onclick="OnLogout">
+            <span>⇦</span>
+            <span class="topbar__logout-text">@L["Logout"]</span>
+        </button>
+    </div>
+</header>
+
+@code {
+    [Parameter] public string UserName { get; set; } = "زائر";
+    [Parameter] public string? RoleName { get; set; }
+    [Parameter] public string CurrentCulture { get; set; } = "ar";
+    [Parameter] public EventCallback OnMenuToggle { get; set; }
+    [Parameter] public EventCallback<string> OnCultureChanged { get; set; }
+    [Parameter] public EventCallback OnLogout { get; set; }
+
+    private string UserInitials
+    {
+        get
+        {
+            var parts = UserName.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (parts.Length == 0)
+            {
+                return "ز";
+            }
+
+            return string.Concat(parts.Take(2).Select(part => char.ToUpperInvariant(part[0])));
+        }
+    }
+
+    private string DisplayRoleName => RoleName switch
+    {
+        "SuperAdmin" => L["SuperAdmin"],
+        "Admin" => L["Admin"],
+        "User" => L["UserRole"],
+        _ => RoleName ?? string.Empty
+    };
+
+    private string RoleClass => RoleName switch
+    {
+        "SuperAdmin" => "topbar__role--super",
+        "Admin" => "topbar__role--admin",
+        "User" => "topbar__role--user",
+        _ => string.Empty
+    };
+
+    private Task HandleCultureChanged(ChangeEventArgs args)
+        => OnCultureChanged.InvokeAsync(args.Value?.ToString() ?? "ar");
+}

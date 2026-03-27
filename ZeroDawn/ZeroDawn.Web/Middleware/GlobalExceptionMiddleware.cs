@@ -77,7 +77,7 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
             var response = new ApiResponse
             {
                 Succeeded = false,
-                Error = isDevOrAdmin ? ex.Message : "An unexpected error occurred.",
+                Error = isDevOrAdmin ? ex.Message : "حدث خطأ غير متوقع.",
                 ErrorCode = "SERVER_ERROR",
                 ReferenceNumber = referenceNumber
             };

@@ -1,0 +1,14 @@
+<span class="badge badge--@NormalizedVariant">@Text</span>
+
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+    [Parameter] public string Variant { get; set; } = "info";
+
+    private string NormalizedVariant => Variant.Trim().ToLowerInvariant() switch
+    {
+        "success" => "success",
+        "warning" => "warning",
+        "error" => "error",
+        _ => "info"
+    };
+}
