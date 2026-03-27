@@ -244,11 +244,8 @@ try
 
     app.UseRateLimiter();
 
-    if (isJwtConfigured)
-    {
-        app.UseAuthentication();
-        app.UseAuthorization();
-    }
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.MapControllers();
     app.MapHealthChecks("/api/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
