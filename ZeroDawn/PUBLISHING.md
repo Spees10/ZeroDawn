@@ -7,7 +7,8 @@ Before any publish:
 - make sure `Jwt:Secret` comes from environment variables or a secret manager
 - make sure SMTP credentials are not in checked-in JSON
 - point `Database:ConnectionString` to the real target DB
-- set `App:BaseUrl` to the real public URL
+- set `App:BaseUrl` to the real public server URL
+- set `ApiBaseUrl` in [ZeroDawn.Web.Client/wwwroot/appsettings*.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json) to the real browser API URL
 - build the full solution successfully
 
 Build check:
@@ -28,14 +29,21 @@ Publish command:
 dotnet publish Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\ZeroDawn.Web.csproj -c Release -o Q:\Work\ZeroDawn\publish\web
 ```
 
+Important:
+
+- `ZeroDawn.Web` is the deployable web host
+- it serves the server APIs and the interactive web client assets
+- browser deployments depend on both `App:BaseUrl` and `ApiBaseUrl`
+
 ### IIS Basics
 
 1. Publish `ZeroDawn.Web`
 2. Install ASP.NET Core Hosting Bundle on the server
-3. Create the IIS site/app pool
+3. Create the IIS site and app pool
 4. Point IIS to the publish folder
 5. Set environment variables for secrets and connection string
-6. Run DB migrations
+6. Make sure the deployed client `ApiBaseUrl` points to the real API URL
+7. Run DB migrations
 
 ### Azure App Service Basics
 
@@ -47,7 +55,8 @@ dotnet publish Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\ZeroDawn.Web.csproj -c Rel
    - `Smtp__Password`
    - `Database__ConnectionString`
    - `App__BaseUrl`
-4. Run DB migrations
+4. Ensure the deployed browser config contains the correct `ApiBaseUrl`
+5. Run DB migrations
 
 ## Production Environment Variables
 
@@ -60,6 +69,18 @@ Smtp__Password=real-smtp-password
 Database__ConnectionString=Server=...;Database=...;User Id=...;Password=...;TrustServerCertificate=True;
 App__BaseUrl=https://your-real-domain.example
 ```
+
+## Browser Runtime Config
+
+Checked-in development browser config:
+
+- [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+
+Before a real deployment, make sure:
+
+- `ApiBaseUrl` is not left as `https://localhost:7001`
+- the value points to the reachable deployed API origin
+- the value matches your actual reverse-proxy or public routing strategy
 
 ## Database Migration In Production
 
@@ -91,6 +112,7 @@ Practical notes:
 - production Android builds need signing
 - do not ship with emulator URL `10.0.2.2`
 - update [MauiProgram.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\MauiProgram.cs) to the real API URL for the target environment
+- production must use a proper trusted certificate strategy rather than debug-only localhost assumptions
 
 ## MAUI Windows Publish
 
@@ -109,8 +131,8 @@ dotnet publish Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\ZeroDawn.csproj -f net10.0-win
 If you need MSIX:
 
 - switch to packaged Windows configuration first
-- define certificate/signing strategy
-- verify package identity/versioning
+- define certificate and signing strategy
+- verify package identity and versioning
 
 Do not assume MSIX is ready just because the Windows target exists.
 
@@ -122,8 +144,9 @@ Do not assume MSIX is ready just because the Windows target exists.
 - production secrets supplied externally
 - production DB reachable
 - `App:BaseUrl` correct
+- `ApiBaseUrl` correct for browser traffic
 - SMTP tested
-- default development admin account/password reviewed
+- default development admin account and password reviewed
 
 ### MAUI
 
@@ -132,6 +155,7 @@ Do not assume MSIX is ready just because the Windows target exists.
 - signing configured
 - offline behavior tested
 - token storage tested on the target platform
+- certificate strategy verified for real devices
 
 ### Functional Smoke Tests
 
@@ -140,11 +164,13 @@ Do not assume MSIX is ready just because the Windows target exists.
 - forgot password
 - email confirmation
 - admin user list
+- superadmin health page
 - error handling with reference numbers
 
 ## Deployment Risks
 
 - missing `Jwt:Secret` breaks token-issuing flows
+- leaving `ApiBaseUrl` on localhost breaks browser production traffic
 - Android emulator URL is wrong for real devices
 - Windows MSIX needs extra packaging work
 - auto-migrate-on-start is convenient but risky if DB changes are tightly controlled

@@ -61,7 +61,7 @@ dotnet user-secrets --project .\ZeroDawn.Web\ZeroDawn.Web.csproj list
 
 Important:
 
-- Do not put `Jwt:Secret`, `Smtp:Username`, or `Smtp:Password` in checked-in JSON
+- do not put `Jwt:Secret`, `Smtp:Username`, or `Smtp:Password` in checked-in JSON
 - JWT token flows are disabled if `Jwt:Secret` is missing
 
 ## Database Setup
@@ -82,7 +82,7 @@ dotnet ef database update --project .\ZeroDawn.Web\ZeroDawn.Web.csproj
 
 Notes:
 
-- Migrations live in [ZeroDawn.Web/Migrations](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Migrations)
+- migrations live in [ZeroDawn.Web/Migrations](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Migrations)
 - [DatabaseSeeder.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Data\DatabaseSeeder.cs) also runs `MigrateAsync()` on startup and seeds roles plus the static super admin
 
 ## Run The Web App
@@ -96,10 +96,30 @@ Main files:
 - [Program.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Program.cs)
 - [appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
 - [appsettings.Development.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.Development.json)
+- [launchSettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\Properties\launchSettings.json)
 
-Expected development URL:
+Expected development URLs:
 
 - `https://localhost:7001`
+- `http://localhost:5000`
+
+Notes:
+
+- `ZeroDawn.Web` is the app you run for web development
+- it hosts the controllers, Razor components, and WebAssembly client assets together
+- the checked-in browser `ApiBaseUrl` also points to `https://localhost:7001`
+
+## Browser Client Runtime Config
+
+Browser API calls come from:
+
+- [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+
+Current checked-in dev value:
+
+- `ApiBaseUrl = https://localhost:7001`
+
+If browser requests are hitting the wrong API, check this file first.
 
 ## Run MAUI Android
 
@@ -115,9 +135,9 @@ Current Android API URL in [MauiProgram.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\M
 
 ### MAUI Android HTTPS
 
-- Android debug builds use [DevHttpsConnectionHelper.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\Platforms\Android\DevHttpsConnectionHelper.cs) to trust the local `CN=localhost` development certificate automatically.
-- Production must use a real trusted certificate. Do not rely on this helper outside debug development.
-- If HTTPS still fails on the emulator or device, try:
+- Android debug builds use [DevHttpsConnectionHelper.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\Platforms\Android\DevHttpsConnectionHelper.cs) to trust the local `CN=localhost` development certificate automatically
+- production must use a real trusted certificate
+- if HTTPS still fails on the emulator or device, try:
 
 ```powershell
 dotnet dev-certs https --trust
@@ -137,11 +157,18 @@ Current Windows API URL in [MauiProgram.cs](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn\M
 
 ## Known Platform API URL Rules
 
-- Web host links use `App:BaseUrl` in [ZeroDawn.Web/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
-- Blazor WASM uses `ApiBaseUrl` in [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+- web host links use `App:BaseUrl` in [ZeroDawn.Web/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json)
+- browser API calls use `ApiBaseUrl` in [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
 - MAUI Android emulator uses `10.0.2.2`
 - MAUI Windows uses `localhost`
-- Physical devices must use `https://<your-machine-ip>:7001`
+- physical devices must use `https://<your-machine-ip>:7001`
+
+## Useful Runtime Notes
+
+- the browser client registers named `HttpClient` instances `ApiAuthenticated` and `ApiNoAuth`
+- the MAUI host also uses named `HttpClient` instances `ApiAuthenticated` and `ApiNoAuth`
+- the admin health page calls `/api/health` through an authenticated client
+- `/api/health` requires a `SuperAdmin` session
 
 ## Troubleshooting
 
@@ -153,14 +180,22 @@ Fix:
 dotnet user-secrets --project .\ZeroDawn.Web\ZeroDawn.Web.csproj set "Jwt:Secret" "replace-with-a-long-random-secret-at-least-32-characters"
 ```
 
+### Browser app calls the wrong API
+
+Check:
+
+1. [ZeroDawn.Web.Client/wwwroot/appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web.Client\wwwroot\appsettings.json)
+2. the current `ApiBaseUrl` value
+3. that the API is actually running on that URL
+
 ### Android emulator cannot reach the API
 
 Check:
 
-1. The API is running
+1. the API is running
 2. Android uses `https://10.0.2.2:7001`, not `localhost`
-3. The firewall is not blocking the port
-4. The dev HTTPS certificate is trusted
+3. the firewall is not blocking the port
+4. the dev HTTPS certificate is trusted
 
 Trust the dev cert on the host:
 
@@ -172,21 +207,21 @@ dotnet dev-certs https --trust
 
 Most likely cause:
 
-- TLS trust problem between emulator/device and your host cert
+- TLS trust problem between emulator or device and your host cert
 
 Practical fix plan:
 
-1. Trust the local dev certificate on Windows
-2. Restart the emulator
-3. Re-test with the correct host URL
-4. For physical devices, move to a proper trusted certificate strategy instead of relying on localhost-style development certs
+1. trust the local dev certificate on Windows
+2. restart the emulator
+3. re-test with the correct host URL
+4. for physical devices, move to a proper trusted certificate strategy instead of relying on localhost-style development certs
 
 ### LocalDB or SQL connection failure
 
 Check:
 
 - LocalDB is installed
-- The connection string in [appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json) is valid for your machine
+- the connection string in [appsettings.json](Q:\Work\ZeroDawn\ZeroDawn\ZeroDawn.Web\appsettings.json) is valid for your machine
 - `dotnet ef database update` succeeds
 
 ### `dotnet ef database update` fails
